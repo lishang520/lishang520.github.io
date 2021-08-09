@@ -24,7 +24,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="github推送新项目">
 <meta property="og:url" content="https://lishang520.github.io/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/index.html">
-<meta property="og:site_name" content="painter">
+<meta property="og:site_name" content="painter&#39;s Blog">
 <meta property="og:description" content="应用场景： 推送本地项目到github上  步骤： 0、在github上新建一个仓库，取个名字，直接默认即可 1、本地新建一个文件夹，我这里新建github文件夹 2、右键---打开gitbash（需要提前安装git工具）">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-09T10:46:37.000Z">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>github推送新项目 | painter</title>
+  <title>github推送新项目 | painter's Blog</title>
   
 
 
@@ -106,7 +106,7 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">painter</h1>
+      <h1 class="site-title">painter's Blog</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -151,6 +151,11 @@
         <li class="menu-item menu-item-友情链接">
 
     <a href="/link/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -215,11 +220,11 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/%E5%A4%B4%E5%83%8F.jpg">
       <meta itemprop="name" content="painter">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="painter的博客">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="painter">
+      <meta itemprop="name" content="painter's Blog">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -253,7 +258,21 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span id="busuanzi_value_page_pv"></span>
-            </span><br>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -333,11 +352,7 @@
 
           </div>
           
-    
-  <div class="comments">
-    <div id="lv-container" data-id="city" data-uid="MTAyMC81MzcyNS8zMDE5OA=="></div>
-  </div>
-  
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -392,7 +407,7 @@
     <img class="site-author-image" itemprop="image" alt="painter"
       src="/images/%E5%A4%B4%E5%83%8F.jpg">
   <p class="site-author-name" itemprop="name">painter</p>
-  <div class="site-description" itemprop="description"></div>
+  <div class="site-description" itemprop="description">painter的博客</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
@@ -535,19 +550,32 @@
 
   
 
+
 <script>
-NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
-  window.livereOptions = {
-    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
-  };
-  (function(d, s) {
-    var j, e = d.getElementsByTagName(s)[0];
-    if (typeof LivereTower === 'function') { return; }
-    j = d.createElement(s);
-    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-    j.async = true;
-    e.parentNode.insertBefore(j, e);
-  })(document, 'script');
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '58W9BPsri2U8s70HBxhy6tS6-gzGzoHsz',
+      appKey     : 'XsON9yD3oGzDCQskxtiPhGFj',
+      placeholder: "ヾﾉ≧∀≦)o快来评论一下吧!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
 });
 </script>
 

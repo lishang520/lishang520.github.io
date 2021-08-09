@@ -26,6 +26,38 @@
       </tags>
   </entry>
   <entry>
+    <title>github推送新项目</title>
+    <url>/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>推送本地项目到github上
+</code></pre>
+<p>步骤：</p>
+<pre><code>0、在github上新建一个仓库，取个名字，直接默认即可
+1、本地新建一个文件夹，我这里新建github文件夹
+2、右键---打开gitbash（需要提前安装git工具）
+</code></pre>
+<span id="more"></span>
+<pre><code>3、输入以下命令
+    git init   初始化仓库
+    git add .     这个点 . 代表当前目录所有文件，表示把当前目录所有文件添加进去
+    git commit -m &quot;ip反查公司+域名&quot;   设置提交的时候的备注
+    git remote add origin https://github.com/lishang520/security-tools.git  添加远程仓库，这个仓库地址是我们新建的仓库的那个地址
+    git push -u origin master   将本地文件推送到github上
+4、以后每次推送只需要执行以下几个命令
+    git add .    
+    git commit -m &quot;ip反查公司+域名&quot;  
+    git remote add origin https://github.com/lishang520/security-tools.git  
+    git push -u origin master 
+</code></pre>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>环境搭建</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ip反查公司+域名</title>
     <url>/2021/08/09/ip%E5%8F%8D%E6%9F%A5%E5%85%AC%E5%8F%B8-%E5%9F%9F%E5%90%8D/</url>
     <content><![CDATA[<p>应用场景：</p>
@@ -64,38 +96,6 @@
       </categories>
       <tags>
         <tag>公益src</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>github推送新项目</title>
-    <url>/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>推送本地项目到github上
-</code></pre>
-<p>步骤：</p>
-<pre><code>0、在github上新建一个仓库，取个名字，直接默认即可
-1、本地新建一个文件夹，我这里新建github文件夹
-2、右键---打开gitbash（需要提前安装git工具）
-</code></pre>
-<span id="more"></span>
-<pre><code>3、输入以下命令
-    git init   初始化仓库
-    git add .     这个点 . 代表当前目录所有文件，表示把当前目录所有文件添加进去
-    git commit -m &quot;ip反查公司+域名&quot;   设置提交的时候的备注
-    git remote add origin https://github.com/lishang520/security-tools.git  添加远程仓库，这个仓库地址是我们新建的仓库的那个地址
-    git push -u origin master   将本地文件推送到github上
-4、以后每次推送只需要执行以下几个命令
-    git add .    
-    git commit -m &quot;ip反查公司+域名&quot;  
-    git remote add origin https://github.com/lishang520/security-tools.git  
-    git push -u origin master 
-</code></pre>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-      <tags>
-        <tag>环境搭建</tag>
       </tags>
   </entry>
 </search>
