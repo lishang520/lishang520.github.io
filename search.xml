@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>hexo基础语法</title>
+    <url>/2021/08/09/hexo%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<p>1、设置阅读全文</p>
+<pre><code>只需要在文章插入字符串&#39;&lt;!--more--&gt;&#39; 即可
+</code></pre>
+<p>2、hexo clean 清楚缓存</p>
+<p>3、hexo g 生成博客</p>
+<p>4、hexo server 启动本地博客</p>
+<p>5、配置步骤2、3、4自动化</p>
+<pre><code>修改package.json 文件，将里面server的值改为：  hexo clean &amp;&amp; hexo generate &amp;&amp; hexo server
+</code></pre>
+<p>6、hexo d 上传博客</p>
+<p>6、hexo new “文件名”  新建文章</p>
+<p>7、hexo new page link   在source目录下创建了link目录，并且创建了index.md文件</p>
+<span id="more"></span>
+
+]]></content>
+      <categories>
+        <category>hexo使用技巧</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ip反查公司+域名</title>
     <url>/2021/08/09/ip%E5%8F%8D%E6%9F%A5%E5%85%AC%E5%8F%B8-%E5%9F%9F%E5%90%8D/</url>
     <content><![CDATA[<p>应用场景：</p>
@@ -71,31 +96,6 @@
       </categories>
       <tags>
         <tag>环境搭建</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo基础语法</title>
-    <url>/2021/08/09/hexo%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<p>1、设置阅读全文</p>
-<pre><code>只需要在文章插入字符串&#39;&lt;!--more--&gt;&#39; 即可
-</code></pre>
-<p>2、hexo clean 清楚缓存</p>
-<p>3、hexo g 生成博客</p>
-<p>4、hexo server 启动本地博客</p>
-<p>5、配置步骤2、3、4自动化</p>
-<pre><code>修改package.json 文件，将里面server的值改为：  hexo clean &amp;&amp; hexo generate &amp;&amp; hexo server
-</code></pre>
-<p>6、hexo d 上传博客</p>
-<p>6、hexo new “文件名”  新建文章</p>
-<p>7、hexo new page link   在source目录下创建了link目录，并且创建了index.md文件</p>
-<span id="more"></span>
-
-]]></content>
-      <categories>
-        <category>hexo使用技巧</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
       </tags>
   </entry>
 </search>
