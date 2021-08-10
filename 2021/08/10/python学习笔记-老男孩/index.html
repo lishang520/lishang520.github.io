@@ -199,9 +199,9 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
 
   </li>
-        <li class="menu-item menu-item-关于我">
+        <li class="menu-item menu-item-分类">
 
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-标签">
@@ -209,14 +209,14 @@
     <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
-        <li class="menu-item menu-item-分类">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
         <li class="menu-item menu-item-归档">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
 
   </li>
         <li class="menu-item menu-item-友情链接">
@@ -3304,7 +3304,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="gutter"><
 <p>推荐：推荐新式类，同时推荐每次定义类时，括号里都写上object，这样即使在python2中运行代码也不会出错</p>
 <h2 id="附录2-python错题"><a href="#附录2-python错题" class="headerlink" title="附录2 python错题"></a>附录2 python错题</h2><h3 id="1-git上传码云，提示无权限"><a href="#1-git上传码云，提示无权限" class="headerlink" title="1.git上传码云，提示无权限"></a>1.git上传码云，提示无权限</h3><p>第一步：在git终端上生成sshkey</p>
 <ul>
-<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#x37;&#52;&#48;&#x33;&#x31;&#x30;&#51;&#x2b;&#112;&#x79;&#116;&#104;&#x6f;&#x6e;&#x5f;&#114;&#x6f;&#x61;&#100;&#x40;&#x75;&#x73;&#101;&#114;&#x2e;&#110;&#111;&#x72;&#101;&#112;&#x6c;&#121;&#x2e;&#103;&#105;&#116;&#101;&#x65;&#46;&#99;&#111;&#x6d;">&#x37;&#52;&#48;&#x33;&#x31;&#x30;&#51;&#x2b;&#112;&#x79;&#116;&#104;&#x6f;&#x6e;&#x5f;&#114;&#x6f;&#x61;&#100;&#x40;&#x75;&#x73;&#101;&#114;&#x2e;&#110;&#111;&#x72;&#101;&#112;&#x6c;&#121;&#x2e;&#103;&#105;&#116;&#101;&#x65;&#46;&#99;&#111;&#x6d;</a>“</p>
+<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#x37;&#52;&#x30;&#51;&#x31;&#x30;&#51;&#x2b;&#112;&#121;&#x74;&#x68;&#111;&#x6e;&#95;&#x72;&#x6f;&#x61;&#100;&#x40;&#x75;&#115;&#101;&#x72;&#46;&#x6e;&#111;&#114;&#101;&#x70;&#x6c;&#121;&#x2e;&#103;&#x69;&#x74;&#x65;&#101;&#x2e;&#99;&#111;&#109;">&#x37;&#52;&#x30;&#51;&#x31;&#x30;&#51;&#x2b;&#112;&#121;&#x74;&#x68;&#111;&#x6e;&#95;&#x72;&#x6f;&#x61;&#100;&#x40;&#x75;&#115;&#101;&#x72;&#46;&#x6e;&#111;&#114;&#101;&#x70;&#x6c;&#121;&#x2e;&#103;&#x69;&#x74;&#x65;&#101;&#x2e;&#99;&#111;&#109;</a>“</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191502617.png" alt="image-20200403191502617"></p>
 </li>
 <li><p>查看生成的ssh秘钥：cat ~/.ssh/id_rsa.pub</p>
@@ -3313,7 +3313,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="gutter"><
 </ul>
 <p>第二步：在码云个人设置里—ssh公钥—新增公钥—-名称建议输入和项目名，公钥输入刚才复制的</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191817999.png" alt="image-20200403191817999"></p>
-<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#101;&#101;&#x2e;&#99;&#111;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#101;&#101;&#x2e;&#99;&#111;&#x6d;</a>  显示下图界面就代表成功了</p>
+<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#x65;&#x65;&#46;&#x63;&#111;&#x6d;">&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#x65;&#x65;&#46;&#x63;&#111;&#x6d;</a>  显示下图界面就代表成功了</p>
 <ul>
 <li><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191921263.png" alt="image-20200403191921263"></li>
 </ul>
@@ -3992,8 +3992,8 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="gutter"><
 <ul>
 <li>git init </li>
 <li>git config –global user.name “发飙的登山包”</li>
-<li>git config –global user.email “<a href="mailto:&#x37;&#x34;&#x30;&#x33;&#49;&#48;&#x33;&#43;&#x70;&#x79;&#116;&#x68;&#x6f;&#x6e;&#x5f;&#114;&#x6f;&#x61;&#100;&#64;&#x75;&#115;&#101;&#x72;&#46;&#x6e;&#111;&#x72;&#101;&#x70;&#x6c;&#121;&#46;&#103;&#x69;&#116;&#101;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#x37;&#x34;&#x30;&#x33;&#49;&#48;&#x33;&#43;&#x70;&#x79;&#116;&#x68;&#x6f;&#x6e;&#x5f;&#114;&#x6f;&#x61;&#100;&#64;&#x75;&#115;&#101;&#x72;&#46;&#x6e;&#111;&#x72;&#101;&#x70;&#x6c;&#121;&#46;&#103;&#x69;&#116;&#101;&#101;&#x2e;&#99;&#x6f;&#x6d;</a>“</li>
-<li>git remote add origin <a href="mailto:&#x67;&#105;&#x74;&#x40;&#x67;&#x69;&#116;&#x65;&#101;&#46;&#x63;&#111;&#109;">&#x67;&#105;&#x74;&#x40;&#x67;&#x69;&#116;&#x65;&#101;&#46;&#x63;&#111;&#109;</a>:python_road/old_boy_python_self_study.git</li>
+<li>git config –global user.email “<a href="mailto:&#x37;&#x34;&#48;&#51;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#x6e;&#x5f;&#114;&#111;&#97;&#x64;&#x40;&#117;&#x73;&#x65;&#x72;&#x2e;&#x6e;&#x6f;&#114;&#101;&#x70;&#x6c;&#x79;&#x2e;&#103;&#x69;&#116;&#x65;&#x65;&#46;&#99;&#111;&#x6d;">&#x37;&#x34;&#48;&#51;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#x6e;&#x5f;&#114;&#111;&#97;&#x64;&#x40;&#117;&#x73;&#x65;&#x72;&#x2e;&#x6e;&#x6f;&#114;&#101;&#x70;&#x6c;&#x79;&#x2e;&#103;&#x69;&#116;&#x65;&#x65;&#46;&#99;&#111;&#x6d;</a>“</li>
+<li>git remote add origin <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#101;&#x65;&#x2e;&#99;&#x6f;&#109;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#101;&#x65;&#x2e;&#99;&#x6f;&#109;</a>:python_road/old_boy_python_self_study.git</li>
 </ul>
 <p>以上就初始化完成</p>
 </li>
