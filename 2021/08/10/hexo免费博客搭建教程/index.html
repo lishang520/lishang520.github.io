@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lishang520.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、环境准备安装vscode：  下载地址：Download Visual Studio Code - Mac, Linux, Windows vscode设置中文： 打开软件，按下快捷键：ctrl+shift+p 输入config language 选择安装中文包 重启软件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo免费博客搭建教程">
+<meta property="og:url" content="https://lishang520.github.io/2021/08/10/hexo%E5%85%8D%E8%B4%B9%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="painter&#39;s Blog">
+<meta property="og:description" content="一、环境准备安装vscode：  下载地址：Download Visual Studio Code - Mac, Linux, Windows vscode设置中文： 打开软件，按下快捷键：ctrl+shift+p 输入config language 选择安装中文包 重启软件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808092209883.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808092530515.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808100203390.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808105910264.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808112115194.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808120239014.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808120503667.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808122842000.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808165730593.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210808182008245.png">
+<meta property="article:published_time" content="2021-08-10T13:04:50.000Z">
+<meta property="article:modified_time" content="2021-08-10T13:38:36.495Z">
+<meta property="article:author" content="painter">
+<meta property="article:tag" content="其他">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lishang520.github.io/source/images/image-20210808092209883.png">
+
+<link rel="canonical" href="https://lishang520.github.io/2021/08/10/hexo%E5%85%8D%E8%B4%B9%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>hexo免费博客搭建教程 | painter's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?24a57553e96b4b8b803c9794fd76b400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">painter's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-友情链接">
+
+    <a href="/link/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/lishang520/" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lishang520.github.io/2021/08/10/hexo%E5%85%8D%E8%B4%B9%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="painter">
+      <meta itemprop="description" content="painter的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="painter's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          hexo免费博客搭建教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-10 21:04:50 / 修改时间：21:38:36" itemprop="dateCreated datePublished" datetime="2021-08-10T21:04:50+08:00">2021-08-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">教程</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/10/hexo%E5%85%8D%E8%B4%B9%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/10/hexo%E5%85%8D%E8%B4%B9%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="一、环境准备"><a href="#一、环境准备" class="headerlink" title="一、环境准备"></a>一、环境准备</h1><p>安装vscode：</p>
+<ul>
+<li>下载地址：<a target="_blank" rel="noopener" href="https://code.visualstudio.com/Download">Download Visual Studio Code - Mac, Linux, Windows</a></li>
+<li>vscode设置中文：<ul>
+<li>打开软件，按下快捷键：ctrl+shift+p</li>
+<li>输入config language 选择安装中文包</li>
+<li>重启软件<span id="more"></span>
+1、安装git</li>
+</ul>
+</li>
+</ul>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://git-scm.com/download/win">Git - Downloading Package (git-scm.com)</a></p>
+<p>安装：全部下一步即可</p>
+<p>验证是否安装成功</p>
+<ul>
+<li>打开一个文件夹，按下shift+鼠标右键，选择 Git Bash Here</li>
+<li>输入命令：git version   如果正常显示版本，则代表成功</li>
+</ul>
+<p>2、安装Node.js</p>
+<ul>
+<li>下载地址：<a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/">Node.js (nodejs.org)</a></li>
+<li>添加环境变量：将 D:\Program Files\nodejs  添加到path环境变量里</li>
+<li>命令行输入：node -v   查看是否出现版本号</li>
+<li>命令行输入 npm -v  查看是否出现版本号</li>
+</ul>
+<p>3、安装hexo</p>
+<p>开始安装：</p>
+<ul>
+<li>打开命令行，输入命令：npm install hexo -g</li>
+</ul>
+<p>检测是否可以hexo是否可以适用：</p>
+<ul>
+<li>输入命令：hexo version    若出现结果，就代表安装成功了</li>
+</ul>
+<p>4、本地新建文件夹blog用来储存blog文件</p>
+<ul>
+<li>这里我再e盘下创建blog文件夹</li>
+<li>接着切换到该文件夹，并且打开命令行，这里可以直接再地址栏输入cmd即可瞬间再当前路径打开命令行</li>
+</ul>
+<p>5、初始化博客</p>
+<ul>
+<li>命令：hexo  init  painter_blog        这里的painter_blog就是我的博客名</li>
+<li>注意事项：如果后续搞错了，完全可以删除painter_blog文件夹</li>
+<li><img src="/source/images/image-20210808092209883.png" alt="image-20210808092209883"></li>
+</ul>
+<p>6、切换到painter_blog目录，打开命令行，安装npm依赖</p>
+<ul>
+<li>npm install</li>
+</ul>
+<p>7、本地预览博客</p>
+<ul>
+<li>hexo serve</li>
+<li><img src="/source/images/image-20210808092530515.png" alt="image-20210808092530515"></li>
+</ul>
+<h1 id="二、上传博客到github"><a href="#二、上传博客到github" class="headerlink" title="二、上传博客到github"></a>二、上传博客到github</h1><p>前提：需要github账号</p>
+<p>创建github仓库：</p>
+<ul>
+<li><p>登录后点击右上角的加号，Create a new repository</p>
+</li>
+<li><p>输入name：</p>
+<ul>
+<li>易错点：这里的仓库名必须要   github用户名 + github.io    否则后面会报错</li>
+<li>lishang520.github.io</li>
+</ul>
+</li>
+<li><p>选择Public</p>
+</li>
+<li><p>最后提交</p>
+</li>
+</ul>
+<p>配置git信息</p>
+<ul>
+<li><p>打开gitbash，配置github账户信息(是github的用户名和邮箱)</p>
+<ul>
+<li><p>git config –global user.name “lishang520”</p>
+</li>
+<li><p>git config –global user.email “<a href="mailto:&#x31;&#49;&#x38;&#51;&#49;&#52;&#52;&#48;&#x37;&#x30;&#x40;&#x71;&#x71;&#46;&#99;&#111;&#x6d;">&#x31;&#49;&#x38;&#51;&#49;&#52;&#52;&#48;&#x37;&#x30;&#x40;&#x71;&#x71;&#46;&#99;&#111;&#x6d;</a>“</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>适用vscode加载我们的博客文件夹：painter_blog</p>
+<ul>
+<li>将该文件夹拖到vscode里</li>
+</ul>
+<p>修改blog配置信息</p>
+<ul>
+<li><p>在vscode左侧找到 config.yml</p>
+<ul>
+<li><p>拖到最底部，修改delopy</p>
+</li>
+<li><p>易错点：冒号后面记得按下一个空格，否则容易出错</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>deploy:
+type: &#39;git&#39;
+repo: &#39;https://github.com/lishang520/lishang520.github.io.git&#39;
+branch: main
+</code></pre>
+<p>在painter_blog目录下安装插件</p>
+<ul>
+<li>命令行下输入<ul>
+<li>npm install hexo-deployer-git –save</li>
+<li><img src="/source/images/image-20210808100203390.png" alt="image-20210808100203390"></li>
+</ul>
+</li>
+</ul>
+<p>清楚缓存</p>
+<ul>
+<li>hexo clean</li>
+</ul>
+<p>生成文件</p>
+<ul>
+<li>hexo g</li>
+</ul>
+<p>上传文件到github仓库</p>
+<ul>
+<li>hexo d<ul>
+<li>易错点：要观察我们的浏览器，它会弹出一个页面，让我们输入token，但是我们没有token，所以选择with open browser ，然后同意，接着会提示成功，然后就可以关闭该页面了，接着我们就可以看到命令行已经运行完毕</li>
+</ul>
+</li>
+</ul>
+<p>检查是否上传成功</p>
+<ul>
+<li>打开我们的仓库页面，发现已经成功上传</li>
+</ul>
+<h1 id="三、修改配置文件"><a href="#三、修改配置文件" class="headerlink" title="三、修改配置文件"></a>三、修改配置文件</h1><p>总共2个配置文件</p>
+<ul>
+<li>config.landscape.yml<ul>
+<li>这是主题的配置文件</li>
+</ul>
+</li>
+<li>config.yml<ul>
+<li>这是hexo框架的配置文件</li>
+</ul>
+</li>
+</ul>
+<p>主题的文件夹</p>
+<ul>
+<li>themes</li>
+</ul>
+<p>存放文章的文件夹</p>
+<ul>
+<li>source</li>
+</ul>
+<p>在vscode里启动hexo</p>
+<ul>
+<li>首先选择菜单栏—查看—选择终端，下面就会出来一个终端的界面，我们在终端里输入启动命令</li>
+<li>hexo s</li>
+<li>会提示报错，无法启动，这是我们关闭vscode</li>
+<li>在桌面找到vscode图标，选择兼容性—勾选以管理员运行—应用–再次打开vscode</li>
+<li>接着再再vscode的终端里运行 hexo s   就正常运行了</li>
+</ul>
+<p>技巧：</p>
+<ul>
+<li>每次修改配置文件都需要重启服务</li>
+<li>但是修改文章则不需要</li>
+</ul>
+<p>修改hexo配置文件：config.yml</p>
+<ul>
+<li><img src="/source/images/image-20210808105910264.png" alt="image-20210808105910264"></li>
+</ul>
+<p>常用命令：</p>
+<ul>
+<li><p>添加一个文章：执行下面命令后，会再目录生成一个 标题.md  的文件，然后我们去里面编辑</p>
+<ul>
+<li>hexo  n “文章标题”</li>
+</ul>
+</li>
+<li><p>当我们需要将新文章提交到github上，运行以下命令</p>
+<ul>
+<li><p>hexo g     重新生成下博客</p>
+</li>
+<li><p>hexo s    重新运行下本地的博客，预览下，如果没问题，就可以向下执行上传了</p>
+</li>
+<li><p>hexo  clean  清理缓存</p>
+</li>
+<li><p>hexo g    生成博客</p>
+</li>
+<li><p>hexo d   上传</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="四、安装butterfly主题"><a href="#四、安装butterfly主题" class="headerlink" title="四、安装butterfly主题"></a>四、安装butterfly主题</h1><p>安装butterfly主题</p>
+<ul>
+<li>安装参考文档：<a target="_blank" rel="noopener" href="https://butterfly.js.org/posts/21cfbf15/">Butterfly 安裝文檔(一) 快速開始 | Butterfly</a></li>
+<li>适用npm方法安装<ul>
+<li>vscode命令下：npm i hexo-theme-butterfly</li>
+<li>如果要升级的话：npm update hexo-theme-butterfly</li>
+</ul>
+</li>
+<li>修改hexo配置文件(config.yml)的主题参数：theme<ul>
+<li>大概再100行左右，将theme修改为butterfly<ul>
+<li>theme: butterfly </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>安装butterfly必备插件<ul>
+<li>npm install hexo-renderer-pug hexo-renderer-stylus –save </li>
+</ul>
+</li>
+</ul>
+<p>查看主题安装后的效果</p>
+<ul>
+<li>清楚缓存：hexo clean</li>
+<li>本地生成下博客：hexo g</li>
+<li>本地启动博客：hexo s<ul>
+<li><img src="/source/images/image-20210808112115194.png" alt="image-20210808112115194"></li>
+</ul>
+</li>
+</ul>
+<p>设置自动清理缓存+生成博客+本地启动博客</p>
+<ul>
+<li>打开package.json文件，修改server的内容，原先只有hexo server这个内容，限制修改为<ul>
+<li>“server”: “hexo clean &amp;&amp; generate &amp;&amp; hexo server”    </li>
+<li>这样以后只需要直接启动hexo s   即可同时清理缓存，生成博客了</li>
+</ul>
+</li>
+</ul>
+<p>主题配置文件修改：config.landscape.yml，因为我们主题是采用npm安装的，所以主题相关的文件在node_modules下面的hexo-theme-butterfly下，我们找到config.yml</p>
+<ul>
+<li><p>修改导航菜单：大概第9行开始menu</p>
+<ul>
+<li>易错点：一定要注意缩进，因为未修改前，代码都被注释了，所以我们要删除注释，并且删除后，后面的内容必须要和menu后面的冒号 ‘:’ 对其，否则会导致页面菜单栏出不来</li>
+<li>此次修改，去掉了movie、music<ul>
+<li><img src="/source/images/image-20210808120239014.png" alt="image-20210808120239014"></li>
+</ul>
+</li>
+<li>修改后的界面<ul>
+<li><img src="/source/images/image-20210808120503667.png" alt="image-20210808120503667"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>修改社交图标，比如github、邮箱的图标等等</p>
+<ul>
+<li><p>在主题配置文件里，找到social settings ，我们直接将github和email取消注释</p>
+<ul>
+<li>易错点：注意对齐</li>
+</ul>
+</li>
+<li><p>更换图标</p>
+<ul>
+<li><p>前往网站复制图标地址：<a target="_blank" rel="noopener" href="https://fontawesome.com/v5.15/icons?d=gallery&p=2">Font Awesome</a></p>
+</li>
+<li><p>选中想要图图标，也可以在里面搜索，我这里搜索blog，找到需要的，点击打开，如果打不开，可以右键打开新的标签页，接着复制代码，点击代码即可自动复制</p>
+<ul>
+<li><img src="/source/images/image-20210808122842000.png" alt="image-20210808122842000"></li>
+</ul>
+</li>
+<li><p>得到复制的代码：<i class="fas fa-blog"></i>    </p>
+<ul>
+<li>修改配置文件，将复制的代码的class的值替换掉social下的冒号之前的值，并将博客地址修改为自己的博客地址<ul>
+<li>初始邮箱的图标地址：fas fa-envelope: mailto:<a href="mailto:&#120;&#120;&#x78;&#x78;&#x78;&#120;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#x6d;">&#120;&#120;&#x78;&#x78;&#x78;&#120;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#x6d;</a> || Email</li>
+<li>修改后的博客的地址：fas fa-blog: <a href="https://lishang520.github.io/">https://lishang520.github.io/</a> || 博客</li>
+<li>修改github为我的github主页地址：<a target="_blank" rel="noopener" href="https://github.com/lishang520">https://github.com/lishang520</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>配置文章内容节选功能：搜索 index_post_content</p>
+<ul>
+<li>这里又3个模式，我们一般推荐选择第二种：如果文章又描述，则节选描述，如果描述不存在，则节选部分正文内容<ul>
+<li>将method的值修改为2即可</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>修改图片</p>
+<ul>
+<li>在储存文章的位置新建一个image文件夹，将背景图片、顶部图、归档页面的图片都放在里面，注意，image在source文件夹下创建，和post文件夹处于同一级目录<ul>
+<li>修改背景图（将它放到image下）：搜索index_img<ul>
+<li>修改：index_img: “./image/bj.jpg”    </li>
+<li>修改归档页面顶部的图片：搜索  archive_img<ul>
+<li>修改为：archive_img: “./image/归档图片.jpeg”</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>新建tags页面，并修改tags页面顶部图片</p>
+<ul>
+<li><p>在source文件夹下新建tags文件夹，和post文件夹处于同一级目录</p>
+</li>
+<li><p>新建tags页面：在vscode页面，选中tags文件夹，右键–新建文件–index.md</p>
+<ul>
+<li><h2 id="markdown"><a href="#markdown" class="headerlink" title="```markdown"></a>```markdown</h2>title: 标签汇总<br>date: 2021-08-08 11:02:36<br>type: tags<h2 id="top-img-“-image-tags图片-jpg”"><a href="#top-img-“-image-tags图片-jpg”" class="headerlink" title="top_img: “./image/tags图片.jpg”"></a>top_img: “./image/tags图片.jpg”</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">新建categories页面，并修改categories页面顶部图片</span><br><span class="line"></span><br><span class="line">- 在source文件夹下新建categories文件夹，和post文件夹处于同一级目录</span><br><span class="line"></span><br><span class="line">- 新建categories页面：在vscode页面，选中categories文件夹，右键--新建文件--index.md</span><br><span class="line"></span><br><span class="line">  - ```markdown</span><br><span class="line">    ---</span><br><span class="line">    title: 分类汇总</span><br><span class="line">    date: 2021-08-08 11:02:36</span><br><span class="line">    type: categories</span><br><span class="line">    top_img: &quot;./image/分类图片.jpeg&quot;</span><br><span class="line">    ---</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p>新建link页面，并修改link页面顶部图片</p>
+<ul>
+<li><p>在source文件夹下新建link文件夹，和post文件夹处于同一级目录</p>
+</li>
+<li><p>新建link页面：在vscode页面，选中link文件夹，右键–新建文件–index.md</p>
+<ul>
+<li><h2 id="markdown-1"><a href="#markdown-1" class="headerlink" title="```markdown"></a>```markdown</h2>title: 友情链接<br>date: 2021-08-08 11:02:36<br>type: link<h2 id="top-img-“-image-link图片-jpeg”"><a href="#top-img-“-image-link图片-jpeg”" class="headerlink" title="top_img: “./image/link图片.jpeg”"></a>top_img: “./image/link图片.jpeg”</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">新建about页面，并修改about页面顶部图片</span><br><span class="line"></span><br><span class="line">- 在source文件夹下新建about文件夹，和post文件夹处于同一级目录</span><br><span class="line"></span><br><span class="line">- 新建about页面：在vscode页面，选中about文件夹，右键--新建文件--index.md</span><br><span class="line"></span><br><span class="line">    - ```markdown</span><br><span class="line">        ---</span><br><span class="line">        title: </span><br><span class="line">        date: 2021-08-08 11:02:36</span><br><span class="line">        type: heart</span><br><span class="line">        top_img: &quot;./image/关于我.jpg&quot;</span><br><span class="line">        ---</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p>文章置顶：</p>
+<ul>
+<li>在想置顶得文章得title那个代码区域里，加上 sticky: 1<ul>
+<li><img src="/source/images/image-20210808165730593.png" alt="image-20210808165730593"></li>
+</ul>
+</li>
+</ul>
+<p>文章得封面设置</p>
+<ul>
+<li>搜索关键字：cover    ，如果不想要封面，就设置为false</li>
+<li>在titile那个区域加上：cover:</li>
+</ul>
+<p>如果文章是转载得，一定要在title区域加上如下代码：</p>
+<ul>
+<li>copyright: false</li>
+</ul>
+<p>对某个文章单独设置版权信息：</p>
+<ul>
+<li>请参考文章：<a target="_blank" rel="noopener" href="https://butterfly.js.org/posts/4aa8abbe/#%E6%96%87%E7%AB%A0%E7%89%88%E6%AC%8A">Butterfly 安裝文檔(三) 主題配置-1 | Butterfly</a></li>
+</ul>
+<p>修改头像：搜索avatar   有很多结果，它大概在100行左右</p>
+<ul>
+<li>将我们得图片放入image文件夹</li>
+</ul>
+<p>复制添加版权信息</p>
+<ul>
+<li>在52行，将false改为true   ，这里得50代表当别人复制得文字超过50个字，就会自动添加版权信息</li>
+</ul>
+<p>博客年份设置：搜索footer</p>
+<ul>
+<li>大概在426行</li>
+</ul>
+<p>​    </p>
+<p>修改页面最下面得自定义文本：</p>
+<ul>
+<li>在427行</li>
+</ul>
+<p>去掉hexo和butterfly的标志</p>
+<ul>
+<li>在128行，改为false</li>
+</ul>
+<p>修改侧边栏：搜索aside</p>
+<ul>
+<li><p>将侧边栏设置为左边：</p>
+<ul>
+<li>在652行，这里我选择将侧边栏的位置 position  设置为left</li>
+</ul>
+</li>
+<li><p>将follow me改为关注我</p>
+</li>
+<li><p>修改公告：card_announcement</p>
+<ul>
+<li>将 This is my Blog   改为 欢迎来到我的博客</li>
+</ul>
+</li>
+</ul>
+<p>添加搜索功能：需要安装插件</p>
+<ul>
+<li><p>插件地址：<a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search">wzpan/hexo-generator-search: A plugin to generate search data for Hexo. (github.com)</a></p>
+</li>
+<li><p>安装插件，在博客目录安装</p>
+<ul>
+<li>```<br>npm install hexo-generator-search –save<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 在hexo的配置文件(config.yml)的最底部添加：</span><br><span class="line"></span><br><span class="line">  - ```</span><br><span class="line">    search:</span><br><span class="line">      path: search.xml</span><br><span class="line">      field: post</span><br><span class="line">      format: html</span><br><span class="line">      limit:10000</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>在主题配置文件里搜索：local_search</p>
+<ul>
+<li>将false改成true</li>
+</ul>
+</li>
+</ul>
+<p>添加百度统计代码：</p>
+<ul>
+<li>首先百度搜索百度统计，然后个人账号登录，申请一个统计代码，只要那一部分即可<ul>
+<li><img src="/source/images/image-20210808182008245.png" alt="image-20210808182008245"></li>
+</ul>
+</li>
+<li>其次在主题配置文件里搜索 baidu<ul>
+<li>将刚刚获取到的一串字符串写上去</li>
+</ul>
+</li>
+</ul>
+<p>设置网站背景色：</p>
+<ul>
+<li><p>第520行，background    ,下面是  footer_bg   </p>
+</li>
+<li><p>易错点：必须要下面这么写</p>
+<ul>
+<li><pre><code>background: url(&quot;../image/bj.jpg&quot;)
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="五、安装next主题"><a href="#五、安装next主题" class="headerlink" title="五、安装next主题"></a>五、安装next主题</h1><p>提示：</p>
+<ul>
+<li>关于修改主题配置文件的一些基本方法<ul>
+<li>主要是对照官方文档，搜索关键字修改即可</li>
+</ul>
+</li>
+</ul>
+<p>安装主题+修改主题配置文件</p>
+<ul>
+<li>参考官方文档<ul>
+<li><a target="_blank" rel="noopener" href="http://theme-next.iissnan.com/getting-started.html">开始使用 - NexT 使用文档 (iissnan.com)</a></li>
+<li>参考文章链接：<a target="_blank" rel="noopener" href="http://www.bubuko.com/infodetail-3560139.html">Hexo进阶设置-布布扣-bubuko.com</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%85%B6%E4%BB%96/" rel="tag"># 其他</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/10/web%E5%AE%89%E5%85%A8-%E5%90%88%E5%A4%A9%E7%BD%91%E5%AE%89/" rel="prev" title="web安全(合天网安)">
+      <i class="fa fa-chevron-left"></i> web安全(合天网安)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/10/edu-ip%E8%B5%84%E4%BA%A7%E6%89%B9%E9%87%8F%E6%A3%80%E6%9F%A5/" rel="next" title="edu-ip资产批量检查">
+      edu-ip资产批量检查 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-text">一、环境准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%B8%8A%E4%BC%A0%E5%8D%9A%E5%AE%A2%E5%88%B0github"><span class="nav-text">二、上传博客到github</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">三、修改配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%89%E8%A3%85butterfly%E4%B8%BB%E9%A2%98"><span class="nav-text">四、安装butterfly主题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#markdown"><span class="nav-text">&#96;&#96;&#96;markdown</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#top-img-%E2%80%9C-image-tags%E5%9B%BE%E7%89%87-jpg%E2%80%9D"><span class="nav-text">top_img: “.&#x2F;image&#x2F;tags图片.jpg”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markdown-1"><span class="nav-text">&#96;&#96;&#96;markdown</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#top-img-%E2%80%9C-image-link%E5%9B%BE%E7%89%87-jpeg%E2%80%9D"><span class="nav-text">top_img: “.&#x2F;image&#x2F;link图片.jpeg”</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%AE%89%E8%A3%85next%E4%B8%BB%E9%A2%98"><span class="nav-text">五、安装next主题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="painter"
+      src="/images/%E5%A4%B4%E5%83%8F.jpg">
+  <p class="site-author-name" itemprop="name">painter</p>
+  <div class="site-description" itemprop="description">painter的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://lishang520.github.io/" title="GitHub → https:&#x2F;&#x2F;lishang520.github.io&#x2F;"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">painter安全技术博客</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">285k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:19</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '58W9BPsri2U8s70HBxhy6tS6-gzGzoHsz',
+      appKey     : 'XsON9yD3oGzDCQskxtiPhGFj',
+      placeholder: "ヾﾉ≧∀≦)o快来评论一下吧!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

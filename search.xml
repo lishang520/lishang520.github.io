@@ -87,6 +87,84 @@
       </tags>
   </entry>
   <entry>
+    <title>edu-ip资产批量检查</title>
+    <url>/2021/08/10/edu-ip%E8%B5%84%E4%BA%A7%E6%89%B9%E9%87%8F%E6%A3%80%E6%9F%A5/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>    我们在用poc批量检测fofa等平台获取到的资产的时候，有时候命中了一大批，
+但是不知道该ip是不是属于edu资产，本工具可以解决这个问题
+</code></pre>
+<span id="more"></span>
+
+<p>实现原理：</p>
+<pre><code>    1、先判断待检测目标里是否包含&#39;edu.cn&#39;关键字，若包含，则直接写入文件
+    2、本地读取目标（我带检测的目标），就将目标将其转换为ip
+        如果目标里包含ip地址，比如:http://192.168.16.56  就通过re将其提取出来，并return回去
+        如果目标里不包含ip，它可能就是类似于baidu.com,所以我需要将其解析为ip
+    3、从教育网ip池爬取ip
+    4、根据2获得的ip，和我们1爬取的ip进行比对，如果2获取的ip在1获取的ip里，那么它就是教育网ip
+
+待检测ip：
+https://124.165.196.3:4430
+baidu.com
+http://117.187.230.194:10000
+58.205.208.9
+
+
+核心：步骤4使用的ip来进行判断，该ip必须要是字符串类型，而我们通过正则匹配的ip是一个列表，所以我们在return返回数据的时候，只需要返回第一个元素即可
+
+难点：
+    1、异常信息为：Unsupported data type: &lt;class &#39;list&#39;&gt;
+    2、执行完本程序，只显示了一个结果，就一个   not   ,按道理应该是4个结果，而且这个not应该是第一个目标的，为啥其和第二个目标baidu.com 匹配上了
+</code></pre>
+<p>使用教程：</p>
+<pre><code>1、将待检测ip放到ip.txt中
+2、安装依赖
+3、运行该脚本
+4、运行完毕，会生成edu_result.txt
+</code></pre>
+<p>工具下载链接：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
+<p>对你有用的话，希望能给个星星</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>github推送新项目</title>
+    <url>/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>推送本地项目到github上
+</code></pre>
+<p>步骤：</p>
+<pre><code>0、在github上新建一个仓库，取个名字，直接默认即可
+1、本地新建一个文件夹，我这里新建github文件夹
+2、右键---打开gitbash（需要提前安装git工具）
+</code></pre>
+<span id="more"></span>
+<pre><code>3、输入以下命令
+    git init   初始化仓库
+    git add .     这个点 . 代表当前目录所有文件，表示把当前目录所有文件添加进去
+    git commit -m &quot;ip反查公司+域名&quot;   设置提交的时候的备注
+    git remote add origin https://github.com/lishang520/security-tools.git  添加远程仓库，这个仓库地址是我们新建的仓库的那个地址
+    git push -u origin master   将本地文件推送到github上
+4、以后每次推送只需要执行以下几个命令
+    git add .    
+    git commit -m &quot;ip反查公司+域名&quot;  
+    git remote add origin https://github.com/lishang520/security-tools.git  
+    git push -u origin master 
+</code></pre>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>环境搭建</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>9-12、渗透测试学习笔记(xiaodi)</title>
     <url>/2021/08/10/9-12%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-xiaodi/</url>
     <content><![CDATA[<p>9、加密编码进制WEB&amp;系统&amp;代码</p>
@@ -323,120 +401,435 @@ else&#123;
       </tags>
   </entry>
   <entry>
-    <title>github推送新项目</title>
-    <url>/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>推送本地项目到github上
+    <title>hexo免费博客搭建教程</title>
+    <url>/2021/08/10/hexo%E5%85%8D%E8%B4%B9%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="一、环境准备"><a href="#一、环境准备" class="headerlink" title="一、环境准备"></a>一、环境准备</h1><p>安装vscode：</p>
+<ul>
+<li>下载地址：<a href="https://code.visualstudio.com/Download">Download Visual Studio Code - Mac, Linux, Windows</a></li>
+<li>vscode设置中文：<ul>
+<li>打开软件，按下快捷键：ctrl+shift+p</li>
+<li>输入config language 选择安装中文包</li>
+<li>重启软件<span id="more"></span>
+1、安装git</li>
+</ul>
+</li>
+</ul>
+<p>下载地址：<a href="https://git-scm.com/download/win">Git - Downloading Package (git-scm.com)</a></p>
+<p>安装：全部下一步即可</p>
+<p>验证是否安装成功</p>
+<ul>
+<li>打开一个文件夹，按下shift+鼠标右键，选择 Git Bash Here</li>
+<li>输入命令：git version   如果正常显示版本，则代表成功</li>
+</ul>
+<p>2、安装Node.js</p>
+<ul>
+<li>下载地址：<a href="https://nodejs.org/zh-cn/">Node.js (nodejs.org)</a></li>
+<li>添加环境变量：将 D:\Program Files\nodejs  添加到path环境变量里</li>
+<li>命令行输入：node -v   查看是否出现版本号</li>
+<li>命令行输入 npm -v  查看是否出现版本号</li>
+</ul>
+<p>3、安装hexo</p>
+<p>开始安装：</p>
+<ul>
+<li>打开命令行，输入命令：npm install hexo -g</li>
+</ul>
+<p>检测是否可以hexo是否可以适用：</p>
+<ul>
+<li>输入命令：hexo version    若出现结果，就代表安装成功了</li>
+</ul>
+<p>4、本地新建文件夹blog用来储存blog文件</p>
+<ul>
+<li>这里我再e盘下创建blog文件夹</li>
+<li>接着切换到该文件夹，并且打开命令行，这里可以直接再地址栏输入cmd即可瞬间再当前路径打开命令行</li>
+</ul>
+<p>5、初始化博客</p>
+<ul>
+<li>命令：hexo  init  painter_blog        这里的painter_blog就是我的博客名</li>
+<li>注意事项：如果后续搞错了，完全可以删除painter_blog文件夹</li>
+<li><img src="/source/images/image-20210808092209883.png" alt="image-20210808092209883"></li>
+</ul>
+<p>6、切换到painter_blog目录，打开命令行，安装npm依赖</p>
+<ul>
+<li>npm install</li>
+</ul>
+<p>7、本地预览博客</p>
+<ul>
+<li>hexo serve</li>
+<li><img src="/source/images/image-20210808092530515.png" alt="image-20210808092530515"></li>
+</ul>
+<h1 id="二、上传博客到github"><a href="#二、上传博客到github" class="headerlink" title="二、上传博客到github"></a>二、上传博客到github</h1><p>前提：需要github账号</p>
+<p>创建github仓库：</p>
+<ul>
+<li><p>登录后点击右上角的加号，Create a new repository</p>
+</li>
+<li><p>输入name：</p>
+<ul>
+<li>易错点：这里的仓库名必须要   github用户名 + github.io    否则后面会报错</li>
+<li>lishang520.github.io</li>
+</ul>
+</li>
+<li><p>选择Public</p>
+</li>
+<li><p>最后提交</p>
+</li>
+</ul>
+<p>配置git信息</p>
+<ul>
+<li><p>打开gitbash，配置github账户信息(是github的用户名和邮箱)</p>
+<ul>
+<li><p>git config –global user.name “lishang520”</p>
+</li>
+<li><p>git config –global user.email “<a href="mailto:&#x31;&#49;&#x38;&#51;&#49;&#52;&#52;&#48;&#x37;&#x30;&#x40;&#x71;&#x71;&#46;&#99;&#111;&#x6d;">&#x31;&#49;&#x38;&#51;&#49;&#52;&#52;&#48;&#x37;&#x30;&#x40;&#x71;&#x71;&#46;&#99;&#111;&#x6d;</a>“</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>适用vscode加载我们的博客文件夹：painter_blog</p>
+<ul>
+<li>将该文件夹拖到vscode里</li>
+</ul>
+<p>修改blog配置信息</p>
+<ul>
+<li><p>在vscode左侧找到 config.yml</p>
+<ul>
+<li><p>拖到最底部，修改delopy</p>
+</li>
+<li><p>易错点：冒号后面记得按下一个空格，否则容易出错</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>deploy:
+type: &#39;git&#39;
+repo: &#39;https://github.com/lishang520/lishang520.github.io.git&#39;
+branch: main
 </code></pre>
-<p>步骤：</p>
-<pre><code>0、在github上新建一个仓库，取个名字，直接默认即可
-1、本地新建一个文件夹，我这里新建github文件夹
-2、右键---打开gitbash（需要提前安装git工具）
+<p>在painter_blog目录下安装插件</p>
+<ul>
+<li>命令行下输入<ul>
+<li>npm install hexo-deployer-git –save</li>
+<li><img src="/source/images/image-20210808100203390.png" alt="image-20210808100203390"></li>
+</ul>
+</li>
+</ul>
+<p>清楚缓存</p>
+<ul>
+<li>hexo clean</li>
+</ul>
+<p>生成文件</p>
+<ul>
+<li>hexo g</li>
+</ul>
+<p>上传文件到github仓库</p>
+<ul>
+<li>hexo d<ul>
+<li>易错点：要观察我们的浏览器，它会弹出一个页面，让我们输入token，但是我们没有token，所以选择with open browser ，然后同意，接着会提示成功，然后就可以关闭该页面了，接着我们就可以看到命令行已经运行完毕</li>
+</ul>
+</li>
+</ul>
+<p>检查是否上传成功</p>
+<ul>
+<li>打开我们的仓库页面，发现已经成功上传</li>
+</ul>
+<h1 id="三、修改配置文件"><a href="#三、修改配置文件" class="headerlink" title="三、修改配置文件"></a>三、修改配置文件</h1><p>总共2个配置文件</p>
+<ul>
+<li>config.landscape.yml<ul>
+<li>这是主题的配置文件</li>
+</ul>
+</li>
+<li>config.yml<ul>
+<li>这是hexo框架的配置文件</li>
+</ul>
+</li>
+</ul>
+<p>主题的文件夹</p>
+<ul>
+<li>themes</li>
+</ul>
+<p>存放文章的文件夹</p>
+<ul>
+<li>source</li>
+</ul>
+<p>在vscode里启动hexo</p>
+<ul>
+<li>首先选择菜单栏—查看—选择终端，下面就会出来一个终端的界面，我们在终端里输入启动命令</li>
+<li>hexo s</li>
+<li>会提示报错，无法启动，这是我们关闭vscode</li>
+<li>在桌面找到vscode图标，选择兼容性—勾选以管理员运行—应用–再次打开vscode</li>
+<li>接着再再vscode的终端里运行 hexo s   就正常运行了</li>
+</ul>
+<p>技巧：</p>
+<ul>
+<li>每次修改配置文件都需要重启服务</li>
+<li>但是修改文章则不需要</li>
+</ul>
+<p>修改hexo配置文件：config.yml</p>
+<ul>
+<li><img src="/source/images/image-20210808105910264.png" alt="image-20210808105910264"></li>
+</ul>
+<p>常用命令：</p>
+<ul>
+<li><p>添加一个文章：执行下面命令后，会再目录生成一个 标题.md  的文件，然后我们去里面编辑</p>
+<ul>
+<li>hexo  n “文章标题”</li>
+</ul>
+</li>
+<li><p>当我们需要将新文章提交到github上，运行以下命令</p>
+<ul>
+<li><p>hexo g     重新生成下博客</p>
+</li>
+<li><p>hexo s    重新运行下本地的博客，预览下，如果没问题，就可以向下执行上传了</p>
+</li>
+<li><p>hexo  clean  清理缓存</p>
+</li>
+<li><p>hexo g    生成博客</p>
+</li>
+<li><p>hexo d   上传</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="四、安装butterfly主题"><a href="#四、安装butterfly主题" class="headerlink" title="四、安装butterfly主题"></a>四、安装butterfly主题</h1><p>安装butterfly主题</p>
+<ul>
+<li>安装参考文档：<a href="https://butterfly.js.org/posts/21cfbf15/">Butterfly 安裝文檔(一) 快速開始 | Butterfly</a></li>
+<li>适用npm方法安装<ul>
+<li>vscode命令下：npm i hexo-theme-butterfly</li>
+<li>如果要升级的话：npm update hexo-theme-butterfly</li>
+</ul>
+</li>
+<li>修改hexo配置文件(config.yml)的主题参数：theme<ul>
+<li>大概再100行左右，将theme修改为butterfly<ul>
+<li>theme: butterfly </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>安装butterfly必备插件<ul>
+<li>npm install hexo-renderer-pug hexo-renderer-stylus –save </li>
+</ul>
+</li>
+</ul>
+<p>查看主题安装后的效果</p>
+<ul>
+<li>清楚缓存：hexo clean</li>
+<li>本地生成下博客：hexo g</li>
+<li>本地启动博客：hexo s<ul>
+<li><img src="/source/images/image-20210808112115194.png" alt="image-20210808112115194"></li>
+</ul>
+</li>
+</ul>
+<p>设置自动清理缓存+生成博客+本地启动博客</p>
+<ul>
+<li>打开package.json文件，修改server的内容，原先只有hexo server这个内容，限制修改为<ul>
+<li>“server”: “hexo clean &amp;&amp; generate &amp;&amp; hexo server”    </li>
+<li>这样以后只需要直接启动hexo s   即可同时清理缓存，生成博客了</li>
+</ul>
+</li>
+</ul>
+<p>主题配置文件修改：config.landscape.yml，因为我们主题是采用npm安装的，所以主题相关的文件在node_modules下面的hexo-theme-butterfly下，我们找到config.yml</p>
+<ul>
+<li><p>修改导航菜单：大概第9行开始menu</p>
+<ul>
+<li>易错点：一定要注意缩进，因为未修改前，代码都被注释了，所以我们要删除注释，并且删除后，后面的内容必须要和menu后面的冒号 ‘:’ 对其，否则会导致页面菜单栏出不来</li>
+<li>此次修改，去掉了movie、music<ul>
+<li><img src="/source/images/image-20210808120239014.png" alt="image-20210808120239014"></li>
+</ul>
+</li>
+<li>修改后的界面<ul>
+<li><img src="/source/images/image-20210808120503667.png" alt="image-20210808120503667"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>修改社交图标，比如github、邮箱的图标等等</p>
+<ul>
+<li><p>在主题配置文件里，找到social settings ，我们直接将github和email取消注释</p>
+<ul>
+<li>易错点：注意对齐</li>
+</ul>
+</li>
+<li><p>更换图标</p>
+<ul>
+<li><p>前往网站复制图标地址：<a href="https://fontawesome.com/v5.15/icons?d=gallery&p=2">Font Awesome</a></p>
+</li>
+<li><p>选中想要图图标，也可以在里面搜索，我这里搜索blog，找到需要的，点击打开，如果打不开，可以右键打开新的标签页，接着复制代码，点击代码即可自动复制</p>
+<ul>
+<li><img src="/source/images/image-20210808122842000.png" alt="image-20210808122842000"></li>
+</ul>
+</li>
+<li><p>得到复制的代码：<i class="fas fa-blog"></i>    </p>
+<ul>
+<li>修改配置文件，将复制的代码的class的值替换掉social下的冒号之前的值，并将博客地址修改为自己的博客地址<ul>
+<li>初始邮箱的图标地址：fas fa-envelope: mailto:<a href="mailto:&#120;&#120;&#x78;&#x78;&#x78;&#120;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#x6d;">&#120;&#120;&#x78;&#x78;&#x78;&#120;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#x6d;</a> || Email</li>
+<li>修改后的博客的地址：fas fa-blog: <a href="https://lishang520.github.io/">https://lishang520.github.io/</a> || 博客</li>
+<li>修改github为我的github主页地址：<a href="https://github.com/lishang520">https://github.com/lishang520</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>配置文章内容节选功能：搜索 index_post_content</p>
+<ul>
+<li>这里又3个模式，我们一般推荐选择第二种：如果文章又描述，则节选描述，如果描述不存在，则节选部分正文内容<ul>
+<li>将method的值修改为2即可</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>修改图片</p>
+<ul>
+<li>在储存文章的位置新建一个image文件夹，将背景图片、顶部图、归档页面的图片都放在里面，注意，image在source文件夹下创建，和post文件夹处于同一级目录<ul>
+<li>修改背景图（将它放到image下）：搜索index_img<ul>
+<li>修改：index_img: “./image/bj.jpg”    </li>
+<li>修改归档页面顶部的图片：搜索  archive_img<ul>
+<li>修改为：archive_img: “./image/归档图片.jpeg”</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>新建tags页面，并修改tags页面顶部图片</p>
+<ul>
+<li><p>在source文件夹下新建tags文件夹，和post文件夹处于同一级目录</p>
+</li>
+<li><p>新建tags页面：在vscode页面，选中tags文件夹，右键–新建文件–index.md</p>
+<ul>
+<li><h2 id="markdown"><a href="#markdown" class="headerlink" title="```markdown"></a>```markdown</h2>title: 标签汇总<br>date: 2021-08-08 11:02:36<br>type: tags<h2 id="top-img-“-image-tags图片-jpg”"><a href="#top-img-“-image-tags图片-jpg”" class="headerlink" title="top_img: “./image/tags图片.jpg”"></a>top_img: “./image/tags图片.jpg”</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">新建categories页面，并修改categories页面顶部图片</span><br><span class="line"></span><br><span class="line">- 在source文件夹下新建categories文件夹，和post文件夹处于同一级目录</span><br><span class="line"></span><br><span class="line">- 新建categories页面：在vscode页面，选中categories文件夹，右键--新建文件--index.md</span><br><span class="line"></span><br><span class="line">  - ```markdown</span><br><span class="line">    ---</span><br><span class="line">    title: 分类汇总</span><br><span class="line">    date: 2021-08-08 11:02:36</span><br><span class="line">    type: categories</span><br><span class="line">    top_img: &quot;./image/分类图片.jpeg&quot;</span><br><span class="line">    ---</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p>新建link页面，并修改link页面顶部图片</p>
+<ul>
+<li><p>在source文件夹下新建link文件夹，和post文件夹处于同一级目录</p>
+</li>
+<li><p>新建link页面：在vscode页面，选中link文件夹，右键–新建文件–index.md</p>
+<ul>
+<li><h2 id="markdown-1"><a href="#markdown-1" class="headerlink" title="```markdown"></a>```markdown</h2>title: 友情链接<br>date: 2021-08-08 11:02:36<br>type: link<h2 id="top-img-“-image-link图片-jpeg”"><a href="#top-img-“-image-link图片-jpeg”" class="headerlink" title="top_img: “./image/link图片.jpeg”"></a>top_img: “./image/link图片.jpeg”</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">新建about页面，并修改about页面顶部图片</span><br><span class="line"></span><br><span class="line">- 在source文件夹下新建about文件夹，和post文件夹处于同一级目录</span><br><span class="line"></span><br><span class="line">- 新建about页面：在vscode页面，选中about文件夹，右键--新建文件--index.md</span><br><span class="line"></span><br><span class="line">    - ```markdown</span><br><span class="line">        ---</span><br><span class="line">        title: </span><br><span class="line">        date: 2021-08-08 11:02:36</span><br><span class="line">        type: heart</span><br><span class="line">        top_img: &quot;./image/关于我.jpg&quot;</span><br><span class="line">        ---</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p>文章置顶：</p>
+<ul>
+<li>在想置顶得文章得title那个代码区域里，加上 sticky: 1<ul>
+<li><img src="/source/images/image-20210808165730593.png" alt="image-20210808165730593"></li>
+</ul>
+</li>
+</ul>
+<p>文章得封面设置</p>
+<ul>
+<li>搜索关键字：cover    ，如果不想要封面，就设置为false</li>
+<li>在titile那个区域加上：cover:</li>
+</ul>
+<p>如果文章是转载得，一定要在title区域加上如下代码：</p>
+<ul>
+<li>copyright: false</li>
+</ul>
+<p>对某个文章单独设置版权信息：</p>
+<ul>
+<li>请参考文章：<a href="https://butterfly.js.org/posts/4aa8abbe/#%E6%96%87%E7%AB%A0%E7%89%88%E6%AC%8A">Butterfly 安裝文檔(三) 主題配置-1 | Butterfly</a></li>
+</ul>
+<p>修改头像：搜索avatar   有很多结果，它大概在100行左右</p>
+<ul>
+<li>将我们得图片放入image文件夹</li>
+</ul>
+<p>复制添加版权信息</p>
+<ul>
+<li>在52行，将false改为true   ，这里得50代表当别人复制得文字超过50个字，就会自动添加版权信息</li>
+</ul>
+<p>博客年份设置：搜索footer</p>
+<ul>
+<li>大概在426行</li>
+</ul>
+<p>​    </p>
+<p>修改页面最下面得自定义文本：</p>
+<ul>
+<li>在427行</li>
+</ul>
+<p>去掉hexo和butterfly的标志</p>
+<ul>
+<li>在128行，改为false</li>
+</ul>
+<p>修改侧边栏：搜索aside</p>
+<ul>
+<li><p>将侧边栏设置为左边：</p>
+<ul>
+<li>在652行，这里我选择将侧边栏的位置 position  设置为left</li>
+</ul>
+</li>
+<li><p>将follow me改为关注我</p>
+</li>
+<li><p>修改公告：card_announcement</p>
+<ul>
+<li>将 This is my Blog   改为 欢迎来到我的博客</li>
+</ul>
+</li>
+</ul>
+<p>添加搜索功能：需要安装插件</p>
+<ul>
+<li><p>插件地址：<a href="https://github.com/wzpan/hexo-generator-search">wzpan/hexo-generator-search: A plugin to generate search data for Hexo. (github.com)</a></p>
+</li>
+<li><p>安装插件，在博客目录安装</p>
+<ul>
+<li>```<br>npm install hexo-generator-search –save<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- 在hexo的配置文件(config.yml)的最底部添加：</span><br><span class="line"></span><br><span class="line">  - ```</span><br><span class="line">    search:</span><br><span class="line">      path: search.xml</span><br><span class="line">      field: post</span><br><span class="line">      format: html</span><br><span class="line">      limit:10000</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>在主题配置文件里搜索：local_search</p>
+<ul>
+<li>将false改成true</li>
+</ul>
+</li>
+</ul>
+<p>添加百度统计代码：</p>
+<ul>
+<li>首先百度搜索百度统计，然后个人账号登录，申请一个统计代码，只要那一部分即可<ul>
+<li><img src="/source/images/image-20210808182008245.png" alt="image-20210808182008245"></li>
+</ul>
+</li>
+<li>其次在主题配置文件里搜索 baidu<ul>
+<li>将刚刚获取到的一串字符串写上去</li>
+</ul>
+</li>
+</ul>
+<p>设置网站背景色：</p>
+<ul>
+<li><p>第520行，background    ,下面是  footer_bg   </p>
+</li>
+<li><p>易错点：必须要下面这么写</p>
+<ul>
+<li><pre><code>background: url(&quot;../image/bj.jpg&quot;)
 </code></pre>
-<span id="more"></span>
-<pre><code>3、输入以下命令
-    git init   初始化仓库
-    git add .     这个点 . 代表当前目录所有文件，表示把当前目录所有文件添加进去
-    git commit -m &quot;ip反查公司+域名&quot;   设置提交的时候的备注
-    git remote add origin https://github.com/lishang520/security-tools.git  添加远程仓库，这个仓库地址是我们新建的仓库的那个地址
-    git push -u origin master   将本地文件推送到github上
-4、以后每次推送只需要执行以下几个命令
-    git add .    
-    git commit -m &quot;ip反查公司+域名&quot;  
-    git remote add origin https://github.com/lishang520/security-tools.git  
-    git push -u origin master 
-</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="五、安装next主题"><a href="#五、安装next主题" class="headerlink" title="五、安装next主题"></a>五、安装next主题</h1><p>提示：</p>
+<ul>
+<li>关于修改主题配置文件的一些基本方法<ul>
+<li>主要是对照官方文档，搜索关键字修改即可</li>
+</ul>
+</li>
+</ul>
+<p>安装主题+修改主题配置文件</p>
+<ul>
+<li>参考官方文档<ul>
+<li><a href="http://theme-next.iissnan.com/getting-started.html">开始使用 - NexT 使用文档 (iissnan.com)</a></li>
+<li>参考文章链接：<a href="http://www.bubuko.com/infodetail-3560139.html">Hexo进阶设置-布布扣-bubuko.com</a></li>
+</ul>
+</li>
+</ul>
 ]]></content>
       <categories>
-        <category>其他</category>
+        <category>教程</category>
       </categories>
       <tags>
-        <tag>环境搭建</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>typora笔记里的图片迁移</title>
-    <url>/2021/08/10/typora%E7%AC%94%E8%AE%B0%E9%87%8C%E7%9A%84%E5%9B%BE%E7%89%87%E8%BF%81%E7%A7%BB/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>之前用typora做的笔记，里面有图片，现在将笔记迁移到hexo上，
-图片肯定也需要迁移的，这篇文章就是为了解决这个问题
-</code></pre>
-<p>方法步骤：</p>
-<pre><code>修改配置：
-    1、在source目录下新建目录：images
-    2、修改typora的偏好设置--图像--选择复制到指定路径--输入以下路径
-        ./../source/images/
-    3、将5个复选框全部勾选上
-    4、选择菜单栏---格式---图像---设置根目录--选择你blog下的source目录
-</code></pre>
-<span id="more"></span>
-<pre><code>开始迁移：
-    1、打开旧笔记md，点击笔记里的随便一张图片，找到图片的路径
-    2、将该图片里的路径全部复制到我们刚才新建的images目录下
-    3、使用命令新建文章：hexo new &quot;测试&quot;
-    4、将我们带迁移的md笔记全选，然后粘贴到新笔记的md里
-    5、在新笔记里ctrl+f  选择替换，将新笔记.md里的图片的绝对路径进行替换，替换成我们新建的images这个路径，注意是绝对路径哦
-        例如：旧图片路径：C:\Users\painter\AppData\Roaming\Typora\typora-user-images\image-20210808105910264.png
-            我们只需要将C:\Users\painter\AppData\Roaming\Typora\typora-user-images\   替换成我们的相对路径：   /source/images/     即可
-    6、注意选择全部替换
-</code></pre>
-]]></content>
-      <categories>
-        <category>hexo使用技巧</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo基础语法</title>
-    <url>/2021/08/09/hexo%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<p>1、设置阅读全文</p>
-<pre><code>只需要在文章插入字符串&#39;&lt;!--more--&gt;&#39; 即可
-</code></pre>
-<p>2、hexo clean 清楚缓存</p>
-<p>3、hexo g 生成博客</p>
-<p>4、hexo server 启动本地博客</p>
-<p>5、配置步骤2、3、4自动化</p>
-<pre><code>修改package.json 文件，将里面server的值改为：  hexo clean &amp;&amp; hexo generate &amp;&amp; hexo server
-</code></pre>
-<p>6、hexo d 上传博客</p>
-<p>6、hexo new “文件名”  新建文章</p>
-<p>7、hexo new page link   在source目录下创建了link目录，并且创建了index.md文件</p>
-<span id="more"></span>
-
-]]></content>
-      <categories>
-        <category>hexo使用技巧</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>自动添加协议头</title>
-    <url>/2021/08/10/%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E5%8D%8F%E8%AE%AE%E5%A4%B4/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>通过fofa批量工具获取的url或ip好多都没有协议头，在后续的poc利用中，还需要调整它们的格式，很繁琐，
-该工具可以批量给fofa、shodan等工具爬取的url批量添加协议头
-</code></pre>
-<p>支持场景：</p>
-<pre><code>url和ip
-</code></pre>
-<p>利用方法：</p>
-<pre><code>将目标url放在targets.txt中，然后运行脚本程序即可，待程序运行完毕，会在当前目录生成一个result.txt的文件
-</code></pre>
-<p>工具地址：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
-<span id="more"></span>
-
-
-
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
+        <tag>其他</tag>
       </tags>
   </entry>
   <entry>
@@ -478,6 +871,91 @@ else&#123;
       </categories>
       <tags>
         <tag>公益src</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo基础语法</title>
+    <url>/2021/08/09/hexo%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<p>1、设置阅读全文</p>
+<pre><code>只需要在文章插入字符串&#39;&lt;!--more--&gt;&#39; 即可
+</code></pre>
+<p>2、hexo clean 清楚缓存</p>
+<p>3、hexo g 生成博客</p>
+<p>4、hexo server 启动本地博客</p>
+<p>5、配置步骤2、3、4自动化</p>
+<pre><code>修改package.json 文件，将里面server的值改为：  hexo clean &amp;&amp; hexo generate &amp;&amp; hexo server
+</code></pre>
+<p>6、hexo d 上传博客</p>
+<p>6、hexo new “文件名”  新建文章</p>
+<p>7、hexo new page link   在source目录下创建了link目录，并且创建了index.md文件</p>
+<span id="more"></span>
+
+]]></content>
+      <categories>
+        <category>hexo使用技巧</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>typora笔记里的图片迁移</title>
+    <url>/2021/08/10/typora%E7%AC%94%E8%AE%B0%E9%87%8C%E7%9A%84%E5%9B%BE%E7%89%87%E8%BF%81%E7%A7%BB/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>之前用typora做的笔记，里面有图片，现在将笔记迁移到hexo上，
+图片肯定也需要迁移的，这篇文章就是为了解决这个问题
+</code></pre>
+<p>方法步骤：</p>
+<pre><code>修改配置：
+    1、在source目录下新建目录：images
+    2、修改typora的偏好设置--图像--选择复制到指定路径--输入以下路径
+        ./../source/images/
+    3、将5个复选框全部勾选上
+    4、选择菜单栏---格式---图像---设置根目录--选择你blog下的source目录
+</code></pre>
+<span id="more"></span>
+<pre><code>开始迁移：
+    1、打开旧笔记md，点击笔记里的随便一张图片，找到图片的路径
+    2、将该图片里的路径全部复制到我们刚才新建的images目录下
+    3、使用命令新建文章：hexo new &quot;测试&quot;
+    4、将我们带迁移的md笔记全选，然后粘贴到新笔记的md里
+    5、在新笔记里ctrl+f  选择替换，将新笔记.md里的图片的绝对路径进行替换，替换成我们新建的images这个路径，注意是绝对路径哦
+        例如：旧图片路径：C:\Users\painter\AppData\Roaming\Typora\typora-user-images\image-20210808105910264.png
+            我们只需要将C:\Users\painter\AppData\Roaming\Typora\typora-user-images\   替换成我们的相对路径：   /source/images/     即可
+    6、注意选择全部替换
+</code></pre>
+]]></content>
+      <categories>
+        <category>hexo使用技巧</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>自动添加协议头</title>
+    <url>/2021/08/10/%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E5%8D%8F%E8%AE%AE%E5%A4%B4/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>通过fofa批量工具获取的url或ip好多都没有协议头，在后续的poc利用中，还需要调整它们的格式，很繁琐，
+该工具可以批量给fofa、shodan等工具爬取的url批量添加协议头
+</code></pre>
+<p>支持场景：</p>
+<pre><code>url和ip
+</code></pre>
+<p>利用方法：</p>
+<pre><code>将目标url放在targets.txt中，然后运行脚本程序即可，待程序运行完毕，会在当前目录生成一个result.txt的文件
+</code></pre>
+<p>工具地址：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
+<span id="more"></span>
+
+
+
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -2316,7 +2794,7 @@ Sqlmap-SQLite
 </li>
 <li><p>修改 IP 绕过短信 &amp; 邮箱轰炸限制<br>有些同样是验证当前 IP 的，如果当前 IP 短时间内获取短信或邮件频繁或者达到一定次数的话就会出现限制，那么就可以利用修改 IP 或者代理 IP 来进行绕过限制。</p>
 </li>
-<li><p>利用大小写绕过邮箱轰炸限制<br>前面说到了关于加空格的绕过限制，邮箱也可以用，但还有一种方式可以绕过邮箱轰炸限制，那就是通过修改大小写，通过修改邮箱后面字母的大小写就可绕过限制，比如参数是这样的：email=<a href="mailto:&#120;&#120;&#x40;&#x71;&#x71;&#x2e;&#x63;&#111;&#x6d;">&#120;&#120;&#x40;&#x71;&#x71;&#x2e;&#x63;&#111;&#x6d;</a> 当次数达到限制时，随便修改一个字母为大写：email=<a href="mailto:&#120;&#x78;&#x40;&#81;&#113;&#x2e;&#99;&#111;&#109;">&#120;&#x78;&#x40;&#81;&#113;&#x2e;&#99;&#111;&#109;</a> 就可绕过限制</p>
+<li><p>利用大小写绕过邮箱轰炸限制<br>前面说到了关于加空格的绕过限制，邮箱也可以用，但还有一种方式可以绕过邮箱轰炸限制，那就是通过修改大小写，通过修改邮箱后面字母的大小写就可绕过限制，比如参数是这样的：email=<a href="mailto:&#120;&#x78;&#64;&#113;&#113;&#46;&#99;&#x6f;&#x6d;">&#120;&#x78;&#64;&#113;&#113;&#46;&#99;&#x6f;&#x6d;</a> 当次数达到限制时，随便修改一个字母为大写：email=<a href="mailto:&#120;&#x78;&#x40;&#x51;&#x71;&#46;&#x63;&#111;&#x6d;">&#120;&#x78;&#x40;&#x51;&#x71;&#46;&#x63;&#111;&#x6d;</a> 就可绕过限制</p>
 </li>
 <li><p>修改返回值绕过短信 &amp; 邮箱轰炸<br>比如发送成功后返回值是 success，发送失败的返回值是 error，那么当达到次数后，可以通过修改返回值为正确的返回值：success，从而绕过限制，达到发送成功的目的。</p>
 </li>
@@ -3293,7 +3771,7 @@ Sqlmap-SQLite
 <h2 id="3、信息的利用与扫描"><a href="#3、信息的利用与扫描" class="headerlink" title="3、信息的利用与扫描"></a>3、信息的利用与扫描</h2><p>​    1、将OneForAll跑出来的域名去重，存活检测，接着弄到扫描器进行扫描</p>
 <p>​     2、根据kscan扫描的分类，根据其中间件、服务、框架，找专门的批量脚本进行定点扫描</p>
 <p>​    3、进行源码备份扫描</p>
-<p><a href="mailto:&#97;&#x64;&#109;&#x69;&#x6e;&#x40;&#x66;&#122;&#117;&#46;&#101;&#x64;&#117;&#x2e;&#99;&#x6e;">&#97;&#x64;&#109;&#x69;&#x6e;&#x40;&#x66;&#122;&#117;&#46;&#101;&#x64;&#117;&#x2e;&#99;&#x6e;</a></p>
+<p><a href="mailto:&#x61;&#100;&#x6d;&#105;&#110;&#64;&#102;&#x7a;&#117;&#46;&#x65;&#x64;&#117;&#46;&#99;&#110;">&#x61;&#100;&#x6d;&#105;&#110;&#64;&#102;&#x7a;&#117;&#46;&#x65;&#x64;&#117;&#46;&#99;&#110;</a></p>
 <h2 id="4、其他信息收集"><a href="#4、其他信息收集" class="headerlink" title="4、其他信息收集"></a>4、其他信息收集</h2><p>在前面1,2，3步骤没找到漏洞的话，就进行这第4步</p>
 <p>目的：</p>
 <p>​    主要是用来邮件钓鱼（挖src不让钓鱼）</p>
@@ -6378,7 +6856,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <p>推荐：推荐新式类，同时推荐每次定义类时，括号里都写上object，这样即使在python2中运行代码也不会出错</p>
 <h2 id="附录2-python错题"><a href="#附录2-python错题" class="headerlink" title="附录2 python错题"></a>附录2 python错题</h2><h3 id="1-git上传码云，提示无权限"><a href="#1-git上传码云，提示无权限" class="headerlink" title="1.git上传码云，提示无权限"></a>1.git上传码云，提示无权限</h3><p>第一步：在git终端上生成sshkey</p>
 <ul>
-<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#x37;&#52;&#x30;&#51;&#x31;&#x30;&#51;&#x2b;&#112;&#121;&#x74;&#x68;&#111;&#x6e;&#95;&#x72;&#x6f;&#x61;&#100;&#x40;&#x75;&#115;&#101;&#x72;&#46;&#x6e;&#111;&#114;&#101;&#x70;&#x6c;&#121;&#x2e;&#103;&#x69;&#x74;&#x65;&#101;&#x2e;&#99;&#111;&#109;">&#x37;&#52;&#x30;&#51;&#x31;&#x30;&#51;&#x2b;&#112;&#121;&#x74;&#x68;&#111;&#x6e;&#95;&#x72;&#x6f;&#x61;&#100;&#x40;&#x75;&#115;&#101;&#x72;&#46;&#x6e;&#111;&#114;&#101;&#x70;&#x6c;&#121;&#x2e;&#103;&#x69;&#x74;&#x65;&#101;&#x2e;&#99;&#111;&#109;</a>“</p>
+<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#x37;&#x34;&#48;&#51;&#x31;&#48;&#x33;&#x2b;&#112;&#x79;&#116;&#104;&#x6f;&#110;&#95;&#x72;&#x6f;&#x61;&#100;&#64;&#x75;&#x73;&#x65;&#114;&#x2e;&#110;&#111;&#x72;&#101;&#112;&#x6c;&#x79;&#x2e;&#103;&#x69;&#x74;&#x65;&#x65;&#46;&#x63;&#x6f;&#109;">&#x37;&#x34;&#48;&#51;&#x31;&#48;&#x33;&#x2b;&#112;&#x79;&#116;&#104;&#x6f;&#110;&#95;&#x72;&#x6f;&#x61;&#100;&#64;&#x75;&#x73;&#x65;&#114;&#x2e;&#110;&#111;&#x72;&#101;&#112;&#x6c;&#x79;&#x2e;&#103;&#x69;&#x74;&#x65;&#x65;&#46;&#x63;&#x6f;&#109;</a>“</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191502617.png" alt="image-20200403191502617"></p>
 </li>
 <li><p>查看生成的ssh秘钥：cat ~/.ssh/id_rsa.pub</p>
@@ -6387,7 +6865,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 </ul>
 <p>第二步：在码云个人设置里—ssh公钥—新增公钥—-名称建议输入和项目名，公钥输入刚才复制的</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191817999.png" alt="image-20200403191817999"></p>
-<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#x65;&#x65;&#46;&#x63;&#111;&#x6d;">&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#x65;&#x65;&#46;&#x63;&#111;&#x6d;</a>  显示下图界面就代表成功了</p>
+<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#x67;&#105;&#x74;&#x40;&#103;&#105;&#116;&#101;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#x67;&#105;&#x74;&#x40;&#103;&#105;&#116;&#101;&#101;&#x2e;&#99;&#x6f;&#x6d;</a>  显示下图界面就代表成功了</p>
 <ul>
 <li><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191921263.png" alt="image-20200403191921263"></li>
 </ul>
@@ -7066,8 +7544,8 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <ul>
 <li>git init </li>
 <li>git config –global user.name “发飙的登山包”</li>
-<li>git config –global user.email “<a href="mailto:&#x37;&#x34;&#48;&#51;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#x6e;&#x5f;&#114;&#111;&#97;&#x64;&#x40;&#117;&#x73;&#x65;&#x72;&#x2e;&#x6e;&#x6f;&#114;&#101;&#x70;&#x6c;&#x79;&#x2e;&#103;&#x69;&#116;&#x65;&#x65;&#46;&#99;&#111;&#x6d;">&#x37;&#x34;&#48;&#51;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#x6e;&#x5f;&#114;&#111;&#97;&#x64;&#x40;&#117;&#x73;&#x65;&#x72;&#x2e;&#x6e;&#x6f;&#114;&#101;&#x70;&#x6c;&#x79;&#x2e;&#103;&#x69;&#116;&#x65;&#x65;&#46;&#99;&#111;&#x6d;</a>“</li>
-<li>git remote add origin <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#101;&#x65;&#x2e;&#99;&#x6f;&#109;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#101;&#x65;&#x2e;&#99;&#x6f;&#109;</a>:python_road/old_boy_python_self_study.git</li>
+<li>git config –global user.email “<a href="mailto:&#x37;&#x34;&#x30;&#x33;&#x31;&#48;&#51;&#43;&#112;&#x79;&#x74;&#x68;&#111;&#110;&#x5f;&#114;&#x6f;&#97;&#x64;&#x40;&#x75;&#x73;&#101;&#114;&#46;&#x6e;&#111;&#114;&#101;&#112;&#x6c;&#x79;&#x2e;&#103;&#105;&#116;&#x65;&#x65;&#46;&#x63;&#x6f;&#109;">&#x37;&#x34;&#x30;&#x33;&#x31;&#48;&#51;&#43;&#112;&#x79;&#x74;&#x68;&#111;&#110;&#x5f;&#114;&#x6f;&#97;&#x64;&#x40;&#x75;&#x73;&#101;&#114;&#46;&#x6e;&#111;&#114;&#101;&#112;&#x6c;&#x79;&#x2e;&#103;&#105;&#116;&#x65;&#x65;&#46;&#x63;&#x6f;&#109;</a>“</li>
+<li>git remote add origin <a href="mailto:&#x67;&#x69;&#116;&#64;&#103;&#x69;&#116;&#101;&#x65;&#46;&#x63;&#111;&#x6d;">&#x67;&#x69;&#116;&#64;&#103;&#x69;&#116;&#101;&#x65;&#46;&#x63;&#111;&#x6d;</a>:python_road/old_boy_python_self_study.git</li>
 </ul>
 <p>以上就初始化完成</p>
 </li>
