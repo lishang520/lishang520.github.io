@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>github推送新项目</title>
+    <url>/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>推送本地项目到github上
+</code></pre>
+<p>步骤：</p>
+<pre><code>0、在github上新建一个仓库，取个名字，直接默认即可
+1、本地新建一个文件夹，我这里新建github文件夹
+2、右键---打开gitbash（需要提前安装git工具）
+</code></pre>
+<span id="more"></span>
+<pre><code>3、输入以下命令
+    git init   初始化仓库
+    git add .     这个点 . 代表当前目录所有文件，表示把当前目录所有文件添加进去
+    git commit -m &quot;ip反查公司+域名&quot;   设置提交的时候的备注
+    git remote add origin https://github.com/lishang520/security-tools.git  添加远程仓库，这个仓库地址是我们新建的仓库的那个地址
+    git push -u origin master   将本地文件推送到github上
+4、以后每次推送只需要执行以下几个命令
+    git add .    
+    git commit -m &quot;ip反查公司+域名&quot;  
+    git remote add origin https://github.com/lishang520/security-tools.git  
+    git push -u origin master 
+</code></pre>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>环境搭建</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>hexo基础语法</title>
     <url>/2021/08/09/hexo%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<p>1、设置阅读全文</p>
@@ -17,40 +49,6 @@
 <p>7、hexo new page link   在source目录下创建了link目录，并且创建了index.md文件</p>
 <span id="more"></span>
 
-]]></content>
-      <categories>
-        <category>hexo使用技巧</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>typora笔记里的图片迁移</title>
-    <url>/2021/08/10/typora%E7%AC%94%E8%AE%B0%E9%87%8C%E7%9A%84%E5%9B%BE%E7%89%87%E8%BF%81%E7%A7%BB/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>之前用typora做的笔记，里面有图片，现在将笔记迁移到hexo上，
-图片肯定也需要迁移的，这篇文章就是为了解决这个问题
-</code></pre>
-<p>方法步骤：</p>
-<pre><code>修改配置：
-    1、在source目录下新建目录：images
-    2、修改typora的偏好设置--图像--选择复制到指定路径--输入以下路径
-        ./../source/images/
-    3、将5个复选框全部勾选上
-    4、选择菜单栏---格式---图像---设置根目录--选择你blog下的source目录
-</code></pre>
-<span id="more"></span>
-<pre><code>开始迁移：
-    1、打开旧笔记md，点击笔记里的随便一张图片，找到图片的路径
-    2、将该图片里的路径全部复制到我们刚才新建的images目录下
-    3、使用命令新建文章：hexo new &quot;测试&quot;
-    4、将我们带迁移的md笔记全选，然后粘贴到新笔记的md里
-    5、在新笔记里ctrl+f  选择替换，将新笔记.md里的图片的绝对路径进行替换，替换成我们新建的images这个路径，注意是绝对路径哦
-        例如：旧图片路径：C:\Users\painter\AppData\Roaming\Typora\typora-user-images\image-20210808105910264.png
-            我们只需要将C:\Users\painter\AppData\Roaming\Typora\typora-user-images\   替换成我们的相对路径：   /source/images/     即可
-    6、注意选择全部替换
-</code></pre>
 ]]></content>
       <categories>
         <category>hexo使用技巧</category>
@@ -101,35 +99,63 @@
       </tags>
   </entry>
   <entry>
-    <title>github推送新项目</title>
-    <url>/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/</url>
+    <title>typora笔记里的图片迁移</title>
+    <url>/2021/08/10/typora%E7%AC%94%E8%AE%B0%E9%87%8C%E7%9A%84%E5%9B%BE%E7%89%87%E8%BF%81%E7%A7%BB/</url>
     <content><![CDATA[<p>应用场景：</p>
-<pre><code>推送本地项目到github上
+<pre><code>之前用typora做的笔记，里面有图片，现在将笔记迁移到hexo上，
+图片肯定也需要迁移的，这篇文章就是为了解决这个问题
 </code></pre>
-<p>步骤：</p>
-<pre><code>0、在github上新建一个仓库，取个名字，直接默认即可
-1、本地新建一个文件夹，我这里新建github文件夹
-2、右键---打开gitbash（需要提前安装git工具）
+<p>方法步骤：</p>
+<pre><code>修改配置：
+    1、在source目录下新建目录：images
+    2、修改typora的偏好设置--图像--选择复制到指定路径--输入以下路径
+        ./../source/images/
+    3、将5个复选框全部勾选上
+    4、选择菜单栏---格式---图像---设置根目录--选择你blog下的source目录
 </code></pre>
 <span id="more"></span>
-<pre><code>3、输入以下命令
-    git init   初始化仓库
-    git add .     这个点 . 代表当前目录所有文件，表示把当前目录所有文件添加进去
-    git commit -m &quot;ip反查公司+域名&quot;   设置提交的时候的备注
-    git remote add origin https://github.com/lishang520/security-tools.git  添加远程仓库，这个仓库地址是我们新建的仓库的那个地址
-    git push -u origin master   将本地文件推送到github上
-4、以后每次推送只需要执行以下几个命令
-    git add .    
-    git commit -m &quot;ip反查公司+域名&quot;  
-    git remote add origin https://github.com/lishang520/security-tools.git  
-    git push -u origin master 
+<pre><code>开始迁移：
+    1、打开旧笔记md，点击笔记里的随便一张图片，找到图片的路径
+    2、将该图片里的路径全部复制到我们刚才新建的images目录下
+    3、使用命令新建文章：hexo new &quot;测试&quot;
+    4、将我们带迁移的md笔记全选，然后粘贴到新笔记的md里
+    5、在新笔记里ctrl+f  选择替换，将新笔记.md里的图片的绝对路径进行替换，替换成我们新建的images这个路径，注意是绝对路径哦
+        例如：旧图片路径：C:\Users\painter\AppData\Roaming\Typora\typora-user-images\image-20210808105910264.png
+            我们只需要将C:\Users\painter\AppData\Roaming\Typora\typora-user-images\   替换成我们的相对路径：   /source/images/     即可
+    6、注意选择全部替换
 </code></pre>
 ]]></content>
       <categories>
-        <category>其他</category>
+        <category>hexo使用技巧</category>
       </categories>
       <tags>
-        <tag>环境搭建</tag>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>自动添加协议头</title>
+    <url>/2021/08/10/%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E5%8D%8F%E8%AE%AE%E5%A4%B4/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>通过fofa批量工具获取的url或ip好多都没有协议头，在后续的poc利用中，还需要调整它们的格式，很繁琐，
+该工具可以批量给fofa、shodan等工具爬取的url批量添加协议头
+</code></pre>
+<p>支持场景：</p>
+<pre><code>url和ip
+</code></pre>
+<p>利用方法：</p>
+<pre><code>将目标url放在targets.txt中，然后运行脚本程序即可，待程序运行完毕，会在当前目录生成一个result.txt的文件
+</code></pre>
+<p>工具地址：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
+<span id="more"></span>
+
+
+
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -3071,7 +3097,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <p>推荐：推荐新式类，同时推荐每次定义类时，括号里都写上object，这样即使在python2中运行代码也不会出错</p>
 <h2 id="附录2-python错题"><a href="#附录2-python错题" class="headerlink" title="附录2 python错题"></a>附录2 python错题</h2><h3 id="1-git上传码云，提示无权限"><a href="#1-git上传码云，提示无权限" class="headerlink" title="1.git上传码云，提示无权限"></a>1.git上传码云，提示无权限</h3><p>第一步：在git终端上生成sshkey</p>
 <ul>
-<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#55;&#52;&#x30;&#51;&#x31;&#48;&#51;&#x2b;&#x70;&#121;&#116;&#104;&#111;&#x6e;&#x5f;&#114;&#111;&#x61;&#100;&#64;&#x75;&#115;&#101;&#114;&#x2e;&#x6e;&#111;&#x72;&#101;&#112;&#108;&#121;&#x2e;&#103;&#x69;&#116;&#x65;&#101;&#46;&#x63;&#x6f;&#109;">&#55;&#52;&#x30;&#51;&#x31;&#48;&#51;&#x2b;&#x70;&#121;&#116;&#104;&#111;&#x6e;&#x5f;&#114;&#111;&#x61;&#100;&#64;&#x75;&#115;&#101;&#114;&#x2e;&#x6e;&#111;&#x72;&#101;&#112;&#108;&#121;&#x2e;&#103;&#x69;&#116;&#x65;&#101;&#46;&#x63;&#x6f;&#109;</a>“</p>
+<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#55;&#52;&#48;&#x33;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#110;&#x5f;&#114;&#x6f;&#x61;&#x64;&#x40;&#x75;&#x73;&#101;&#114;&#x2e;&#x6e;&#111;&#114;&#101;&#112;&#x6c;&#x79;&#x2e;&#103;&#105;&#x74;&#x65;&#x65;&#x2e;&#x63;&#111;&#109;">&#55;&#52;&#48;&#x33;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#110;&#x5f;&#114;&#x6f;&#x61;&#x64;&#x40;&#x75;&#x73;&#101;&#114;&#x2e;&#x6e;&#111;&#114;&#101;&#112;&#x6c;&#x79;&#x2e;&#103;&#105;&#x74;&#x65;&#x65;&#x2e;&#x63;&#111;&#109;</a>“</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191502617.png" alt="image-20200403191502617"></p>
 </li>
 <li><p>查看生成的ssh秘钥：cat ~/.ssh/id_rsa.pub</p>
@@ -3080,7 +3106,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 </ul>
 <p>第二步：在码云个人设置里—ssh公钥—新增公钥—-名称建议输入和项目名，公钥输入刚才复制的</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191817999.png" alt="image-20200403191817999"></p>
-<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x65;&#x65;&#46;&#99;&#111;&#109;">&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x65;&#x65;&#46;&#99;&#111;&#109;</a>  显示下图界面就代表成功了</p>
+<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#x67;&#105;&#116;&#x40;&#x67;&#105;&#x74;&#101;&#101;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#105;&#116;&#x40;&#x67;&#105;&#x74;&#101;&#101;&#46;&#x63;&#x6f;&#x6d;</a>  显示下图界面就代表成功了</p>
 <ul>
 <li><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191921263.png" alt="image-20200403191921263"></li>
 </ul>
@@ -3759,8 +3785,8 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <ul>
 <li>git init </li>
 <li>git config –global user.name “发飙的登山包”</li>
-<li>git config –global user.email “<a href="mailto:&#x37;&#x34;&#48;&#x33;&#x31;&#48;&#51;&#43;&#112;&#121;&#116;&#104;&#x6f;&#x6e;&#x5f;&#x72;&#x6f;&#x61;&#x64;&#64;&#x75;&#x73;&#101;&#x72;&#x2e;&#110;&#111;&#114;&#101;&#112;&#x6c;&#121;&#x2e;&#x67;&#x69;&#116;&#101;&#101;&#46;&#99;&#111;&#x6d;">&#x37;&#x34;&#48;&#x33;&#x31;&#48;&#51;&#43;&#112;&#121;&#116;&#104;&#x6f;&#x6e;&#x5f;&#x72;&#x6f;&#x61;&#x64;&#64;&#x75;&#x73;&#101;&#x72;&#x2e;&#110;&#111;&#114;&#101;&#112;&#x6c;&#121;&#x2e;&#x67;&#x69;&#116;&#101;&#101;&#46;&#99;&#111;&#x6d;</a>“</li>
-<li>git remote add origin <a href="mailto:&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#101;&#x65;&#x2e;&#99;&#x6f;&#x6d;">&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#101;&#x65;&#x2e;&#99;&#x6f;&#x6d;</a>:python_road/old_boy_python_self_study.git</li>
+<li>git config –global user.email “<a href="mailto:&#55;&#x34;&#x30;&#51;&#x31;&#48;&#x33;&#x2b;&#112;&#x79;&#116;&#104;&#111;&#110;&#x5f;&#114;&#111;&#97;&#100;&#64;&#x75;&#115;&#x65;&#114;&#x2e;&#x6e;&#111;&#x72;&#x65;&#x70;&#108;&#x79;&#x2e;&#x67;&#105;&#x74;&#101;&#x65;&#x2e;&#99;&#x6f;&#109;">&#55;&#x34;&#x30;&#51;&#x31;&#48;&#x33;&#x2b;&#112;&#x79;&#116;&#104;&#111;&#110;&#x5f;&#114;&#111;&#97;&#100;&#64;&#x75;&#115;&#x65;&#114;&#x2e;&#x6e;&#111;&#x72;&#x65;&#x70;&#108;&#x79;&#x2e;&#x67;&#105;&#x74;&#101;&#x65;&#x2e;&#99;&#x6f;&#109;</a>“</li>
+<li>git remote add origin <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#x69;&#116;&#101;&#x65;&#x2e;&#99;&#111;&#109;">&#x67;&#105;&#x74;&#64;&#103;&#x69;&#116;&#101;&#x65;&#x2e;&#99;&#111;&#109;</a>:python_road/old_boy_python_self_study.git</li>
 </ul>
 <p>以上就初始化完成</p>
 </li>
