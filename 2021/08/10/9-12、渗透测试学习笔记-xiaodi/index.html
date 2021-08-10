@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lishang520.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="9、加密编码进制WEB&amp;系统&amp;代码 目的：看到一串密文，能识别它是什么加密，并且将其解密 常用场景：  url里的参数被加密了，我们注入的时候也必须将payload进行进行加密才能进行注入 墨者靶场地址：SQL注入漏洞测试(参数加密)_数据库安全_在线靶场_墨者学院_专注于网络安全人才培养 (mozhe.cn)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="9-12、渗透测试学习笔记(xiaodi)">
+<meta property="og:url" content="https://lishang520.github.io/2021/08/10/9-12%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-xiaodi/index.html">
+<meta property="og:site_name" content="painter&#39;s Blog">
+<meta property="og:description" content="9、加密编码进制WEB&amp;系统&amp;代码 目的：看到一串密文，能识别它是什么加密，并且将其解密 常用场景：  url里的参数被加密了，我们注入的时候也必须将payload进行进行加密才能进行注入 墨者靶场地址：SQL注入漏洞测试(参数加密)_数据库安全_在线靶场_墨者学院_专注于网络安全人才培养 (mozhe.cn)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729095857024.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729095938429.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729094139732.png">
+<meta property="article:published_time" content="2021-08-10T11:27:22.000Z">
+<meta property="article:modified_time" content="2021-08-10T11:49:20.324Z">
+<meta property="article:author" content="painter">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lishang520.github.io/source/images/image-20210729095857024.png">
+
+<link rel="canonical" href="https://lishang520.github.io/2021/08/10/9-12%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-xiaodi/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>9-12、渗透测试学习笔记(xiaodi) | painter's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?24a57553e96b4b8b803c9794fd76b400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">painter's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友情链接">
+
+    <a href="/link/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/lishang520/" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lishang520.github.io/2021/08/10/9-12%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-xiaodi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="painter">
+      <meta itemprop="description" content="painter的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="painter's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          9-12、渗透测试学习笔记(xiaodi)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-10 19:27:22 / 修改时间：19:49:20" itemprop="dateCreated datePublished" datetime="2021-08-10T19:27:22+08:00">2021-08-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/10/9-12%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-xiaodi/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/10/9-12%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-xiaodi/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>9、加密编码进制WEB&amp;系统&amp;代码</p>
+<p>目的：看到一串密文，能识别它是什么加密，并且将其解密</p>
+<p>常用场景：</p>
+<ul>
+<li>url里的参数被加密了，我们注入的时候也必须将payload进行进行加密才能进行注入<ul>
+<li>墨者靶场地址：<a target="_blank" rel="noopener" href="https://www.mozhe.cn/bug/detail/SjRRVFpOQWlLWDBJd3hzNGY5cFBiQT09bW96aGUmozhe">SQL注入漏洞测试(参数加密)_数据库安全_在线靶场_墨者学院_专注于网络安全人才培养 (mozhe.cn)</a><span id="more"></span></li>
+</ul>
+</li>
+<li>对一个网站进行请求的时候，有的一些敏感参数进行加密了，我们必须解密才能懂每个参数的意思</li>
+<li>网站的账户和密码一般都被加密了，所以就算我们通过手段获取到了密码，也没用，必须要将密码解密才有用<ul>
+<li>有的密码加密还带了salt（盐），所以想解密这种md5，也必须要获取到salt是多少才行，不过一般数据库里也会存储salt，可以获取到去解密网站进行解密</li>
+</ul>
+</li>
+<li>代码审计：有的代码被解密了，所以必须将其解密了才能代码审计</li>
+<li>windows账户密码解密：NTLM、Hash、SHA</li>
+</ul>
+<p>解密网站大全：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41638851/article/details/100526839">CTF中常见密码题解密网站总结_Greedy Hat的博客-CSDN博客</a></li>
+</ul>
+<p>密文加密特征：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAwNDcxMjI2MA==&mid=2247484455&idx=1&sn=e1b4324ddcf7d6123be30d9a5613e17b&chksm=9b26f60cac517f1a920cf3b73b3212a645aeef78882c47957b9f3c2135cb7ce051c73fe77bb2&mpshare=1&scene=23&srcid=1111auAYWmr1N0NAs9Wp2hGz&sharer_sharetime=1605145141579&sharer_shareid=5051b3eddbbe2cb698aedf9452370026#rd">30余种加密编码类型的密文特征分析（建议收藏） (qq.com)</a></li>
+</ul>
+<p>常用工具：</p>
+<ul>
+<li>迪哥发的里面的：超级加解密转换工具</li>
+</ul>
+<h2 id="10、WEB-amp-系统-amp-APP-amp-服务漏洞权限认知"><a href="#10、WEB-amp-系统-amp-APP-amp-服务漏洞权限认知" class="headerlink" title="10、WEB&amp;系统&amp;APP&amp;服务漏洞权限认知"></a>10、WEB&amp;系统&amp;APP&amp;服务漏洞权限认知</h2><p>不同的脚本语言适用的漏洞也不同</p>
+<ul>
+<li>例如sql漏洞在php里比较多，在java里就很少了（php的一般是php格式，java的一般是jsp格式的）</li>
+</ul>
+<p>不同的中间件也适用于不同的漏洞</p>
+<ul>
+<li>比如Glassfish就只在java里有</li>
+</ul>
+<p>权限(从低到高)</p>
+<ul>
+<li>后台</li>
+<li>数据库权限</li>
+<li>web权限</li>
+<li>系统权限</li>
+<li>内网权限</li>
+</ul>
+<h2 id="11-、信息收集实战"><a href="#11-、信息收集实战" class="headerlink" title="11 、信息收集实战"></a>11 、信息收集实战</h2><p>基本流程：</p>
+<ul>
+<li>判断有无cdn或者waf<ul>
+<li>违法类网站或者小网站一般无cdn</li>
+</ul>
+</li>
+<li>cms识别、中间件识别<ul>
+<li>cms识别可以在搜索引擎搜索该网站的特有的url关键字</li>
+<li>看有无历史漏洞</li>
+</ul>
+</li>
+<li>whois和备案查询，网站页面的联系方式，比如qq，根据页面公司或者标志前往搜索引擎搜索关键字，查找它的其他网站</li>
+<li>根据上一步获取的信息前往搜索引擎，或者fofa获取更多的资产</li>
+<li>收集子域名</li>
+<li>敏感文件扫描，有waf就放慢速度<ul>
+<li>可对收集到的大量的子域名进行批量扫描</li>
+</ul>
+</li>
+<li>查找登录的页面或者支付接口，然后根据获取的qq或者手机号去纸飞机查询历史密码，若历史密码不正确，则可以根据查询到的历史密码里的关键字制作成字典进行爆破</li>
+</ul>
+<h2 id="12-、SQL注入-amp-超级靶场-amp-函数-amp-可控变量"><a href="#12-、SQL注入-amp-超级靶场-amp-函数-amp-可控变量" class="headerlink" title="12 、SQL注入&amp;超级靶场&amp;函数&amp;可控变量"></a>12 、SQL注入&amp;超级靶场&amp;函数&amp;可控变量</h2><p>函数：决定可能存在什么漏洞，比如数据库查询函数，则可能存在SQL注入</p>
+<p>可控变量：变量是否可控决定此处是否存在漏洞，如果变量被写死了，则不存在漏洞</p>
+<p>检测是否存在sql注入：</p>
+<p>本质：就是对一个参数比如id=1  后面随便加乱七八糟的字符，当然如果是字符型，一定要闭合单引号，否则乱加的数据都会当作字符串进行执行了只要页面和不加之前保持一致，那么就不存在注入，因为这代表加的字符没有带入查询，如果带入查询，我们乱加的字符一定会导致页面和不加之前不一致</p>
+<ul>
+<li>原始方式<ul>
+<li>and 1=1 页面正常</li>
+<li>and 1=2 页面错误</li>
+<li>则表示存在注入</li>
+</ul>
+</li>
+</ul>
+<p>数据库查询代码样例分析</p>
+<ul>
+<li><pre><code class="php">&lt;?php
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+//$s=&#39;O:11:&quot;FileHandler&quot;:3:&#123;s:2:&quot;op&quot;;s:2:&quot; 2&quot;;s:8:&quot;filename&quot;;s:8:&quot;flag.php&quot;;s:7:&quot;content&quot;;s:2:&quot;xd&quot;;&#125;&#39;;
+//var_dump(unserialize($s));
+//var_dump(scandir(&quot;.&quot;));
+
+$id=$_GET[&#39;id&#39;];
+$idx=$_GET[&#39;x&#39;];
+$idpage=$_GET[&#39;page&#39;];//接受参数名为id赋值给变量id
+if(!is_integer($id))&#123;
+    $conn=mysql_connect(&#39;localhost&#39;,&#39;root&#39;,&#39;root&#39;);//连接数据库
+    mysql_select_db(&#39;javaweb-bbs&#39;,$conn);//选择数据库名为javaweb-bss的数据库
+    $sql=&quot;select * from sys_article where id = $id&quot;;//组合定义SQL语句
+    echo $sql.&#39;&lt;hr&gt;&#39;;//输出变量sql
+    $result=mysql_query($sql);//执行变量sql里的SQL语句
+    if($row=mysql_fetch_array($result))&#123; //对执行的结果进行显示
+        echo $row[&#39;title&#39;].&#39;&lt;hr&gt;&#39;;
+        echo $row[&#39;content&#39;].&#39;&lt;hr&gt;&#39;;
+    &#125;
+else&#123;
+    echo &quot;fuck&quot;;
+&#125;
+&#125;
+</code></pre>
+</li>
+</ul>
+<p>sql过滤：</p>
+<ul>
+<li>关键字过滤<ul>
+<li>比如过滤union、update，and等</li>
+</ul>
+</li>
+<li>类型过滤<ul>
+<li>过滤数字类型</li>
+<li>过滤字符类型</li>
+</ul>
+</li>
+</ul>
+<p>get注入时，url存在注入的条件：</p>
+<ul>
+<li>url里必须要有参数</li>
+</ul>
+<p>数据库结构</p>
+<ul>
+<li>mysql数据库<ul>
+<li>数据库A = 网站A<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数据库B=网站B<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数据库C=网站C<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>union联合注入</p>
+<ul>
+<li><p>判断参数是什么类型</p>
+<ul>
+<li>如果是字符型，则需要闭合单引号(原始代码 ‘$id’)，并且查询语句后面还需要加上 –+来注释掉剩下的单引号</li>
+<li>如果是数字型，则不需要</li>
+</ul>
+</li>
+<li><p>查询长度：order by 3  </p>
+<ul>
+<li>如果实际长度超过3，就会报错，</li>
+</ul>
+</li>
+<li><p>联合查询</p>
+<ul>
+<li>union select 1,2,3  <ul>
+<li><a target="_blank" rel="noopener" href="http://127.0.0.1/sqli-labs-master/Less-1/index.php?id=-1%27union%20select%20%201,2,3--+">http://127.0.0.1/sqli-labs-master/Less-1/index.php?id=-1%27union%20select%20%201,2,3--+</a></li>
+<li><img src="/source/images/image-20210729095857024.png" alt="image-20210729095857024"></li>
+</ul>
+</li>
+<li>易错点：如果页面没有回显，需要将union前面的语句变成false，比如1改为-1</li>
+</ul>
+</li>
+<li><p>开始查询</p>
+<ul>
+<li><p>在回显位置的参数处插入想查询的内容，比如database()</p>
+<ul>
+<li>127.0.0.1/sqli-labs-master/Less-1/index.php?id=-1’union select  1,database(),user()–+)</li>
+<li><img src="/source/images/image-20210729095938429.png" alt="image-20210729095938429"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>多参数注入：http//:127.0.0.1/1.php?a=3&amp;id=16</p>
+<ul>
+<li><p>假设扫描出来参数a存在注入</p>
+<ul>
+<li><p>应该怎么手工？</p>
+<ul>
+<li>直接在参数a的值后面拼接sql语句，比如：http//:127.0.0.1/1.php?a=3 and 1=2&amp;id=16</li>
+</ul>
+</li>
+<li><p>应该怎么用sqlmap？</p>
+<ul>
+<li>直接将存在注入的参数剪切下来拼接到最后面（这样不影响访问）：python3 sqlmap.py -u “http//:127.0.0.1/1.php?id=16&amp;a=3”     </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>sqli-labs靶场搭建</p>
+<ul>
+<li>下载：<a target="_blank" rel="noopener" href="https://github.com/Audi-1/sqli-labs">https://github.com/Audi-1/sqli-labs</a></li>
+<li>解压：解压会提示重名，我们只需要打开压缩包，然后将里面的文件夹拖出来即可</li>
+<li>修改连接配置文件：sqli-labs-master\sql-connections\db-creds.inc<ul>
+<li>将密码修改为：$dbpass =’root’;</li>
+</ul>
+</li>
+<li>浏览器访问：127.0.0.1/sqli-labs-master/    ,接着点击：Setup/reset Database for labs<ul>
+<li>如果报错就代表上一步的配置文件没有修改到位</li>
+<li>还有可能就是php的版本不对，应该是图片中的这个php-5.4.45+Apache<ul>
+<li><img src="/source/images/image-20210729094139732.png" alt="image-20210729094139732"></li>
+</ul>
+</li>
+<li>至此，靶场安装完成</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag"># 渗透测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/10/%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E5%8D%8F%E8%AE%AE%E5%A4%B4/" rel="prev" title="自动添加协议头">
+      <i class="fa fa-chevron-left"></i> 自动添加协议头
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/10/13-15%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/" rel="next" title="13-15、渗透测试(xiaodi)">
+      13-15、渗透测试(xiaodi) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#10%E3%80%81WEB-amp-%E7%B3%BB%E7%BB%9F-amp-APP-amp-%E6%9C%8D%E5%8A%A1%E6%BC%8F%E6%B4%9E%E6%9D%83%E9%99%90%E8%AE%A4%E7%9F%A5"><span class="nav-number">1.</span> <span class="nav-text">10、WEB&amp;系统&amp;APP&amp;服务漏洞权限认知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E3%80%81%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E5%AE%9E%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">11 、信息收集实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E3%80%81SQL%E6%B3%A8%E5%85%A5-amp-%E8%B6%85%E7%BA%A7%E9%9D%B6%E5%9C%BA-amp-%E5%87%BD%E6%95%B0-amp-%E5%8F%AF%E6%8E%A7%E5%8F%98%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">12 、SQL注入&amp;超级靶场&amp;函数&amp;可控变量</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="painter"
+      src="/images/%E5%A4%B4%E5%83%8F.jpg">
+  <p class="site-author-name" itemprop="name">painter</p>
+  <div class="site-description" itemprop="description">painter的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://lishang520.github.io/" title="GitHub → https:&#x2F;&#x2F;lishang520.github.io&#x2F;"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">painter安全技术博客</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">180k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:44</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '58W9BPsri2U8s70HBxhy6tS6-gzGzoHsz',
+      appKey     : 'XsON9yD3oGzDCQskxtiPhGFj',
+      placeholder: "ヾﾉ≧∀≦)o快来评论一下吧!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

