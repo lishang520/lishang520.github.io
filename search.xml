@@ -1,6 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>centos安装docker</title>
+    <url>/2021/08/14/centos%E5%AE%89%E8%A3%85docker/</url>
+    <content><![CDATA[<p>应用场景:<br>    通过centos7的iso文件在虚拟机里安装docker</p>
+<span id="more"></span>
+<p>操作步骤：</p>
+<pre><code>1、采用最小安装
+2、自定义分区----很重要，一定要自己划分，要不以后经常会空间不足，使用虚拟机的扩充磁盘也很难解决
+    参考连接：https://jingyan.baidu.com/article/148a1921134d184d71c3b18d.html
+    首先选择Standard Partition 分区方案
+    /boot   200
+    swap   2048
+    biosboot   1   大小设置为1MB，此空间如果不创建在一些环境中系统将会出错
+     /     大小那里空着，表示剩下的空间都给根目录
+     设置完成，选择左上角的Done
+3、网络使用的nat网络
+4、修改配置让centos显示ip信息
+    vi /etc/sysconfig/network-scripts/ ifcfg-ens33
+    将最下面的一行 ONBOOT 的no改为yes
+5、使用 ifup ens33 启动网卡
+6、使用命令：ifconfig  提示该命令不存在，安装ifconfig
+7、输入 yum search ifconfig   搜索ifconfig的包名
+8、根据显示的包的名字安装，我这里是 yum install net-tools.x86_64 -y   
+    ps：这里的 -y 表示自动输入yes，实现自动化安装
+9、输入ifconfig即可获取到ip地址
+10、我这里懒得给centos安装vmtools了，所以为了接下来的方便，我使用 putty.exe 连接该虚拟机
+11、输入账号密码，然后开始安装docker
+12、卸载旧版本：yum remove docker  docker-common docker-selinux docker-engine
+13、安装需要的软件包， yum-util 提供yum-config-manager功能，另两个是devicemapper驱动依赖
+    yum install -y yum-utils device-mapper-persistent-data lvm2
+14、设置 yum 源
+    yum-config-manager --add-repo http://download.docker.com/linux/centos/docker-ce.repo              （中央仓库）
+    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo            （阿里仓库）
+15、选择docker版本并安装
+    查看可用版本有哪些
+        yum list docker-ce --showduplicates | sort -r
+    选择一个版本并安装：yum install docker-ce-版本号
+        yum -y install docker-ce-18.03.1.ce
+16、启动 Docker 并设置开机自启
+    systemctl start docker
+    systemctl enable docker
+17、修改docker的默认工作目录
+    查看默认工作目录Docker Root Dir:docker info
+    关闭docker服务：systemctl stop docker     这一步十分重要，如果不提前关闭，则后面的修改无法成功
+    创建新的工作目录：mkdir /root/docker
+    新建 docker 配置文件：touch /etc/docker/daemon.json
+    编辑docker配置文件：vi /etc/docker/daemon.json
+        如果docker版本 &gt; 
+            &#123;&quot;graph&quot;: &quot;/root/docker&quot;&#125;
+        否则就写入以下内容
+            &#123;&quot;data-root&quot;: &quot;/root/docker&quot;&#125;
+18、启动docker服务
+    systemctl start docker
+19、再次查看docker的默认目录，看是否修改成功
+    docker info
+</code></pre>
+]]></content>
+      <categories>
+        <category>教程</category>
+      </categories>
+      <tags>
+        <tag>其他</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>9-12、渗透测试学习笔记(xiaodi)</title>
     <url>/2021/08/10/9-12%E3%80%81%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-xiaodi/</url>
     <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
@@ -20,6 +84,169 @@
       </categories>
       <tags>
         <tag>渗透测试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>github推送新项目</title>
+    <url>/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>推送本地项目到github上
+</code></pre>
+<p>步骤：</p>
+<pre><code>0、在github上新建一个仓库，取个名字，直接默认即可
+1、本地新建一个文件夹，我这里新建github文件夹
+2、右键---打开gitbash（需要提前安装git工具）
+</code></pre>
+<span id="more"></span>
+<pre><code>3、输入以下命令
+    git init   初始化仓库
+    git add .     这个点 . 代表当前目录所有文件，表示把当前目录所有文件添加进去
+    git commit -m &quot;ip反查公司+域名&quot;   设置提交的时候的备注
+    git remote add origin https://github.com/lishang520/security-tools.git  添加远程仓库，这个仓库地址是我们新建的仓库的那个地址
+    git push -u origin master   将本地文件推送到github上
+4、以后每次推送只需要执行以下几个命令
+    git add .    
+    git commit -m &quot;ip反查公司+域名&quot;  
+    git remote add origin https://github.com/lishang520/security-tools.git  
+    git push -u origin master 
+</code></pre>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>环境搭建</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>GSLibrary docker版（包含全部漏洞库）安装教程</title>
+    <url>/2021/08/14/GSLibrary-docker%E7%89%88%EF%BC%88%E5%8C%85%E5%90%AB%E5%85%A8%E9%83%A8%E6%BC%8F%E6%B4%9E%E5%BA%93%EF%BC%89%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<p>GSLibrary项目介绍：</p>
+<ul>
+<li>GSLibrary知识库平台由G安全团队开源，该团队将收集的POC，EXP等各种文库资料聚合到平台内该平台聚合了2.6w+的文库资料</li>
+<li>开源地址：<a href="https://github.com/G-Security-Team/GSLibrary">https://github.com/G-Security-Team/GSLibrary</a></li>
+<li>主要分为：<ul>
+<li>个人版（debug版）         </li>
+<li>服务器版（团队版）     尝试过，安装成功了，但是每次重启虚拟机了后，nginx总是启动不起来，百度了也没解决，所以尝试docker版了</li>
+<li>Docker版（自带全量文库）    也是我安装的版本</li>
+</ul>
+</li>
+</ul>
+<p>为什么要写这篇文章？</p>
+<ul>
+<li>docker版本安装的时候还是有一点坑，所以这篇文章就教大家怎么避开那些坑</li>
+</ul>
+<span id="more"></span>
+
+<p>安装步骤：</p>
+<ul>
+<li>前提：centos的根目录最好给个100g以上的磁盘空间，否则安装项目的时候会因为磁盘空间少而终止并报错，具体的centos安装docker教程可以参考我的上一篇文章：centos安装docker</li>
+<li>意见建议：安装下面的项目建议的环境建议和我的保持一致，我是通过上一篇文章：centos安装docker 安装的</li>
+<li>1、下载：链接:<a href="https://pan.baidu.com/s/1J3F619eSy5UwZrNfN1XuuQ">https://pan.baidu.com/s/1J3F619eSy5UwZrNfN1XuuQ</a>  密码:v0sx</li>
+<li>2、下载后解压</li>
+<li>3、易错点：<ul>
+<li>解压后，目录下会有一个gslibrary_v1.0.zip 压缩包，我们也需要将其解压，将其解压后，将里面的gslibrary_v1.0.tar 剪切到 GSLibrary docker版（包含全部漏洞库）的根目录<ul>
+<li><img src="/source/images/image-20210814195203265.png" alt="image-20210814195203265"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>4、将GSLibrary docker版（包含全部漏洞库）整个目录通过FileZilla(ftp工具)传到centos的root目录下</li>
+<li>5、接着在centos里进入到/root/GSLibrary docker版（包含全部漏洞库） 目录下</li>
+<li>6、执行命令：docker load &lt; gslibrary_v1.0.tar</li>
+<li>7、因为加载的文件过大，请等待下，然后观察有没有报错，如果正常加载文件，那么几乎没问题了，除非后续因为磁盘空间不足而报错</li>
+<li>8、导⼊完成后输⼊ docker images 即可看到导⼊的docker镜像</li>
+<li>9、输⼊ docker run -itd –privileged -p80:80  /usr/sbin/init 即可启动 docker，此时docker映射80端⼝到本地80端⼝。此时docker已经启动了，我们可以访问本地的80端口即可,初始帐号密码 Gr33k/123456<ul>
+<li>这里的itd就是第8步获取的id<ul>
+<li><img src="/source/images/image-20210814195917317.png" alt="image-20210814195917317"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>10、查看docker运⾏状态的命令 docker ps ，关闭docker的命令 docker stop </li>
+<li>11、给容器起一个别名，方便以后进容器<ul>
+<li>首先列出所有的容器：docker ps<ul>
+<li><img src="/source/images/image-20210814211001997.png" alt="image-20210814211001997"></li>
+</ul>
+</li>
+<li>其次使用命令：<ul>
+<li>docker rename d4b06e2138a7  gslibrary                 这里rename后面接的是容器的id的号码和我们要起的别名：gslibrary</li>
+</ul>
+</li>
+<li>执行完毕后，再次执行docker ps  可以发现names已经变成 gslibrary了</li>
+</ul>
+</li>
+<li>12、以后我们只需要使用 docker exec -it gslibrary   /bin/bash    即可启动这个知识库的容器了</li>
+<li>13、设置容器在docker服务启动的时候自启动：<ul>
+<li>docker update –restart=always   容器别名</li>
+<li>存在问题：当我这样设置后，通过虚拟机将无法登录系统了，因为它自启了容器，所以必要通过ssh连接工具才能连接</li>
+</ul>
+</li>
+</ul>
+<p>以后启动docker步骤</p>
+<ul>
+<li>1、输入命令查看容器是否在运行：docker ps <ul>
+<li>如果找到了我们的容器，直接输入命令：docker exec -it gslibrary /bin/bash     进入容器</li>
+<li>如果没找到容器，则使用：docker ps -a</li>
+</ul>
+</li>
+<li>2、在没有容器没在运行的情况下，我们可以通过docker ps -a   找到我们的容器，比如别名，然后扶植下它的容器id，注意是容器id(CONTAINER ID)而不是IMAGE</li>
+<li>3、执行命令：<ul>
+<li>docker start   容器id               即可启动容器</li>
+</ul>
+</li>
+<li>4、通过输入命令：docker exec -it gslibrary /bin/bash    即可进入容器里面了</li>
+<li>5、进入容器后我们需要检查运行的端口：必须要80、8000、3306   三个端口都在运行<ul>
+<li> netstat  -ntpul         </li>
+</ul>
+</li>
+<li>6、如果发现8000端口没有运行，就代表gslibrary项目的服务没启动，我们需要手工去启动<ul>
+<li>80代表ngnix没启动</li>
+<li>3306代表mysqld没有启动</li>
+</ul>
+</li>
+<li>7、前往：/home/zslibrary     目录，执行以下命令才能执行成功，必须要在这个目录<ul>
+<li> systemctl start gslibrary   </li>
+</ul>
+</li>
+<li>8、再次查看端口：netstat  -ntpul  </li>
+<li>9、端口都启动了，就代表可以访问了</li>
+<li>10、退出容器：但是没有关闭容器，容器还在后台运行<ul>
+<li>ctrl +D </li>
+</ul>
+</li>
+<li>11、将虚拟机最小化就可以了</li>
+</ul>
+<p>注意事项：</p>
+<ul>
+<li>如果进入docker容器后，访问本地的80端口发现无法访问，可以查看docker的80、3306、8000三个端口是否正常运行，如果有端口没运行，那么需要手动启动服务<ul>
+<li>80:nginx<ul>
+<li>启动：systemctl start nginx </li>
+<li>停⽌：systemctl stop nginx </li>
+<li>重启：systemctl restart nginx</li>
+</ul>
+</li>
+<li>3306:mysqld<ul>
+<li>启动：systemctl start mysqld </li>
+<li>停⽌：systemctl stop mysqld </li>
+<li>重启：systemctl restart mysqld</li>
+</ul>
+</li>
+<li>8000: gslibrary（应⽤），必须要进入/home/zslibrary   目录执行才行<ul>
+<li>启动：systemctl start gslibrary </li>
+<li>停⽌：systemctl stop gslibrary </li>
+<li>重启：systemctl restart gslibrary</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>教程</category>
+      </categories>
+      <tags>
+        <tag>其他</tag>
       </tags>
   </entry>
   <entry>
@@ -66,138 +293,6 @@ http://117.187.230.194:10000
       </categories>
       <tags>
         <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo基础语法</title>
-    <url>/2021/08/09/hexo%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<p>1、设置阅读全文</p>
-<pre><code>只需要在文章插入字符串&#39;&lt;!--more--&gt;&#39; 即可
-</code></pre>
-<p>2、hexo clean 清楚缓存</p>
-<p>3、hexo g 生成博客</p>
-<p>4、hexo server 启动本地博客</p>
-<p>5、配置步骤2、3、4自动化</p>
-<pre><code>修改package.json 文件，将里面server的值改为：  hexo clean &amp;&amp; hexo generate &amp;&amp; hexo server
-</code></pre>
-<p>6、hexo d 上传博客</p>
-<p>6、hexo new “文件名”  新建文章</p>
-<p>7、hexo new page link   在source目录下创建了link目录，并且创建了index.md文件</p>
-<span id="more"></span>
-
-]]></content>
-      <categories>
-        <category>hexo使用技巧</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>github推送新项目</title>
-    <url>/2021/08/09/github%E6%8E%A8%E9%80%81%E6%96%B0%E9%A1%B9%E7%9B%AE/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>推送本地项目到github上
-</code></pre>
-<p>步骤：</p>
-<pre><code>0、在github上新建一个仓库，取个名字，直接默认即可
-1、本地新建一个文件夹，我这里新建github文件夹
-2、右键---打开gitbash（需要提前安装git工具）
-</code></pre>
-<span id="more"></span>
-<pre><code>3、输入以下命令
-    git init   初始化仓库
-    git add .     这个点 . 代表当前目录所有文件，表示把当前目录所有文件添加进去
-    git commit -m &quot;ip反查公司+域名&quot;   设置提交的时候的备注
-    git remote add origin https://github.com/lishang520/security-tools.git  添加远程仓库，这个仓库地址是我们新建的仓库的那个地址
-    git push -u origin master   将本地文件推送到github上
-4、以后每次推送只需要执行以下几个命令
-    git add .    
-    git commit -m &quot;ip反查公司+域名&quot;  
-    git remote add origin https://github.com/lishang520/security-tools.git  
-    git push -u origin master 
-</code></pre>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-      <tags>
-        <tag>环境搭建</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ip反查公司+域名</title>
-    <url>/2021/08/09/ip%E5%8F%8D%E6%9F%A5%E5%85%AC%E5%8F%B8-%E5%9F%9F%E5%90%8D/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>刷公益src的时候，ip类资产都是不收的，因为无法找到归属，而一个一个ip去查归属，太繁琐，
-所以本工具就是通过纯真数据库反查ip的公司，提供过ip138反查域名，然后将这些数据写入excel中
-</code></pre>
-<p>工具需要的环境</p>
-<pre><code>python3 
-最新的纯真数据库()
-</code></pre>
-<span id="more"></span>
-<p>安装：</p>
-<pre><code>1、前往地址：https://github.com/WisdomFusion/qqwry.dat  查看最新版本的纯真数据库，我这里的是20210506版本的，如果它们更新了，记得替换qqwry目录下的qqwry.dat
-2、准备目标ip：放在当前目录下的targets.txt 文件
-    注意事项：这里的ip建议是已经被poc打中了的ip，这样效率比较高
-3、准备代理ip，当我们查询次数多了，ip138会封ip，所以我们可以准备代理ip
-    熊猫代理注册链接：http://www.xiongmaodaili.com?invitationCode=C34F143A-7D85-4A22-BE1D-A19E5972E816
-4、购买高校代理就行了，在ip归属和域名批量查询.py 的53行进行替换
-</code></pre>
-<p>运行：直接运行脚本即可</p>
-<p>结果处理的意见建议：</p>
-<pre><code>1、重点关注 归属公司  和  域名
-2、将归属公司 和域名  两列添加筛选
-3、首先将域名全部筛选出  None
-4、其次观察归属公司，将那种带有如下关键字眼的全部删掉
-    节点、电信、移动、联通、城通、中心 等其他一看就属于中间商而非归属商的行全部删掉
-5、接着取消归属公司和域名的筛选，下面的数据几乎都是符合条件的
-    要么域名是none，但是又归属公司，所以能证明归属
-    要么有预谋，归属公司有没有就无所谓了，因为有域名，打开域名一看，就知道对方的归属了
-</code></pre>
-<p>工具下载链接：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
-<p>对你有用的话，希望能给个星星</p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>公益src</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>typora笔记里的图片迁移</title>
-    <url>/2021/08/10/typora%E7%AC%94%E8%AE%B0%E9%87%8C%E7%9A%84%E5%9B%BE%E7%89%87%E8%BF%81%E7%A7%BB/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>之前用typora做的笔记，里面有图片，现在将笔记迁移到hexo上，
-图片肯定也需要迁移的，这篇文章就是为了解决这个问题
-</code></pre>
-<p>方法步骤：</p>
-<pre><code>修改配置：
-    1、在source目录下新建目录：images
-    2、修改typora的偏好设置--图像--选择复制到指定路径--输入以下路径
-        ./../source/images/
-    3、将5个复选框全部勾选上
-    4、选择菜单栏---格式---图像---设置根目录--选择你blog下的source目录
-</code></pre>
-<span id="more"></span>
-<pre><code>开始迁移：
-    1、打开旧笔记md，点击笔记里的随便一张图片，找到图片的路径
-    2、将该图片里的路径全部复制到我们刚才新建的images目录下
-    3、使用命令新建文章：hexo new &quot;测试&quot;
-    4、将我们带迁移的md笔记全选，然后粘贴到新笔记的md里
-    5、在新笔记里ctrl+f  选择替换，将新笔记.md里的图片的绝对路径进行替换，替换成我们新建的images这个路径，注意是绝对路径哦
-        例如：旧图片路径：C:\Users\painter\AppData\Roaming\Typora\typora-user-images\image-20210808105910264.png
-            我们只需要将C:\Users\painter\AppData\Roaming\Typora\typora-user-images\   替换成我们的相对路径：   /source/images/     即可
-    6、注意选择全部替换
-</code></pre>
-]]></content>
-      <categories>
-        <category>hexo使用技巧</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -279,7 +374,7 @@ http://117.187.230.194:10000
 <ul>
 <li><p>git config –global user.name “lishang520”</p>
 </li>
-<li><p>git config –global user.email “<a href="mailto:&#49;&#x31;&#x38;&#51;&#x31;&#52;&#x34;&#48;&#55;&#x30;&#64;&#113;&#x71;&#46;&#99;&#111;&#x6d;">&#49;&#x31;&#x38;&#51;&#x31;&#52;&#x34;&#48;&#55;&#x30;&#64;&#113;&#x71;&#46;&#99;&#111;&#x6d;</a>“</p>
+<li><p>git config –global user.email “<a href="mailto:&#x31;&#49;&#x38;&#51;&#x31;&#52;&#52;&#48;&#x37;&#48;&#64;&#113;&#x71;&#x2e;&#99;&#111;&#109;">&#x31;&#49;&#x38;&#51;&#x31;&#52;&#52;&#48;&#x37;&#48;&#64;&#113;&#x71;&#x2e;&#99;&#111;&#109;</a>“</p>
 </li>
 </ul>
 </li>
@@ -460,7 +555,7 @@ branch: main
 <li><p>得到复制的代码：<i class="fas fa-blog"></i>    </p>
 <ul>
 <li>修改配置文件，将复制的代码的class的值替换掉social下的冒号之前的值，并将博客地址修改为自己的博客地址<ul>
-<li>初始邮箱的图标地址：fas fa-envelope: mailto:<a href="mailto:&#x78;&#x78;&#x78;&#120;&#120;&#x78;&#64;&#103;&#x6d;&#97;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;">&#x78;&#x78;&#x78;&#120;&#120;&#x78;&#64;&#103;&#x6d;&#97;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;</a> || Email</li>
+<li>初始邮箱的图标地址：fas fa-envelope: mailto:<a href="mailto:&#x78;&#x78;&#120;&#x78;&#x78;&#x78;&#64;&#103;&#x6d;&#97;&#105;&#108;&#46;&#99;&#111;&#x6d;">&#x78;&#x78;&#120;&#x78;&#x78;&#x78;&#64;&#103;&#x6d;&#97;&#105;&#108;&#46;&#99;&#111;&#x6d;</a> || Email</li>
 <li>修改后的博客的地址：fas fa-blog: <a href="https://lishang520.github.io/">https://lishang520.github.io/</a> || 博客</li>
 <li>修改github为我的github主页地址：<a href="https://github.com/lishang520">https://github.com/lishang520</a></li>
 </ul>
@@ -634,6 +729,106 @@ branch: main
       </categories>
       <tags>
         <tag>其他</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo基础语法</title>
+    <url>/2021/08/09/hexo%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<p>1、设置阅读全文</p>
+<pre><code>只需要在文章插入字符串&#39;&lt;!--more--&gt;&#39; 即可
+</code></pre>
+<p>2、hexo clean 清楚缓存</p>
+<p>3、hexo g 生成博客</p>
+<p>4、hexo server 启动本地博客</p>
+<p>5、配置步骤2、3、4自动化</p>
+<pre><code>修改package.json 文件，将里面server的值改为：  hexo clean &amp;&amp; hexo generate &amp;&amp; hexo server
+</code></pre>
+<p>6、hexo d 上传博客</p>
+<p>6、hexo new “文件名”  新建文章</p>
+<p>7、hexo new page link   在source目录下创建了link目录，并且创建了index.md文件</p>
+<span id="more"></span>
+
+]]></content>
+      <categories>
+        <category>hexo使用技巧</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ip反查公司+域名</title>
+    <url>/2021/08/09/ip%E5%8F%8D%E6%9F%A5%E5%85%AC%E5%8F%B8-%E5%9F%9F%E5%90%8D/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>刷公益src的时候，ip类资产都是不收的，因为无法找到归属，而一个一个ip去查归属，太繁琐，
+所以本工具就是通过纯真数据库反查ip的公司，提供过ip138反查域名，然后将这些数据写入excel中
+</code></pre>
+<p>工具需要的环境</p>
+<pre><code>python3 
+最新的纯真数据库()
+</code></pre>
+<span id="more"></span>
+<p>安装：</p>
+<pre><code>1、前往地址：https://github.com/WisdomFusion/qqwry.dat  查看最新版本的纯真数据库，我这里的是20210506版本的，如果它们更新了，记得替换qqwry目录下的qqwry.dat
+2、准备目标ip：放在当前目录下的targets.txt 文件
+    注意事项：这里的ip建议是已经被poc打中了的ip，这样效率比较高
+3、准备代理ip，当我们查询次数多了，ip138会封ip，所以我们可以准备代理ip
+    熊猫代理注册链接：http://www.xiongmaodaili.com?invitationCode=C34F143A-7D85-4A22-BE1D-A19E5972E816
+4、购买高校代理就行了，在ip归属和域名批量查询.py 的53行进行替换
+</code></pre>
+<p>运行：直接运行脚本即可</p>
+<p>结果处理的意见建议：</p>
+<pre><code>1、重点关注 归属公司  和  域名
+2、将归属公司 和域名  两列添加筛选
+3、首先将域名全部筛选出  None
+4、其次观察归属公司，将那种带有如下关键字眼的全部删掉
+    节点、电信、移动、联通、城通、中心 等其他一看就属于中间商而非归属商的行全部删掉
+5、接着取消归属公司和域名的筛选，下面的数据几乎都是符合条件的
+    要么域名是none，但是又归属公司，所以能证明归属
+    要么有预谋，归属公司有没有就无所谓了，因为有域名，打开域名一看，就知道对方的归属了
+</code></pre>
+<p>工具下载链接：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
+<p>对你有用的话，希望能给个星星</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>公益src</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>typora笔记里的图片迁移</title>
+    <url>/2021/08/10/typora%E7%AC%94%E8%AE%B0%E9%87%8C%E7%9A%84%E5%9B%BE%E7%89%87%E8%BF%81%E7%A7%BB/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>之前用typora做的笔记，里面有图片，现在将笔记迁移到hexo上，
+图片肯定也需要迁移的，这篇文章就是为了解决这个问题
+</code></pre>
+<p>方法步骤：</p>
+<pre><code>修改配置：
+    1、在source目录下新建目录：images
+    2、修改typora的偏好设置--图像--选择复制到指定路径--输入以下路径
+        ./../source/images/
+    3、将5个复选框全部勾选上
+    4、选择菜单栏---格式---图像---设置根目录--选择你blog下的source目录
+</code></pre>
+<span id="more"></span>
+<pre><code>开始迁移：
+    1、打开旧笔记md，点击笔记里的随便一张图片，找到图片的路径
+    2、将该图片里的路径全部复制到我们刚才新建的images目录下
+    3、使用命令新建文章：hexo new &quot;测试&quot;
+    4、将我们带迁移的md笔记全选，然后粘贴到新笔记的md里
+    5、在新笔记里ctrl+f  选择替换，将新笔记.md里的图片的绝对路径进行替换，替换成我们新建的images这个路径，注意是绝对路径哦
+        例如：旧图片路径：C:\Users\painter\AppData\Roaming\Typora\typora-user-images\image-20210808105910264.png
+            我们只需要将C:\Users\painter\AppData\Roaming\Typora\typora-user-images\   替换成我们的相对路径：   /source/images/     即可
+    6、注意选择全部替换
+</code></pre>
+]]></content>
+      <categories>
+        <category>hexo使用技巧</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -1136,7 +1331,7 @@ branch: main
 </li>
 <li><p>修改 IP 绕过短信 &amp; 邮箱轰炸限制<br>有些同样是验证当前 IP 的，如果当前 IP 短时间内获取短信或邮件频繁或者达到一定次数的话就会出现限制，那么就可以利用修改 IP 或者代理 IP 来进行绕过限制。</p>
 </li>
-<li><p>利用大小写绕过邮箱轰炸限制<br>前面说到了关于加空格的绕过限制，邮箱也可以用，但还有一种方式可以绕过邮箱轰炸限制，那就是通过修改大小写，通过修改邮箱后面字母的大小写就可绕过限制，比如参数是这样的：email=<a href="mailto:&#120;&#x78;&#64;&#113;&#113;&#x2e;&#99;&#x6f;&#x6d;">&#120;&#x78;&#64;&#113;&#113;&#x2e;&#99;&#x6f;&#x6d;</a> 当次数达到限制时，随便修改一个字母为大写：email=<a href="mailto:&#x78;&#120;&#x40;&#x51;&#x71;&#x2e;&#99;&#111;&#109;">&#x78;&#120;&#x40;&#x51;&#x71;&#x2e;&#99;&#111;&#109;</a> 就可绕过限制</p>
+<li><p>利用大小写绕过邮箱轰炸限制<br>前面说到了关于加空格的绕过限制，邮箱也可以用，但还有一种方式可以绕过邮箱轰炸限制，那就是通过修改大小写，通过修改邮箱后面字母的大小写就可绕过限制，比如参数是这样的：email=<a href="mailto:&#x78;&#x78;&#x40;&#113;&#113;&#x2e;&#99;&#111;&#x6d;">&#x78;&#x78;&#x40;&#113;&#113;&#x2e;&#99;&#111;&#x6d;</a> 当次数达到限制时，随便修改一个字母为大写：email=<a href="mailto:&#x78;&#120;&#64;&#81;&#x71;&#x2e;&#99;&#111;&#109;">&#x78;&#120;&#64;&#81;&#x71;&#x2e;&#99;&#111;&#109;</a> 就可绕过限制</p>
 </li>
 <li><p>修改返回值绕过短信 &amp; 邮箱轰炸<br>比如发送成功后返回值是 success，发送失败的返回值是 error，那么当达到次数后，可以通过修改返回值为正确的返回值：success，从而绕过限制，达到发送成功的目的。</p>
 </li>
@@ -2113,7 +2308,7 @@ branch: main
 <h2 id="3、信息的利用与扫描"><a href="#3、信息的利用与扫描" class="headerlink" title="3、信息的利用与扫描"></a>3、信息的利用与扫描</h2><p>​    1、将OneForAll跑出来的域名去重，存活检测，接着弄到扫描器进行扫描</p>
 <p>​     2、根据kscan扫描的分类，根据其中间件、服务、框架，找专门的批量脚本进行定点扫描</p>
 <p>​    3、进行源码备份扫描</p>
-<p><a href="mailto:&#x61;&#100;&#x6d;&#105;&#110;&#x40;&#102;&#x7a;&#117;&#46;&#101;&#100;&#117;&#x2e;&#99;&#110;">&#x61;&#100;&#x6d;&#105;&#110;&#x40;&#102;&#x7a;&#117;&#46;&#101;&#100;&#117;&#x2e;&#99;&#110;</a></p>
+<p><a href="mailto:&#97;&#100;&#109;&#x69;&#x6e;&#64;&#102;&#x7a;&#117;&#x2e;&#101;&#x64;&#x75;&#x2e;&#x63;&#x6e;">&#97;&#100;&#109;&#x69;&#x6e;&#64;&#102;&#x7a;&#117;&#x2e;&#101;&#x64;&#x75;&#x2e;&#x63;&#x6e;</a></p>
 <h2 id="4、其他信息收集"><a href="#4、其他信息收集" class="headerlink" title="4、其他信息收集"></a>4、其他信息收集</h2><p>在前面1,2，3步骤没找到漏洞的话，就进行这第4步</p>
 <p>目的：</p>
 <p>​    主要是用来邮件钓鱼（挖src不让钓鱼）</p>
@@ -5198,7 +5393,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <p>推荐：推荐新式类，同时推荐每次定义类时，括号里都写上object，这样即使在python2中运行代码也不会出错</p>
 <h2 id="附录2-python错题"><a href="#附录2-python错题" class="headerlink" title="附录2 python错题"></a>附录2 python错题</h2><h3 id="1-git上传码云，提示无权限"><a href="#1-git上传码云，提示无权限" class="headerlink" title="1.git上传码云，提示无权限"></a>1.git上传码云，提示无权限</h3><p>第一步：在git终端上生成sshkey</p>
 <ul>
-<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#x37;&#x34;&#48;&#x33;&#49;&#x30;&#51;&#x2b;&#112;&#x79;&#x74;&#104;&#x6f;&#110;&#x5f;&#x72;&#x6f;&#97;&#x64;&#64;&#x75;&#x73;&#x65;&#114;&#46;&#x6e;&#111;&#114;&#101;&#112;&#108;&#x79;&#46;&#103;&#x69;&#x74;&#101;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#x37;&#x34;&#48;&#x33;&#49;&#x30;&#51;&#x2b;&#112;&#x79;&#x74;&#104;&#x6f;&#110;&#x5f;&#x72;&#x6f;&#97;&#x64;&#64;&#x75;&#x73;&#x65;&#114;&#46;&#x6e;&#111;&#114;&#101;&#112;&#108;&#x79;&#46;&#103;&#x69;&#x74;&#101;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a>“</p>
+<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#x37;&#x34;&#48;&#51;&#49;&#x30;&#51;&#43;&#112;&#x79;&#x74;&#x68;&#111;&#110;&#95;&#x72;&#111;&#97;&#100;&#x40;&#x75;&#115;&#x65;&#x72;&#46;&#x6e;&#x6f;&#x72;&#101;&#112;&#108;&#121;&#x2e;&#103;&#x69;&#x74;&#101;&#101;&#x2e;&#99;&#111;&#109;">&#x37;&#x34;&#48;&#51;&#49;&#x30;&#51;&#43;&#112;&#x79;&#x74;&#x68;&#111;&#110;&#95;&#x72;&#111;&#97;&#100;&#x40;&#x75;&#115;&#x65;&#x72;&#46;&#x6e;&#x6f;&#x72;&#101;&#112;&#108;&#121;&#x2e;&#103;&#x69;&#x74;&#101;&#101;&#x2e;&#99;&#111;&#109;</a>“</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191502617.png" alt="image-20200403191502617"></p>
 </li>
 <li><p>查看生成的ssh秘钥：cat ~/.ssh/id_rsa.pub</p>
@@ -5207,7 +5402,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 </ul>
 <p>第二步：在码云个人设置里—ssh公钥—新增公钥—-名称建议输入和项目名，公钥输入刚才复制的</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191817999.png" alt="image-20200403191817999"></p>
-<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#x67;&#105;&#x74;&#x40;&#103;&#x69;&#x74;&#x65;&#101;&#46;&#x63;&#111;&#x6d;">&#x67;&#105;&#x74;&#x40;&#103;&#x69;&#x74;&#x65;&#101;&#46;&#x63;&#111;&#x6d;</a>  显示下图界面就代表成功了</p>
+<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#103;&#x69;&#116;&#x40;&#x67;&#105;&#116;&#x65;&#x65;&#x2e;&#99;&#x6f;&#109;">&#103;&#x69;&#116;&#x40;&#x67;&#105;&#116;&#x65;&#x65;&#x2e;&#99;&#x6f;&#109;</a>  显示下图界面就代表成功了</p>
 <ul>
 <li><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191921263.png" alt="image-20200403191921263"></li>
 </ul>
@@ -5886,8 +6081,8 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <ul>
 <li>git init </li>
 <li>git config –global user.name “发飙的登山包”</li>
-<li>git config –global user.email “<a href="mailto:&#x37;&#52;&#48;&#51;&#49;&#48;&#x33;&#43;&#x70;&#121;&#116;&#104;&#x6f;&#110;&#95;&#x72;&#x6f;&#x61;&#100;&#64;&#117;&#115;&#x65;&#114;&#46;&#110;&#111;&#114;&#x65;&#112;&#108;&#121;&#46;&#103;&#105;&#x74;&#101;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#x37;&#52;&#48;&#51;&#49;&#48;&#x33;&#43;&#x70;&#121;&#116;&#104;&#x6f;&#110;&#95;&#x72;&#x6f;&#x61;&#100;&#64;&#117;&#115;&#x65;&#114;&#46;&#110;&#111;&#114;&#x65;&#112;&#108;&#121;&#46;&#103;&#105;&#x74;&#101;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a>“</li>
-<li>git remote add origin <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#x69;&#x74;&#x65;&#x65;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#x67;&#x69;&#x74;&#x65;&#x65;&#46;&#x63;&#x6f;&#x6d;</a>:python_road/old_boy_python_self_study.git</li>
+<li>git config –global user.email “<a href="mailto:&#55;&#52;&#48;&#x33;&#x31;&#x30;&#51;&#43;&#112;&#121;&#x74;&#x68;&#x6f;&#x6e;&#x5f;&#114;&#x6f;&#x61;&#100;&#64;&#117;&#115;&#x65;&#x72;&#46;&#x6e;&#x6f;&#114;&#x65;&#x70;&#108;&#x79;&#46;&#103;&#x69;&#x74;&#101;&#x65;&#46;&#x63;&#x6f;&#x6d;">&#55;&#52;&#48;&#x33;&#x31;&#x30;&#51;&#43;&#112;&#121;&#x74;&#x68;&#x6f;&#x6e;&#x5f;&#114;&#x6f;&#x61;&#100;&#64;&#117;&#115;&#x65;&#x72;&#46;&#x6e;&#x6f;&#114;&#x65;&#x70;&#108;&#x79;&#46;&#103;&#x69;&#x74;&#101;&#x65;&#46;&#x63;&#x6f;&#x6d;</a>“</li>
+<li>git remote add origin <a href="mailto:&#x67;&#x69;&#116;&#x40;&#103;&#105;&#x74;&#x65;&#101;&#46;&#x63;&#111;&#109;">&#x67;&#x69;&#116;&#x40;&#103;&#105;&#x74;&#x65;&#101;&#46;&#x63;&#111;&#109;</a>:python_road/old_boy_python_self_study.git</li>
 </ul>
 <p>以上就初始化完成</p>
 </li>

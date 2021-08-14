@@ -20,19 +20,24 @@
     var CONFIG = {"hostname":"lishang520.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="painter的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="https://lishang520.github.io/categories/index.html">
+  <meta name="description" content="GSLibrary项目介绍：  GSLibrary知识库平台由G安全团队开源，该团队将收集的POC，EXP等各种文库资料聚合到平台内该平台聚合了2.6w+的文库资料 开源地址：https:&#x2F;&#x2F;github.com&#x2F;G-Security-Team&#x2F;GSLibrary 主要分为： 个人版（debug版）          服务器版（团队版）     尝试过，安装成功了，但是每次重启虚拟机了后，ngin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GSLibrary docker版（包含全部漏洞库）安装教程">
+<meta property="og:url" content="https://lishang520.github.io/2021/08/14/GSLibrary-docker%E7%89%88%EF%BC%88%E5%8C%85%E5%90%AB%E5%85%A8%E9%83%A8%E6%BC%8F%E6%B4%9E%E5%BA%93%EF%BC%89%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/index.html">
 <meta property="og:site_name" content="painter&#39;s Blog">
-<meta property="og:description" content="painter的博客">
+<meta property="og:description" content="GSLibrary项目介绍：  GSLibrary知识库平台由G安全团队开源，该团队将收集的POC，EXP等各种文库资料聚合到平台内该平台聚合了2.6w+的文库资料 开源地址：https:&#x2F;&#x2F;github.com&#x2F;G-Security-Team&#x2F;GSLibrary 主要分为： 个人版（debug版）          服务器版（团队版）     尝试过，安装成功了，但是每次重启虚拟机了后，ngin">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-08-08T13:03:49.000Z">
-<meta property="article:modified_time" content="2021-08-10T12:41:33.297Z">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210814195203265.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210814195917317.png">
+<meta property="og:image" content="https://lishang520.github.io/source/images/image-20210814211001997.png">
+<meta property="article:published_time" content="2021-08-14T11:40:37.000Z">
+<meta property="article:modified_time" content="2021-08-14T14:21:38.937Z">
 <meta property="article:author" content="painter">
+<meta property="article:tag" content="其他">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lishang520.github.io/source/images/image-20210814195203265.png">
 
-<link rel="canonical" href="https://lishang520.github.io/categories/">
+<link rel="canonical" href="https://lishang520.github.io/2021/08/14/GSLibrary-docker%E7%89%88%EF%BC%88%E5%8C%85%E5%90%AB%E5%85%A8%E9%83%A8%E6%BC%8F%E6%B4%9E%E5%BA%93%EF%BC%89%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">
 
 
 <script id="page-configurations">
@@ -40,13 +45,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类 | painter's Blog
-</title>
+  <title>GSLibrary docker版（包含全部漏洞库）安装教程 | painter's Blog</title>
   
 
 
@@ -207,55 +211,251 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
-          <div class="content page posts-expand">
+          <div class="content post posts-expand">
             
 
     
-    
-    
-    <div class="post-block" lang="zh-CN">
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lishang520.github.io/2021/08/14/GSLibrary-docker%E7%89%88%EF%BC%88%E5%8C%85%E5%90%AB%E5%85%A8%E9%83%A8%E6%BC%8F%E6%B4%9E%E5%BA%93%EF%BC%89%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="painter">
+      <meta itemprop="description" content="painter的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="painter's Blog">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GSLibrary docker版（包含全部漏洞库）安装教程
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">分类
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
 
-<div class="post-meta">
+              <time title="创建时间：2021-08-14 19:40:37 / 修改时间：22:21:38" itemprop="dateCreated datePublished" datetime="2021-08-14T19:40:37+08:00">2021-08-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">教程</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/14/GSLibrary-docker%E7%89%88%EF%BC%88%E5%8C%85%E5%90%AB%E5%85%A8%E9%83%A8%E6%BC%8F%E6%B4%9E%E5%BA%93%EF%BC%89%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/14/GSLibrary-docker%E7%89%88%EF%BC%88%E5%8C%85%E5%90%AB%E5%85%A8%E9%83%A8%E6%BC%8F%E6%B4%9E%E5%BA%93%EF%BC%89%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>GSLibrary项目介绍：</p>
+<ul>
+<li>GSLibrary知识库平台由G安全团队开源，该团队将收集的POC，EXP等各种文库资料聚合到平台内该平台聚合了2.6w+的文库资料</li>
+<li>开源地址：<a target="_blank" rel="noopener" href="https://github.com/G-Security-Team/GSLibrary">https://github.com/G-Security-Team/GSLibrary</a></li>
+<li>主要分为：<ul>
+<li>个人版（debug版）         </li>
+<li>服务器版（团队版）     尝试过，安装成功了，但是每次重启虚拟机了后，nginx总是启动不起来，百度了也没解决，所以尝试docker版了</li>
+<li>Docker版（自带全量文库）    也是我安装的版本</li>
+</ul>
+</li>
+</ul>
+<p>为什么要写这篇文章？</p>
+<ul>
+<li>docker版本安装的时候还是有一点坑，所以这篇文章就教大家怎么避开那些坑</li>
+</ul>
+<span id="more"></span>
+
+<p>安装步骤：</p>
+<ul>
+<li>前提：centos的根目录最好给个100g以上的磁盘空间，否则安装项目的时候会因为磁盘空间少而终止并报错，具体的centos安装docker教程可以参考我的上一篇文章：centos安装docker</li>
+<li>意见建议：安装下面的项目建议的环境建议和我的保持一致，我是通过上一篇文章：centos安装docker 安装的</li>
+<li>1、下载：链接:<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1J3F619eSy5UwZrNfN1XuuQ">https://pan.baidu.com/s/1J3F619eSy5UwZrNfN1XuuQ</a>  密码:v0sx</li>
+<li>2、下载后解压</li>
+<li>3、易错点：<ul>
+<li>解压后，目录下会有一个gslibrary_v1.0.zip 压缩包，我们也需要将其解压，将其解压后，将里面的gslibrary_v1.0.tar 剪切到 GSLibrary docker版（包含全部漏洞库）的根目录<ul>
+<li><img src="/source/images/image-20210814195203265.png" alt="image-20210814195203265"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>4、将GSLibrary docker版（包含全部漏洞库）整个目录通过FileZilla(ftp工具)传到centos的root目录下</li>
+<li>5、接着在centos里进入到/root/GSLibrary docker版（包含全部漏洞库） 目录下</li>
+<li>6、执行命令：docker load &lt; gslibrary_v1.0.tar</li>
+<li>7、因为加载的文件过大，请等待下，然后观察有没有报错，如果正常加载文件，那么几乎没问题了，除非后续因为磁盘空间不足而报错</li>
+<li>8、导⼊完成后输⼊ docker images 即可看到导⼊的docker镜像</li>
+<li>9、输⼊ docker run -itd –privileged -p80:80  /usr/sbin/init 即可启动 docker，此时docker映射80端⼝到本地80端⼝。此时docker已经启动了，我们可以访问本地的80端口即可,初始帐号密码 Gr33k/123456<ul>
+<li>这里的itd就是第8步获取的id<ul>
+<li><img src="/source/images/image-20210814195917317.png" alt="image-20210814195917317"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>10、查看docker运⾏状态的命令 docker ps ，关闭docker的命令 docker stop </li>
+<li>11、给容器起一个别名，方便以后进容器<ul>
+<li>首先列出所有的容器：docker ps<ul>
+<li><img src="/source/images/image-20210814211001997.png" alt="image-20210814211001997"></li>
+</ul>
+</li>
+<li>其次使用命令：<ul>
+<li>docker rename d4b06e2138a7  gslibrary                 这里rename后面接的是容器的id的号码和我们要起的别名：gslibrary</li>
+</ul>
+</li>
+<li>执行完毕后，再次执行docker ps  可以发现names已经变成 gslibrary了</li>
+</ul>
+</li>
+<li>12、以后我们只需要使用 docker exec -it gslibrary   /bin/bash    即可启动这个知识库的容器了</li>
+<li>13、设置容器在docker服务启动的时候自启动：<ul>
+<li>docker update –restart=always   容器别名</li>
+<li>存在问题：当我这样设置后，通过虚拟机将无法登录系统了，因为它自启了容器，所以必要通过ssh连接工具才能连接</li>
+</ul>
+</li>
+</ul>
+<p>以后启动docker步骤</p>
+<ul>
+<li>1、输入命令查看容器是否在运行：docker ps <ul>
+<li>如果找到了我们的容器，直接输入命令：docker exec -it gslibrary /bin/bash     进入容器</li>
+<li>如果没找到容器，则使用：docker ps -a</li>
+</ul>
+</li>
+<li>2、在没有容器没在运行的情况下，我们可以通过docker ps -a   找到我们的容器，比如别名，然后扶植下它的容器id，注意是容器id(CONTAINER ID)而不是IMAGE</li>
+<li>3、执行命令：<ul>
+<li>docker start   容器id               即可启动容器</li>
+</ul>
+</li>
+<li>4、通过输入命令：docker exec -it gslibrary /bin/bash    即可进入容器里面了</li>
+<li>5、进入容器后我们需要检查运行的端口：必须要80、8000、3306   三个端口都在运行<ul>
+<li> netstat  -ntpul         </li>
+</ul>
+</li>
+<li>6、如果发现8000端口没有运行，就代表gslibrary项目的服务没启动，我们需要手工去启动<ul>
+<li>80代表ngnix没启动</li>
+<li>3306代表mysqld没有启动</li>
+</ul>
+</li>
+<li>7、前往：/home/zslibrary     目录，执行以下命令才能执行成功，必须要在这个目录<ul>
+<li> systemctl start gslibrary   </li>
+</ul>
+</li>
+<li>8、再次查看端口：netstat  -ntpul  </li>
+<li>9、端口都启动了，就代表可以访问了</li>
+<li>10、退出容器：但是没有关闭容器，容器还在后台运行<ul>
+<li>ctrl +D </li>
+</ul>
+</li>
+<li>11、将虚拟机最小化就可以了</li>
+</ul>
+<p>注意事项：</p>
+<ul>
+<li>如果进入docker容器后，访问本地的80端口发现无法访问，可以查看docker的80、3306、8000三个端口是否正常运行，如果有端口没运行，那么需要手动启动服务<ul>
+<li>80:nginx<ul>
+<li>启动：systemctl start nginx </li>
+<li>停⽌：systemctl stop nginx </li>
+<li>重启：systemctl restart nginx</li>
+</ul>
+</li>
+<li>3306:mysqld<ul>
+<li>启动：systemctl start mysqld </li>
+<li>停⽌：systemctl stop mysqld </li>
+<li>重启：systemctl restart mysqld</li>
+</ul>
+</li>
+<li>8000: gslibrary（应⽤），必须要进入/home/zslibrary   目录执行才行<ul>
+<li>启动：systemctl start gslibrary </li>
+<li>停⽌：systemctl stop gslibrary </li>
+<li>重启：systemctl restart gslibrary</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%85%B6%E4%BB%96/" rel="tag"># 其他</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/14/centos%E5%AE%89%E8%A3%85docker/" rel="prev" title="centos安装docker">
+      <i class="fa fa-chevron-left"></i> centos安装docker
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
-          <div class="category-all-page">
-            <div class="category-all-title">
-              目前共计 6 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/">hexo使用技巧</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%99%E7%A8%8B/">教程</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a><span class="category-list-count">7</span></li></ul>
-            </div>
-          </div>
-        
-      </div>
-      
-      
-      
-    </div>
-    
-
-    
-    
-    
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {

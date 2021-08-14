@@ -20,19 +20,20 @@
     var CONFIG = {"hostname":"lishang520.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="painter的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="https://lishang520.github.io/categories/index.html">
+  <meta name="description" content="应用场景:    通过centos7的iso文件在虚拟机里安装docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="centos安装docker">
+<meta property="og:url" content="https://lishang520.github.io/2021/08/14/centos%E5%AE%89%E8%A3%85docker/index.html">
 <meta property="og:site_name" content="painter&#39;s Blog">
-<meta property="og:description" content="painter的博客">
+<meta property="og:description" content="应用场景:    通过centos7的iso文件在虚拟机里安装docker">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-08-08T13:03:49.000Z">
-<meta property="article:modified_time" content="2021-08-10T12:41:33.297Z">
+<meta property="article:published_time" content="2021-08-14T07:17:03.000Z">
+<meta property="article:modified_time" content="2021-08-14T14:21:41.554Z">
 <meta property="article:author" content="painter">
+<meta property="article:tag" content="其他">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://lishang520.github.io/categories/">
+<link rel="canonical" href="https://lishang520.github.io/2021/08/14/centos%E5%AE%89%E8%A3%85docker/">
 
 
 <script id="page-configurations">
@@ -40,13 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类 | painter's Blog
-</title>
+  <title>centos安装docker | painter's Blog</title>
   
 
 
@@ -207,55 +207,187 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
-          <div class="content page posts-expand">
+          <div class="content post posts-expand">
             
 
     
-    
-    
-    <div class="post-block" lang="zh-CN">
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lishang520.github.io/2021/08/14/centos%E5%AE%89%E8%A3%85docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="painter">
+      <meta itemprop="description" content="painter的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="painter's Blog">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          centos安装docker
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">分类
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
 
-<div class="post-meta">
+              <time title="创建时间：2021-08-14 15:17:03 / 修改时间：22:21:41" itemprop="dateCreated datePublished" datetime="2021-08-14T15:17:03+08:00">2021-08-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">教程</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/14/centos%E5%AE%89%E8%A3%85docker/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/14/centos%E5%AE%89%E8%A3%85docker/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>应用场景:<br>    通过centos7的iso文件在虚拟机里安装docker</p>
+<span id="more"></span>
+<p>操作步骤：</p>
+<pre><code>1、采用最小安装
+2、自定义分区----很重要，一定要自己划分，要不以后经常会空间不足，使用虚拟机的扩充磁盘也很难解决
+    参考连接：https://jingyan.baidu.com/article/148a1921134d184d71c3b18d.html
+    首先选择Standard Partition 分区方案
+    /boot   200
+    swap   2048
+    biosboot   1   大小设置为1MB，此空间如果不创建在一些环境中系统将会出错
+     /     大小那里空着，表示剩下的空间都给根目录
+     设置完成，选择左上角的Done
+3、网络使用的nat网络
+4、修改配置让centos显示ip信息
+    vi /etc/sysconfig/network-scripts/ ifcfg-ens33
+    将最下面的一行 ONBOOT 的no改为yes
+5、使用 ifup ens33 启动网卡
+6、使用命令：ifconfig  提示该命令不存在，安装ifconfig
+7、输入 yum search ifconfig   搜索ifconfig的包名
+8、根据显示的包的名字安装，我这里是 yum install net-tools.x86_64 -y   
+    ps：这里的 -y 表示自动输入yes，实现自动化安装
+9、输入ifconfig即可获取到ip地址
+10、我这里懒得给centos安装vmtools了，所以为了接下来的方便，我使用 putty.exe 连接该虚拟机
+11、输入账号密码，然后开始安装docker
+12、卸载旧版本：yum remove docker  docker-common docker-selinux docker-engine
+13、安装需要的软件包， yum-util 提供yum-config-manager功能，另两个是devicemapper驱动依赖
+    yum install -y yum-utils device-mapper-persistent-data lvm2
+14、设置 yum 源
+    yum-config-manager --add-repo http://download.docker.com/linux/centos/docker-ce.repo              （中央仓库）
+    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo            （阿里仓库）
+15、选择docker版本并安装
+    查看可用版本有哪些
+        yum list docker-ce --showduplicates | sort -r
+    选择一个版本并安装：yum install docker-ce-版本号
+        yum -y install docker-ce-18.03.1.ce
+16、启动 Docker 并设置开机自启
+    systemctl start docker
+    systemctl enable docker
+17、修改docker的默认工作目录
+    查看默认工作目录Docker Root Dir:docker info
+    关闭docker服务：systemctl stop docker     这一步十分重要，如果不提前关闭，则后面的修改无法成功
+    创建新的工作目录：mkdir /root/docker
+    新建 docker 配置文件：touch /etc/docker/daemon.json
+    编辑docker配置文件：vi /etc/docker/daemon.json
+        如果docker版本 &gt; 
+            &#123;&quot;graph&quot;: &quot;/root/docker&quot;&#125;
+        否则就写入以下内容
+            &#123;&quot;data-root&quot;: &quot;/root/docker&quot;&#125;
+18、启动docker服务
+    systemctl start docker
+19、再次查看docker的默认目录，看是否修改成功
+    docker info
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%85%B6%E4%BB%96/" rel="tag"># 其他</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/10/edu-ip%E8%B5%84%E4%BA%A7%E6%89%B9%E9%87%8F%E6%A3%80%E6%9F%A5/" rel="prev" title="edu-ip资产批量检查">
+      <i class="fa fa-chevron-left"></i> edu-ip资产批量检查
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/14/GSLibrary-docker%E7%89%88%EF%BC%88%E5%8C%85%E5%90%AB%E5%85%A8%E9%83%A8%E6%BC%8F%E6%B4%9E%E5%BA%93%EF%BC%89%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" rel="next" title="GSLibrary docker版（包含全部漏洞库）安装教程">
+      GSLibrary docker版（包含全部漏洞库）安装教程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
-          <div class="category-all-page">
-            <div class="category-all-title">
-              目前共计 6 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/">hexo使用技巧</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%99%E7%A8%8B/">教程</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a><span class="category-list-count">7</span></li></ul>
-            </div>
-          </div>
-        
-      </div>
-      
-      
-      
-    </div>
-    
-
-    
-    
-    
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
