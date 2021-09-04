@@ -318,31 +318,6 @@ http://117.187.230.194:10000
       </tags>
   </entry>
   <entry>
-    <title>hexo基础语法</title>
-    <url>/2021/08/09/hexo%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<p>1、设置阅读全文</p>
-<pre><code>只需要在文章插入字符串&#39;&lt;!--more--&gt;&#39; 即可
-</code></pre>
-<p>2、hexo clean 清楚缓存</p>
-<p>3、hexo g 生成博客</p>
-<p>4、hexo server 启动本地博客</p>
-<p>5、配置步骤2、3、4自动化</p>
-<pre><code>修改package.json 文件，将里面server的值改为：  hexo clean &amp;&amp; hexo generate &amp;&amp; hexo server
-</code></pre>
-<p>6、hexo d 上传博客</p>
-<p>6、hexo new “文件名”  新建文章</p>
-<p>7、hexo new page link   在source目录下创建了link目录，并且创建了index.md文件</p>
-<span id="more"></span>
-
-]]></content>
-      <categories>
-        <category>hexo使用技巧</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>hexo免费博客搭建教程</title>
     <url>/2021/08/10/hexo%E5%85%8D%E8%B4%B9%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="一、环境准备"><a href="#一、环境准备" class="headerlink" title="一、环境准备"></a>一、环境准备</h1><p>安装vscode：</p>
@@ -421,7 +396,7 @@ http://117.187.230.194:10000
 <ul>
 <li><p>git config –global user.name “lishang520”</p>
 </li>
-<li><p>git config –global user.email “<a href="mailto:&#49;&#49;&#x38;&#x33;&#49;&#x34;&#52;&#48;&#55;&#x30;&#x40;&#x71;&#x71;&#46;&#99;&#111;&#109;">&#49;&#49;&#x38;&#x33;&#49;&#x34;&#52;&#48;&#55;&#x30;&#x40;&#x71;&#x71;&#46;&#99;&#111;&#109;</a>“</p>
+<li><p>git config –global user.email “<a href="mailto:&#x31;&#49;&#56;&#x33;&#49;&#x34;&#x34;&#x30;&#x37;&#48;&#64;&#113;&#x71;&#46;&#x63;&#111;&#109;">&#x31;&#49;&#56;&#x33;&#49;&#x34;&#x34;&#x30;&#x37;&#48;&#64;&#113;&#x71;&#46;&#x63;&#111;&#109;</a>“</p>
 </li>
 </ul>
 </li>
@@ -602,7 +577,7 @@ branch: main
 <li><p>得到复制的代码：<i class="fas fa-blog"></i>    </p>
 <ul>
 <li>修改配置文件，将复制的代码的class的值替换掉social下的冒号之前的值，并将博客地址修改为自己的博客地址<ul>
-<li>初始邮箱的图标地址：fas fa-envelope: mailto:<a href="mailto:&#120;&#x78;&#120;&#120;&#x78;&#x78;&#64;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#109;">&#120;&#x78;&#120;&#120;&#x78;&#x78;&#64;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#109;</a> || Email</li>
+<li>初始邮箱的图标地址：fas fa-envelope: mailto:<a href="mailto:&#120;&#x78;&#120;&#x78;&#x78;&#x78;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#111;&#x6d;">&#120;&#x78;&#120;&#x78;&#x78;&#x78;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#111;&#x6d;</a> || Email</li>
 <li>修改后的博客的地址：fas fa-blog: <a href="https://lishang520.github.io/">https://lishang520.github.io/</a> || 博客</li>
 <li>修改github为我的github主页地址：<a href="https://github.com/lishang520">https://github.com/lishang520</a></li>
 </ul>
@@ -779,6 +754,31 @@ branch: main
       </tags>
   </entry>
   <entry>
+    <title>hexo基础语法</title>
+    <url>/2021/08/09/hexo%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<p>1、设置阅读全文</p>
+<pre><code>只需要在文章插入字符串&#39;&lt;!--more--&gt;&#39; 即可
+</code></pre>
+<p>2、hexo clean 清楚缓存</p>
+<p>3、hexo g 生成博客</p>
+<p>4、hexo server 启动本地博客</p>
+<p>5、配置步骤2、3、4自动化</p>
+<pre><code>修改package.json 文件，将里面server的值改为：  hexo clean &amp;&amp; hexo generate &amp;&amp; hexo server
+</code></pre>
+<p>6、hexo d 上传博客</p>
+<p>6、hexo new “文件名”  新建文章</p>
+<p>7、hexo new page link   在source目录下创建了link目录，并且创建了index.md文件</p>
+<span id="more"></span>
+
+]]></content>
+      <categories>
+        <category>hexo使用技巧</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ip反查公司+域名</title>
     <url>/2021/08/09/ip%E5%8F%8D%E6%9F%A5%E5%85%AC%E5%8F%B8-%E5%9F%9F%E5%90%8D/</url>
     <content><![CDATA[<p>应用场景：</p>
@@ -851,6 +851,64 @@ branch: main
       </categories>
       <tags>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>url主站提取</title>
+    <url>/2021/09/04/url%E4%B8%BB%E7%AB%99%E6%8F%90%E5%8F%96/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>在面对大批量的漏洞提交的时候，需要填写目标的主站，也就是该目标的官方网址，但是有的url的是多级域名，例如x.com.cn这种，有的又是x.com这种，人工一个一个的修改太麻烦，所以就有了本工具，一键提取主站，并进行存活检测
+</code></pre>
+<span id="more"></span>
+<p>工具原理：</p>
+<pre><code>1、对url结构进行分解，并进行判断，如果目标是类似于x.com.cn这种，那么提取的主站就是x.com.cn，如果目标是x.com，那么就是提取x.com
+2、通过httpx软件对提取的目标进行存活检测
+3、对httpx生成的结果进行提取
+</code></pre>
+<p>使用技巧：</p>
+<pre><code>1、推荐使用cmd运行：python3 多级域名提取.py
+2、运行期间，cmd窗口会执行httpx，当等待一段时间后，发现cmd无变化，可以尝试按下几个回车，然后等待即可
+</code></pre>
+<p>工具下载链接：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
+<p>对你有用的话，希望能给个星星</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>公益src</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>域名批量备案查询(免代理)</title>
+    <url>/2021/09/04/%E5%9F%9F%E5%90%8D%E6%89%B9%E9%87%8F%E5%A4%87%E6%A1%88%E6%9F%A5%E8%AF%A2-%E5%85%8D%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>我们在批量提交公益src的时候，需要获取每个网站的所属公司，如果单纯的通过获取title来实现，会有很多不合要求的数据，但是如果通过备案查询该公司名称，那么就会很准确，对于一大批url，通过该工具+漏洞盒子批量提交工具，将会事半功倍
+</code></pre>
+<span id="more"></span>
+<p>实现原理：</p>
+<pre><code>1、借助站长工具的批量查询功能
+2、采用随机user-agent、延迟来防止封ip
+3、对于没有备案的域名让他的结果变为空
+3、将备案查询结果和原始url一起写入到excel中
+</code></pre>
+<p>工具搭配建议：</p>
+<pre><code>1、对于初始的查询的url，建议检测以下存活
+2、搭配漏洞盒子批量提交脚本使用
+</code></pre>
+<p>易错点：</p>
+<pre><code>生成的excel结果里有一部分数据需要我们通过筛选手工删除，情况如下：
+    备案为空的，需要我们手工删除
+    备案结果为人名的，需要我们删除
+</code></pre>
+<p>工具下载链接：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
+<p>对你有用的话，希望能给个星星</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>公益src</tag>
       </tags>
   </entry>
   <entry>
@@ -1353,7 +1411,7 @@ branch: main
 </li>
 <li><p>修改 IP 绕过短信 &amp; 邮箱轰炸限制<br>有些同样是验证当前 IP 的，如果当前 IP 短时间内获取短信或邮件频繁或者达到一定次数的话就会出现限制，那么就可以利用修改 IP 或者代理 IP 来进行绕过限制。</p>
 </li>
-<li><p>利用大小写绕过邮箱轰炸限制<br>前面说到了关于加空格的绕过限制，邮箱也可以用，但还有一种方式可以绕过邮箱轰炸限制，那就是通过修改大小写，通过修改邮箱后面字母的大小写就可绕过限制，比如参数是这样的：email=<a href="mailto:&#x78;&#x78;&#64;&#113;&#x71;&#x2e;&#99;&#x6f;&#109;">&#x78;&#x78;&#64;&#113;&#x71;&#x2e;&#99;&#x6f;&#109;</a> 当次数达到限制时，随便修改一个字母为大写：email=<a href="mailto:&#x78;&#120;&#64;&#x51;&#x71;&#x2e;&#x63;&#111;&#109;">&#x78;&#120;&#64;&#x51;&#x71;&#x2e;&#x63;&#111;&#109;</a> 就可绕过限制</p>
+<li><p>利用大小写绕过邮箱轰炸限制<br>前面说到了关于加空格的绕过限制，邮箱也可以用，但还有一种方式可以绕过邮箱轰炸限制，那就是通过修改大小写，通过修改邮箱后面字母的大小写就可绕过限制，比如参数是这样的：email=<a href="mailto:&#120;&#120;&#64;&#113;&#113;&#x2e;&#x63;&#x6f;&#x6d;">&#120;&#120;&#64;&#113;&#113;&#x2e;&#x63;&#x6f;&#x6d;</a> 当次数达到限制时，随便修改一个字母为大写：email=<a href="mailto:&#120;&#x78;&#64;&#81;&#x71;&#46;&#x63;&#111;&#109;">&#120;&#x78;&#64;&#81;&#x71;&#46;&#x63;&#111;&#109;</a> 就可绕过限制</p>
 </li>
 <li><p>修改返回值绕过短信 &amp; 邮箱轰炸<br>比如发送成功后返回值是 success，发送失败的返回值是 error，那么当达到次数后，可以通过修改返回值为正确的返回值：success，从而绕过限制，达到发送成功的目的。</p>
 </li>
@@ -2330,7 +2388,7 @@ branch: main
 <h2 id="3、信息的利用与扫描"><a href="#3、信息的利用与扫描" class="headerlink" title="3、信息的利用与扫描"></a>3、信息的利用与扫描</h2><p>​    1、将OneForAll跑出来的域名去重，存活检测，接着弄到扫描器进行扫描</p>
 <p>​     2、根据kscan扫描的分类，根据其中间件、服务、框架，找专门的批量脚本进行定点扫描</p>
 <p>​    3、进行源码备份扫描</p>
-<p><a href="mailto:&#x61;&#100;&#x6d;&#x69;&#110;&#x40;&#x66;&#122;&#117;&#46;&#101;&#100;&#x75;&#46;&#x63;&#110;">&#x61;&#100;&#x6d;&#x69;&#110;&#x40;&#x66;&#122;&#117;&#46;&#101;&#100;&#x75;&#46;&#x63;&#110;</a></p>
+<p><a href="mailto:&#x61;&#100;&#109;&#x69;&#x6e;&#x40;&#102;&#122;&#x75;&#x2e;&#x65;&#x64;&#x75;&#46;&#99;&#110;">&#x61;&#100;&#109;&#x69;&#x6e;&#x40;&#102;&#122;&#x75;&#x2e;&#x65;&#x64;&#x75;&#46;&#99;&#110;</a></p>
 <h2 id="4、其他信息收集"><a href="#4、其他信息收集" class="headerlink" title="4、其他信息收集"></a>4、其他信息收集</h2><p>在前面1,2，3步骤没找到漏洞的话，就进行这第4步</p>
 <p>目的：</p>
 <p>​    主要是用来邮件钓鱼（挖src不让钓鱼）</p>
@@ -5415,7 +5473,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <p>推荐：推荐新式类，同时推荐每次定义类时，括号里都写上object，这样即使在python2中运行代码也不会出错</p>
 <h2 id="附录2-python错题"><a href="#附录2-python错题" class="headerlink" title="附录2 python错题"></a>附录2 python错题</h2><h3 id="1-git上传码云，提示无权限"><a href="#1-git上传码云，提示无权限" class="headerlink" title="1.git上传码云，提示无权限"></a>1.git上传码云，提示无权限</h3><p>第一步：在git终端上生成sshkey</p>
 <ul>
-<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#x37;&#52;&#x30;&#51;&#49;&#48;&#x33;&#x2b;&#x70;&#121;&#x74;&#x68;&#x6f;&#x6e;&#95;&#x72;&#111;&#x61;&#x64;&#x40;&#117;&#x73;&#101;&#x72;&#46;&#110;&#x6f;&#114;&#x65;&#x70;&#108;&#121;&#x2e;&#x67;&#x69;&#x74;&#x65;&#x65;&#x2e;&#99;&#111;&#109;">&#x37;&#52;&#x30;&#51;&#49;&#48;&#x33;&#x2b;&#x70;&#121;&#x74;&#x68;&#x6f;&#x6e;&#95;&#x72;&#111;&#x61;&#x64;&#x40;&#117;&#x73;&#101;&#x72;&#46;&#110;&#x6f;&#114;&#x65;&#x70;&#108;&#121;&#x2e;&#x67;&#x69;&#x74;&#x65;&#x65;&#x2e;&#99;&#111;&#109;</a>“</p>
+<li><p>如果之前生成过，再输入该命令会提示是否覆盖，此时需要输入y才能覆盖，如果不输入，则不覆盖：ssh-keygen -t rsa -C “<a href="mailto:&#55;&#52;&#48;&#51;&#x31;&#48;&#x33;&#x2b;&#112;&#121;&#x74;&#104;&#111;&#x6e;&#95;&#x72;&#x6f;&#x61;&#100;&#x40;&#117;&#115;&#x65;&#114;&#46;&#110;&#x6f;&#x72;&#x65;&#x70;&#x6c;&#121;&#x2e;&#x67;&#105;&#116;&#x65;&#101;&#x2e;&#x63;&#111;&#x6d;">&#55;&#52;&#48;&#51;&#x31;&#48;&#x33;&#x2b;&#112;&#121;&#x74;&#104;&#111;&#x6e;&#95;&#x72;&#x6f;&#x61;&#100;&#x40;&#117;&#115;&#x65;&#114;&#46;&#110;&#x6f;&#x72;&#x65;&#x70;&#x6c;&#121;&#x2e;&#x67;&#105;&#116;&#x65;&#101;&#x2e;&#x63;&#111;&#x6d;</a>“</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191502617.png" alt="image-20200403191502617"></p>
 </li>
 <li><p>查看生成的ssh秘钥：cat ~/.ssh/id_rsa.pub</p>
@@ -5424,7 +5482,7 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 </ul>
 <p>第二步：在码云个人设置里—ssh公钥—新增公钥—-名称建议输入和项目名，公钥输入刚才复制的</p>
 <p><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191817999.png" alt="image-20200403191817999"></p>
-<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#101;&#101;&#46;&#99;&#x6f;&#109;">&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#101;&#101;&#46;&#99;&#x6f;&#109;</a>  显示下图界面就代表成功了</p>
+<p>第三步：回到git终端输入： ssh -T <a href="mailto:&#103;&#x69;&#x74;&#x40;&#x67;&#x69;&#x74;&#101;&#x65;&#x2e;&#x63;&#x6f;&#109;">&#103;&#x69;&#x74;&#x40;&#x67;&#x69;&#x74;&#101;&#x65;&#x2e;&#x63;&#x6f;&#109;</a>  显示下图界面就代表成功了</p>
 <ul>
 <li><img src="https://gitee.com/python_road/python_img/raw/master/img/image-20200403191921263.png" alt="image-20200403191921263"></li>
 </ul>
@@ -6103,8 +6161,8 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
 <ul>
 <li>git init </li>
 <li>git config –global user.name “发飙的登山包”</li>
-<li>git config –global user.email “<a href="mailto:&#x37;&#52;&#48;&#x33;&#x31;&#48;&#51;&#43;&#x70;&#x79;&#116;&#x68;&#111;&#110;&#95;&#x72;&#x6f;&#x61;&#x64;&#x40;&#117;&#x73;&#101;&#114;&#x2e;&#x6e;&#111;&#x72;&#x65;&#x70;&#108;&#x79;&#46;&#103;&#x69;&#x74;&#101;&#101;&#46;&#x63;&#x6f;&#x6d;">&#x37;&#52;&#48;&#x33;&#x31;&#48;&#51;&#43;&#x70;&#x79;&#116;&#x68;&#111;&#110;&#95;&#x72;&#x6f;&#x61;&#x64;&#x40;&#117;&#x73;&#101;&#114;&#x2e;&#x6e;&#111;&#x72;&#x65;&#x70;&#108;&#x79;&#46;&#103;&#x69;&#x74;&#101;&#101;&#46;&#x63;&#x6f;&#x6d;</a>“</li>
-<li>git remote add origin <a href="mailto:&#103;&#105;&#x74;&#64;&#103;&#105;&#x74;&#x65;&#101;&#46;&#x63;&#x6f;&#109;">&#103;&#105;&#x74;&#64;&#103;&#105;&#x74;&#x65;&#101;&#46;&#x63;&#x6f;&#109;</a>:python_road/old_boy_python_self_study.git</li>
+<li>git config –global user.email “<a href="mailto:&#55;&#x34;&#48;&#x33;&#x31;&#48;&#x33;&#43;&#112;&#121;&#x74;&#x68;&#x6f;&#110;&#x5f;&#x72;&#x6f;&#x61;&#100;&#x40;&#117;&#x73;&#x65;&#x72;&#46;&#110;&#x6f;&#x72;&#101;&#x70;&#108;&#121;&#x2e;&#103;&#x69;&#x74;&#101;&#101;&#x2e;&#99;&#111;&#x6d;">&#55;&#x34;&#48;&#x33;&#x31;&#48;&#x33;&#43;&#112;&#121;&#x74;&#x68;&#x6f;&#110;&#x5f;&#x72;&#x6f;&#x61;&#100;&#x40;&#117;&#x73;&#x65;&#x72;&#46;&#110;&#x6f;&#x72;&#101;&#x70;&#108;&#121;&#x2e;&#103;&#x69;&#x74;&#101;&#101;&#x2e;&#99;&#111;&#x6d;</a>“</li>
+<li>git remote add origin <a href="mailto:&#103;&#x69;&#116;&#x40;&#103;&#105;&#116;&#101;&#101;&#46;&#x63;&#111;&#x6d;">&#103;&#x69;&#116;&#x40;&#103;&#105;&#116;&#101;&#101;&#46;&#x63;&#111;&#x6d;</a>:python_road/old_boy_python_self_study.git</li>
 </ul>
 <p>以上就初始化完成</p>
 </li>
@@ -6641,64 +6699,6 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
       </categories>
       <tags>
         <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>url主站提取</title>
-    <url>/2021/09/04/url%E4%B8%BB%E7%AB%99%E6%8F%90%E5%8F%96/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>在面对大批量的漏洞提交的时候，需要填写目标的主站，也就是该目标的官方网址，但是有的url的是多级域名，例如x.com.cn这种，有的又是x.com这种，人工一个一个的修改太麻烦，所以就有了本工具，一键提取主站，并进行存活检测
-</code></pre>
-<span id="more"></span>
-<p>工具原理：</p>
-<pre><code>1、对url结构进行分解，并进行判断，如果目标是类似于x.com.cn这种，那么提取的主站就是x.com.cn，如果目标是x.com，那么就是提取x.com
-2、通过httpx软件对提取的目标进行存活检测
-3、对httpx生成的结果进行提取
-</code></pre>
-<p>使用技巧：</p>
-<pre><code>1、推荐使用cmd运行：python3 多级域名提取.py
-2、运行期间，cmd窗口会执行httpx，当等待一段时间后，发现cmd无变化，可以尝试按下几个回车，然后等待即可
-</code></pre>
-<p>工具下载链接：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
-<p>对你有用的话，希望能给个星星</p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>公益src</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>域名批量备案查询(免代理)</title>
-    <url>/2021/09/04/%E5%9F%9F%E5%90%8D%E6%89%B9%E9%87%8F%E5%A4%87%E6%A1%88%E6%9F%A5%E8%AF%A2-%E5%85%8D%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[<p>应用场景：</p>
-<pre><code>我们在批量提交公益src的时候，需要获取每个网站的所属公司，如果单纯的通过获取title来实现，会有很多不合要求的数据，但是如果通过备案查询该公司名称，那么就会很准确，对于一大批url，通过该工具+漏洞盒子批量提交工具，将会事半功倍
-</code></pre>
-<span id="more"></span>
-<p>实现原理：</p>
-<pre><code>1、借助站长工具的批量查询功能
-2、采用随机user-agent、延迟来防止封ip
-3、对于没有备案的域名让他的结果变为空
-3、将备案查询结果和原始url一起写入到excel中
-</code></pre>
-<p>工具搭配建议：</p>
-<pre><code>1、对于初始的查询的url，建议检测以下存活
-2、搭配漏洞盒子批量提交脚本使用
-</code></pre>
-<p>易错点：</p>
-<pre><code>生成的excel结果里有一部分数据需要我们通过筛选手工删除，情况如下：
-    备案为空的，需要我们手工删除
-    备案结果为人名的，需要我们删除
-</code></pre>
-<p>工具下载链接：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
-<p>对你有用的话，希望能给个星星</p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>公益src</tag>
       </tags>
   </entry>
 </search>
