@@ -6643,4 +6643,62 @@ print(switch)<figure class="highlight plaintext"><table><tr><td class="code"><pr
         <tag>笔记</tag>
       </tags>
   </entry>
+  <entry>
+    <title>url主站提取</title>
+    <url>/2021/09/04/url%E4%B8%BB%E7%AB%99%E6%8F%90%E5%8F%96/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>在面对大批量的漏洞提交的时候，需要填写目标的主站，也就是该目标的官方网址，但是有的url的是多级域名，例如x.com.cn这种，有的又是x.com这种，人工一个一个的修改太麻烦，所以就有了本工具，一键提取主站，并进行存活检测
+</code></pre>
+<span id="more"></span>
+<p>工具原理：</p>
+<pre><code>1、对url结构进行分解，并进行判断，如果目标是类似于x.com.cn这种，那么提取的主站就是x.com.cn，如果目标是x.com，那么就是提取x.com
+2、通过httpx软件对提取的目标进行存活检测
+3、对httpx生成的结果进行提取
+</code></pre>
+<p>使用技巧：</p>
+<pre><code>1、推荐使用cmd运行：python3 多级域名提取.py
+2、运行期间，cmd窗口会执行httpx，当等待一段时间后，发现cmd无变化，可以尝试按下几个回车，然后等待即可
+</code></pre>
+<p>工具下载链接：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
+<p>对你有用的话，希望能给个星星</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>公益src</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>域名批量备案查询(免代理)</title>
+    <url>/2021/09/04/%E5%9F%9F%E5%90%8D%E6%89%B9%E9%87%8F%E5%A4%87%E6%A1%88%E6%9F%A5%E8%AF%A2-%E5%85%8D%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<p>应用场景：</p>
+<pre><code>我们在批量提交公益src的时候，需要获取每个网站的所属公司，如果单纯的通过获取title来实现，会有很多不合要求的数据，但是如果通过备案查询该公司名称，那么就会很准确，对于一大批url，通过该工具+漏洞盒子批量提交工具，将会事半功倍
+</code></pre>
+<span id="more"></span>
+<p>实现原理：</p>
+<pre><code>1、借助站长工具的批量查询功能
+2、采用随机user-agent、延迟来防止封ip
+3、对于没有备案的域名让他的结果变为空
+3、将备案查询结果和原始url一起写入到excel中
+</code></pre>
+<p>工具搭配建议：</p>
+<pre><code>1、对于初始的查询的url，建议检测以下存活
+2、搭配漏洞盒子批量提交脚本使用
+</code></pre>
+<p>易错点：</p>
+<pre><code>生成的excel结果里有一部分数据需要我们通过筛选手工删除，情况如下：
+    备案为空的，需要我们手工删除
+    备案结果为人名的，需要我们删除
+</code></pre>
+<p>工具下载链接：<a href="https://github.com/lishang520/security-tools">https://github.com/lishang520/security-tools</a></p>
+<p>对你有用的话，希望能给个星星</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>公益src</tag>
+      </tags>
+  </entry>
 </search>
